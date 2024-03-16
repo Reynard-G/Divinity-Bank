@@ -5,6 +5,6 @@ export async function POST() {
   cookies().delete('authorization');
 
   return new Response('Logged out successfully', { status: 200 });
-};
+}
 
 export const runtime = 'edge';

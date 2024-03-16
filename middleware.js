@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
-import * as jose from 'jose'
+import * as jose from 'jose';
 import Pages from '@/constants/Pages';
 
 export async function middleware(req) {
@@ -32,8 +32,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: [
-    '/myaccount/:path*',
-    '/login',
-  ],
+  matcher: ['/myaccount/:path*', '/login'],
 };

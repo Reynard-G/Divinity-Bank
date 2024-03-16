@@ -17,12 +17,16 @@ export async function POST(req) {
   }
 
   // Check if username exists in Minecraft API
-  const mojangResponse = await fetch(`https://api.mojang.com/users/profiles/minecraft/${minecraftUsername}`);
+  const mojangResponse = await fetch(
+    `https://api.mojang.com/users/profiles/minecraft/${minecraftUsername}`,
+  );
   const minecraftUser = await mojangResponse.json();
 
   console.log(minecraftUser);
   if (!mojangResponse.ok) {
-    return new Response('Minecraft username is invalid or does not exist', { status: 400 });
+    return new Response('Minecraft username is invalid or does not exist', {
+      status: 400,
+    });
   }
 
   const hashedPassword = await hash(password, 12);

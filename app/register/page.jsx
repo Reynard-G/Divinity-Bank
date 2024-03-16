@@ -18,7 +18,8 @@ export default function Register() {
   const [isLoading, setIsLoading] = useState(false);
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
-  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] = useState(false);
+  const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
+    useState(false);
   const [isUsernameInvalid, setIsUsernameInvalid] = useState(false);
   const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
 
@@ -130,14 +131,24 @@ export default function Register() {
           />
         </div>
 
-        <Checkbox size='md' className='py-4' isSelected={acceptTerms} onValueChange={setAcceptTerms}>
+        <Checkbox
+          size='md'
+          className='py-4'
+          isSelected={acceptTerms}
+          onValueChange={setAcceptTerms}
+        >
           I agree with the{' '}
           <Link size='md' underline='always' href={Pages.TOS}>
             Terms and Conditions
           </Link>
         </Checkbox>
 
-        <Button color='primary' isLoading={isLoading} isDisabled={!acceptTerms} type='submit'>
+        <Button
+          color='primary'
+          isLoading={isLoading}
+          isDisabled={!acceptTerms}
+          type='submit'
+        >
           Sign Up
         </Button>
       </form>

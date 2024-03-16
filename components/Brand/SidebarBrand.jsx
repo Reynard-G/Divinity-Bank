@@ -6,7 +6,7 @@ import cn from '@/utils/cn';
 
 export default function SidebarBrand() {
   return (
-    <Link href="/">
+    <Link href='/'>
       <div className='flex items-center gap-2 px-2'>
         <div className='flex w-12'>
           <Image
@@ -18,7 +18,9 @@ export default function SidebarBrand() {
             alt='Divinity'
           />
         </div>
-        <p className={cn('text-2xl font-bold uppercase', chakraPetch.className)}>
+        <p
+          className={cn('text-2xl font-bold uppercase', chakraPetch.className)}
+        >
           Divinity
         </p>
       </div>

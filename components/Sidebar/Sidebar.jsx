@@ -25,7 +25,7 @@ export default function Sidebar({ items = [] }) {
     } catch (error) {
       console.error('An error occurred during logout:', error);
     }
-  }
+  };
 
   return (
     <div className='fixed flex h-full w-full max-w-[288px] flex-1 flex-col border-r-small border-divider p-6 transition-[transform,opacity,margin] duration-250 ease-in-out'>

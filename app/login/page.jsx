@@ -79,7 +79,9 @@ export default function Login() {
             label='Password'
             placeholder='Enter your password'
             isInvalid={isCredentialsInvalid}
-            errorMessage={isCredentialsInvalid && 'Invalid username or password'}
+            errorMessage={
+              isCredentialsInvalid && 'Invalid username or password'
+            }
             endContent={
               <PasswordVisibleButton
                 isVisible={isPasswordVisible}
@@ -93,7 +95,12 @@ export default function Login() {
         </div>
 
         <div className='flex items-center justify-between'>
-          <Checkbox name='remember me' size='md' isSelected={rememberMe} onValueChange={setRememberMe}>
+          <Checkbox
+            name='remember me'
+            size='md'
+            isSelected={rememberMe}
+            onValueChange={setRememberMe}
+          >
             Remember me
           </Checkbox>
 
