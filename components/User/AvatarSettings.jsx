@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
+import useSWR from 'swr';
 import { Avatar } from '@nextui-org/avatar';
 import {
   Dropdown,
@@ -8,10 +9,12 @@ import {
   DropdownTrigger,
 } from '@nextui-org/dropdown';
 
+import fetcher from '@/utils/fetcher';
 import Pages from '@/constants/Pages';
 import APIs from '@/constants/APIs';
 
 export default function AvatarSettings({ minecraftUUID }) {
+  const { data, error } = useSWR(APIs.USER, fetcher);
   const router = useRouter();
   const [username, setUsername] = useState('Loading...');
 
@@ -31,6 +34,12 @@ export default function AvatarSettings({ minecraftUUID }) {
     }
   };
 
+  useEffect(() => {
+    if (data) {
+      setUsername(data?.minecraft_username || 'Unknown User');
+    }
+  }, [data]);
+
   return (
     <Dropdown>
       <DropdownTrigger>
@@ -39,7 +48,7 @@ export default function AvatarSettings({ minecraftUUID }) {
           isBordered
           radius='lg'
           name={username}
-          src={`https://starlightskins.lunareclipse.studio/render/pixel/${minecraftUUID}/face`}
+          src={`https://crafatar.com/avatars/${minecraftUUID}`}
           alt='Minecraft Avatar'
         />
       </DropdownTrigger>
