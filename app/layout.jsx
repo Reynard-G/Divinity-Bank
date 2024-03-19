@@ -1,7 +1,7 @@
 //import { spaceGrotesk } from "@/app/fonts";
 import { Space_Grotesk } from 'next/font/google';
 
-import Providers from '@/providers.jsx';
+import Providers from '@/app/providers';
 
 import './globals.css';
 
