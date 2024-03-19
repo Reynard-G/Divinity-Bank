@@ -1,10 +1,10 @@
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/db';
 import { hash } from 'bcrypt';
+import { v4 as uuidv4 } from 'uuid';
+import redashUUID from '@/utils/redashUUID';
 
 export async function POST(req) {
   const { minecraftUsername, discordUsername, password } = await req.json();
-
-  const prisma = new PrismaClient();
 
   const user = await prisma.users.findFirst({
     where: {
@@ -22,7 +22,6 @@ export async function POST(req) {
   );
   const minecraftUser = await mojangResponse.json();
 
-  console.log(minecraftUser);
   if (!mojangResponse.ok) {
     return new Response('Minecraft username is invalid or does not exist', {
       status: 400,
@@ -33,7 +32,8 @@ export async function POST(req) {
 
   await prisma.users.create({
     data: {
-      minecraft_uuid: minecraftUser.id,
+      uuid: uuidv4(),
+      minecraft_uuid: redashUUID(minecraftUser.id),
       minecraft_username: minecraftUsername,
       discord_username: discordUsername,
       password: hashedPassword,

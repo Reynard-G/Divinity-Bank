@@ -1,12 +1,14 @@
 import { cookies } from 'next/headers';
-import { PrismaClient } from '@prisma/client';
+import prisma from '@/lib/db';
 import { compare } from 'bcrypt';
 import * as jose from 'jose';
 
 export async function POST(req) {
   const { username, password, remember } = await req.json();
 
-  const prisma = new PrismaClient();
+  if (!username || !password) {
+    return new Response('Invalid username or password', { status: 400 });
+  }
 
   const user = await prisma.users.findFirst({
     where: {
@@ -27,7 +29,7 @@ export async function POST(req) {
   const secret = new TextEncoder().encode(process.env.JWT_SECRET);
   const expirationTime = remember ? '30 d' : '1 hr';
 
-  const token = await new jose.SignJWT({ id: user.id })
+  const token = await new jose.SignJWT({ uuid: user.uuid })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(expirationTime)

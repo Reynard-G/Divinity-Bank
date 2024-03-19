@@ -25,6 +25,7 @@ model Transactions {
 
 model Users {
   id                 Int           @id @default(autoincrement()) @db.UnsignedInt
+  uuid               String        @db.VarChar(36)
   minecraft_uuid     String        @db.VarChar(36)
   minecraft_username String        @db.VarChar(24)
   discord_username   String        @db.VarChar(32)
