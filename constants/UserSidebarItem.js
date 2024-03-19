@@ -1,35 +1,35 @@
 import { Icon } from '@iconify/react';
-import Pages from '@/constants/Pages';
+import Page from '@/constants/Page';
 
 export default [
   {
     name: 'Dashboard',
     icon: <Icon icon='tabler:layout-dashboard' fontSize='1.5rem' />,
-    href: Pages.DASHBOARD,
+    href: Page.DASHBOARD,
   },
   {
     name: 'My Accounts',
     icon: <Icon icon='mdi:accounts-outline' fontSize='1.5rem' />,
-    href: Pages.ACCOUNTS,
+    href: Page.ACCOUNTS,
   },
   {
     name: 'Transactions',
     icon: <Icon icon='bitcoin-icons:transactions-outline' fontSize='1.5rem' />,
-    href: Pages.TRANSACTIONS,
+    href: Page.TRANSACTIONS,
   },
   {
     name: 'Transfer Money',
     icon: <Icon icon='ph:money' fontSize='1.5rem' />,
-    href: Pages.TRANSFER,
+    href: Page.TRANSFER,
   },
   {
     name: 'Loans',
     icon: <Icon icon='carbon:white-paper' fontSize='1.5rem' />,
-    href: Pages.LOANS,
+    href: Page.LOANS,
   },
   {
     name: 'Settings',
     icon: <Icon icon='lucide:settings' fontSize='1.5rem' />,
-    href: Pages.SETTINGS,
+    href: Page.SETTINGS,
   },
 ];

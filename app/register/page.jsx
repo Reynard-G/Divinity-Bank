@@ -11,8 +11,8 @@ import { Link } from '@nextui-org/link';
 import RegisterBrand from '@/components/Brand/RegisterBrand';
 import PasswordVisibleButton from '@/components/Button/PasswordVisibleButton';
 import RegisterLayout from '@/components/Layout/RegisterLayout';
-import APIs from '@/constants/APIs';
-import Pages from '@/constants/Pages';
+import API from '@/constants/API';
+import Page from '@/constants/Page';
 
 export default function Register() {
   const router = useRouter();
@@ -43,7 +43,7 @@ export default function Register() {
 
     setIsLoading(true);
     try {
-      const res = await fetch(APIs.REGISTER, {
+      const res = await fetch(API.REGISTER, {
         method: 'POST',
         body: JSON.stringify(data),
         headers: {
@@ -52,7 +52,7 @@ export default function Register() {
       });
 
       if (res.ok) {
-        router.push(Pages.LOGIN);
+        router.push(Page.LOGIN);
       } else {
         setIsUsernameInvalid(true);
       }
@@ -164,7 +164,7 @@ export default function Register() {
           onValueChange={setAcceptTerms}
         >
           I agree with the{' '}
-          <Link size='md' underline='always' href={Pages.TOS}>
+          <Link size='md' underline='always' href={Page.TOS}>
             Terms and Conditions
           </Link>
         </Checkbox>
@@ -181,7 +181,7 @@ export default function Register() {
 
       <p className='text-center text-small'>
         Already have an account?{' '}
-        <Link size='sm' underline='always' href={Pages.LOGIN}>
+        <Link size='sm' underline='always' href={Page.LOGIN}>
           Log In
         </Link>
       </p>

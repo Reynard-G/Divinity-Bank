@@ -1,15 +1,15 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 import * as jose from 'jose';
-import Pages from '@/constants/Pages';
+import Page from '@/constants/Page';
 
 export async function middleware(req) {
   const cookie = cookies().get('authorization');
   const token = cookie?.value;
 
   if (!token) {
-    if (req.nextUrl.pathname === Pages.LOGIN) return NextResponse.next();
-    return NextResponse.redirect(new URL(Pages.LOGIN, req.url));
+    if (req.nextUrl.pathname === Page.LOGIN) return NextResponse.next();
+    return NextResponse.redirect(new URL(Page.LOGIN, req.url));
   }
 
   try {
@@ -18,16 +18,16 @@ export async function middleware(req) {
     console.log(payload);
 
     // If the user is trying to access the login page with a valid token, redirect to /myaccount
-    if (req.nextUrl.pathname === Pages.LOGIN) {
-      return NextResponse.redirect(new URL(Pages.DASHBOARD, req.url));
+    if (req.nextUrl.pathname === Page.LOGIN) {
+      return NextResponse.redirect(new URL(Page.DASHBOARD, req.url));
     }
 
     return NextResponse.next();
   } catch (error) {
     // If the user is already on the login page with an invalid token, do nothing to avoid redirect loops
-    if (req.nextUrl.pathname === Pages.LOGIN) return NextResponse.next();
+    if (req.nextUrl.pathname === Page.LOGIN) return NextResponse.next();
 
-    return NextResponse.redirect(new URL(Pages.LOGIN, req.url));
+    return NextResponse.redirect(new URL(Page.LOGIN, req.url));
   }
 }
 

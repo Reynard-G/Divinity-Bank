@@ -11,8 +11,8 @@ import { Link } from '@nextui-org/link';
 import LoginBrand from '@/components/Brand/LoginBrand';
 import PasswordVisibleButton from '@/components/Button/PasswordVisibleButton';
 import LoginLayout from '@/components/Layout/LoginLayout';
-import APIs from '@/constants/APIs';
-import Pages from '@/constants/Pages';
+import API from '@/constants/API';
+import Page from '@/constants/Page';
 
 export default function Login() {
   const router = useRouter();
@@ -34,7 +34,7 @@ export default function Login() {
     setIsLoading(true);
     try {
       // Make API request
-      const res = await fetch(APIs.LOGIN, {
+      const res = await fetch(API.LOGIN, {
         method: 'POST',
         body: JSON.stringify({ ...data, remember: rememberMe }),
         headers: {
@@ -45,7 +45,7 @@ export default function Login() {
       // Handle response
       if (res.ok) {
         setIsCredentialsInvalid(false);
-        router.push(Pages.DASHBOARD);
+        router.push(Page.DASHBOARD);
       } else {
         setIsCredentialsInvalid(true);
       }
@@ -116,7 +116,7 @@ export default function Login() {
             Remember me
           </Checkbox>
 
-          <Link size='sm' underline='always' href={Pages.FORGOT_PASSWORD}>
+          <Link size='sm' underline='always' href={Page.FORGOT_PASSWORD}>
             Forgot Password?
           </Link>
         </div>
@@ -133,7 +133,7 @@ export default function Login() {
 
       <p className='text-center text-small'>
         Need to create an account?{' '}
-        <Link size='sm' underline='always' href={Pages.REGISTER}>
+        <Link size='sm' underline='always' href={Page.REGISTER}>
           Sign Up
         </Link>
       </p>

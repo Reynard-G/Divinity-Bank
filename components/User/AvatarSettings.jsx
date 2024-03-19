@@ -10,23 +10,23 @@ import {
 } from '@nextui-org/dropdown';
 import useSWR from 'swr';
 
-import APIs from '@/constants/APIs';
-import Pages from '@/constants/Pages';
+import API from '@/constants/API';
+import Page from '@/constants/Page';
 import fetcher from '@/utils/fetcher';
 
 export default function AvatarSettings({ minecraftUUID }) {
-  const { data, error } = useSWR(APIs.USER, fetcher);
+  const { data, error } = useSWR(API.USER, fetcher);
   const router = useRouter();
   const [username, setUsername] = useState('Loading...');
 
   const handleLogout = async () => {
     try {
-      const res = await fetch(APIs.LOGOUT, {
+      const res = await fetch(API.LOGOUT, {
         method: 'POST',
       });
 
       if (res.ok) {
-        router.replace(Pages.LOGIN);
+        router.replace(Page.LOGIN);
       } else {
         console.error('An error occurred during logout');
       }
@@ -59,7 +59,7 @@ export default function AvatarSettings({ minecraftUUID }) {
           <p>Signed in as</p>
           <p className='font-bold'>{username}</p>
         </DropdownItem>
-        <DropdownItem key='settings' href={Pages.SETTINGS}>
+        <DropdownItem key='settings' href={Page.SETTINGS}>
           Settings
         </DropdownItem>
         <DropdownItem key='logout' onPress={handleLogout}>

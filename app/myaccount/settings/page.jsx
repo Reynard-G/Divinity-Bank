@@ -14,12 +14,12 @@ import useSWR from 'swr';
 
 import UserDashboardLayout from '@/components/Layout/UserDashboardLayout';
 import LoadingSpinner from '@/components/Loading/LoadingSpinner';
-import APIs from '@/constants/APIs';
-import Pages from '@/constants/Pages';
+import API from '@/constants/API';
+import Page from '@/constants/Page';
 import fetcher from '@/utils/fetcher';
 
 export default function Settings() {
-  const { data, isLoading, error } = useSWR(APIs.USER, fetcher);
+  const { data, isLoading, error } = useSWR(API.USER, fetcher);
   const [minecraftUsername, setMinecraftUsername] = useState('');
   const [minecraftUUID, setMinecraftUUID] = useState('');
   const [discordUsername, setDiscordUsername] = useState('');
@@ -195,7 +195,7 @@ export default function Settings() {
                 <Link
                   size='sm'
                   underline='hover'
-                  href={Pages.FORGOT_PASSWORD}
+                  href={Page.FORGOT_PASSWORD}
                   className='text-primary-500'
                 >
                   I forgot my password

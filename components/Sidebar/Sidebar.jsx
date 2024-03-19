@@ -6,20 +6,20 @@ import { ScrollShadow } from '@nextui-org/scroll-shadow';
 
 import SidebarBrand from '@/components/Brand/SidebarBrand';
 import SidebarItems from '@/components/Sidebar/SidebarItems';
-import APIs from '@/constants/APIs';
-import Pages from '@/constants/Pages';
+import API from '@/constants/API';
+import Page from '@/constants/Page';
 
 export default function Sidebar({ items = [] }) {
   const router = useRouter();
 
   const handleLogout = async () => {
     try {
-      const res = await fetch(APIs.LOGOUT, {
+      const res = await fetch(API.LOGOUT, {
         method: 'POST',
       });
 
       if (res.ok) {
-        router.replace(Pages.LOGIN);
+        router.replace(Page.LOGIN);
       } else {
         console.error('An error occurred during logout');
       }
