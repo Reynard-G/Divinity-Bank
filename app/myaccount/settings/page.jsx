@@ -1,21 +1,22 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import useSWR from 'swr';
-import { Divider } from '@nextui-org/divider';
+import { useEffect, useState } from 'react';
+
+import { Icon } from '@iconify/react';
 import { Avatar } from '@nextui-org/avatar';
 import { Badge } from '@nextui-org/badge';
 import { Button } from '@nextui-org/button';
-import { Popover, PopoverTrigger, PopoverContent } from '@nextui-org/popover';
+import { Divider } from '@nextui-org/divider';
 import { Input } from '@nextui-org/input';
+import { Popover, PopoverContent, PopoverTrigger } from '@nextui-org/popover';
 import { Link } from '@nextui-org/react';
-import { Icon } from '@iconify/react';
+import useSWR from 'swr';
 
-import fetcher from '@/utils/fetcher';
 import UserDashboardLayout from '@/components/Layout/UserDashboardLayout';
 import LoadingSpinner from '@/components/Loading/LoadingSpinner';
-import Pages from '@/constants/Pages';
 import APIs from '@/constants/APIs';
+import Pages from '@/constants/Pages';
+import fetcher from '@/utils/fetcher';
 
 export default function Settings() {
   const { data, isLoading, error } = useSWR(APIs.USER, fetcher);

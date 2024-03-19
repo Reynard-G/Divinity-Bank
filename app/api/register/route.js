@@ -1,6 +1,7 @@
-import prisma from '@/lib/db';
 import { hash } from 'bcrypt';
 import { v4 as uuidv4 } from 'uuid';
+
+import prisma from '@/lib/db';
 import redashUUID from '@/utils/redashUUID';
 
 export async function POST(req) {

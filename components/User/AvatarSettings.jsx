@@ -1,17 +1,18 @@
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import useSWR from 'swr';
+
 import { Avatar } from '@nextui-org/avatar';
 import {
   Dropdown,
-  DropdownMenu,
   DropdownItem,
+  DropdownMenu,
   DropdownTrigger,
 } from '@nextui-org/dropdown';
+import useSWR from 'swr';
 
-import fetcher from '@/utils/fetcher';
-import Pages from '@/constants/Pages';
 import APIs from '@/constants/APIs';
+import Pages from '@/constants/Pages';
+import fetcher from '@/utils/fetcher';
 
 export default function AvatarSettings({ minecraftUUID }) {
   const { data, error } = useSWR(APIs.USER, fetcher);

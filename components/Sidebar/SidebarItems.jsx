@@ -1,4 +1,5 @@
 import { usePathname } from 'next/navigation';
+
 import { Listbox, ListboxItem } from '@nextui-org/listbox';
 
 export default function SidebarItems({ items }) {

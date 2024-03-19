@@ -1,12 +1,13 @@
 import { useRouter } from 'next/navigation';
-import { ScrollShadow } from '@nextui-org/scroll-shadow';
-import { Button } from '@nextui-org/button';
+
 import { Icon } from '@iconify/react';
+import { Button } from '@nextui-org/button';
+import { ScrollShadow } from '@nextui-org/scroll-shadow';
 
 import SidebarBrand from '@/components/Brand/SidebarBrand';
 import SidebarItems from '@/components/Sidebar/SidebarItems';
-import Pages from '@/constants/Pages';
 import APIs from '@/constants/APIs';
+import Pages from '@/constants/Pages';
 
 export default function Sidebar({ items = [] }) {
   const router = useRouter();

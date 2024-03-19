@@ -1,17 +1,18 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { Input } from '@nextui-org/input';
-import { Checkbox } from '@nextui-org/checkbox';
-import { Link } from '@nextui-org/link';
-import { Button } from '@nextui-org/button';
 
-import RegisterLayout from '@/components/Layout/RegisterLayout';
+import { Button } from '@nextui-org/button';
+import { Checkbox } from '@nextui-org/checkbox';
+import { Input } from '@nextui-org/input';
+import { Link } from '@nextui-org/link';
+
 import RegisterBrand from '@/components/Brand/RegisterBrand';
 import PasswordVisibleButton from '@/components/Button/PasswordVisibleButton';
-import Pages from '@/constants/Pages';
+import RegisterLayout from '@/components/Layout/RegisterLayout';
 import APIs from '@/constants/APIs';
+import Pages from '@/constants/Pages';
 
 export default function Register() {
   const router = useRouter();

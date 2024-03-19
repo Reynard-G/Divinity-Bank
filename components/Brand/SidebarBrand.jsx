@@ -1,4 +1,5 @@
 import Image from 'next/image';
+
 import { Link } from '@nextui-org/link';
 
 import { chakraPetch } from '@/app/fonts';

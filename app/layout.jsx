@@ -1,7 +1,9 @@
-import './globals.css';
-import Providers from './providers';
 //import { spaceGrotesk } from "@/app/fonts";
 import { Space_Grotesk } from 'next/font/google';
+
+import Providers from '@/providers.jsx';
+
+import './globals.css';
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],

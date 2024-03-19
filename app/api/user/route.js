@@ -1,5 +1,7 @@
 import { cookies } from 'next/headers';
+
 import * as jose from 'jose';
+
 import prisma from '@/lib/db';
 
 export async function GET() {

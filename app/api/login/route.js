@@ -1,7 +1,9 @@
 import { cookies } from 'next/headers';
-import prisma from '@/lib/db';
+
 import { compare } from 'bcrypt';
 import * as jose from 'jose';
+
+import prisma from '@/lib/db';
 
 export async function POST(req) {
   const { username, password, remember } = await req.json();
