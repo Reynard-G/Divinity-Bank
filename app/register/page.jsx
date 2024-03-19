@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Input } from '@nextui-org/input';
 import { Checkbox } from '@nextui-org/checkbox';
@@ -16,12 +16,17 @@ import APIs from '@/constants/APIs';
 export default function Register() {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
+  const [minecraftUsername, setMinecraftUsername] = useState('');
+  const [discordUsername, setDiscordUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [acceptTerms, setAcceptTerms] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isConfirmPasswordVisible, setIsConfirmPasswordVisible] =
     useState(false);
   const [isUsernameInvalid, setIsUsernameInvalid] = useState(false);
   const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
+  const [isFormValid, setIsFormValid] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -58,6 +63,22 @@ export default function Register() {
     }
   }
 
+  useEffect(() => {
+    setIsFormValid(
+      minecraftUsername &&
+        discordUsername &&
+        password &&
+        confirmPassword &&
+        acceptTerms,
+    );
+  }, [
+    minecraftUsername,
+    discordUsername,
+    password,
+    confirmPassword,
+    acceptTerms,
+  ]);
+
   return (
     <RegisterLayout>
       <RegisterBrand />
@@ -71,6 +92,7 @@ export default function Register() {
             label='Minecraft Username'
             placeholder='Enter your minecraft username'
             isInvalid={isUsernameInvalid}
+            onValueChange={setMinecraftUsername}
             classNames={{
               base: '-mb-[2px]',
               inputWrapper:
@@ -84,6 +106,7 @@ export default function Register() {
             name='discordUsername'
             label='Discord Username'
             placeholder='Enter your discord username'
+            onValueChange={setDiscordUsername}
             classNames={{
               base: '-mb-[2px]',
               inputWrapper:
@@ -104,6 +127,7 @@ export default function Register() {
                 setIsVisible={setIsPasswordVisible}
               />
             }
+            onValueChange={setPassword}
             classNames={{
               base: '-mb-[2px]',
               inputWrapper:
@@ -125,6 +149,7 @@ export default function Register() {
                 setIsVisible={setIsConfirmPasswordVisible}
               />
             }
+            onValueChange={setConfirmPassword}
             classNames={{
               inputWrapper: 'rounded-t-none',
             }}
@@ -146,7 +171,7 @@ export default function Register() {
         <Button
           color='primary'
           isLoading={isLoading}
-          isDisabled={!acceptTerms}
+          isDisabled={!isFormValid}
           type='submit'
         >
           Sign Up

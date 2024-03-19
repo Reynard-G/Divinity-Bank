@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { Input } from '@nextui-org/input';
 import { Checkbox } from '@nextui-org/checkbox';
@@ -19,6 +19,9 @@ export default function Login() {
   const [rememberMe, setRememberMe] = useState(false);
   const [isPasswordVisible, setIsPasswordVisible] = useState(false);
   const [isCredentialsInvalid, setIsCredentialsInvalid] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [isFormValid, setIsFormValid] = useState(false);
 
   async function handleSubmit(event) {
     event.preventDefault();
@@ -40,6 +43,7 @@ export default function Login() {
 
       // Handle response
       if (res.ok) {
+        setIsCredentialsInvalid(false);
         router.push(Pages.DASHBOARD);
       } else {
         setIsCredentialsInvalid(true);
@@ -51,6 +55,11 @@ export default function Login() {
       setIsLoading(false);
     }
   }
+
+  useEffect(() => {
+    // If username and password are not empty, form is valid
+    setIsFormValid(username && password);
+  }, [username, password]);
 
   return (
     <LoginLayout>
@@ -65,6 +74,7 @@ export default function Login() {
             label='Username'
             placeholder='Enter your username'
             isInvalid={isCredentialsInvalid}
+            onValueChange={setUsername}
             classNames={{
               base: '-mb-[2px]',
               inputWrapper:
@@ -88,6 +98,7 @@ export default function Login() {
                 setIsVisible={setIsPasswordVisible}
               />
             }
+            onValueChange={setPassword}
             classNames={{
               inputWrapper: 'rounded-t-none',
             }}
@@ -109,7 +120,12 @@ export default function Login() {
           </Link>
         </div>
 
-        <Button color='primary' isLoading={isLoading} type='submit'>
+        <Button
+          isDisabled={!isFormValid}
+          color='primary'
+          isLoading={isLoading}
+          type='submit'
+        >
           Log In
         </Button>
       </form>

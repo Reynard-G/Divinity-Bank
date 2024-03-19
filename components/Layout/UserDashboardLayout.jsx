@@ -37,7 +37,7 @@ export default function DashboardLayout({ children }) {
           </header>
 
           <main className='mt-4 h-dvh w-full overflow-visible'>
-            <div className='flex h-full w-full flex-col gap-4 rounded-medium border-small border-divider'>
+            <div className='flex h-full w-full flex-col gap-4 rounded-medium border-small border-divider p-4'>
               {children}
             </div>
           </main>
