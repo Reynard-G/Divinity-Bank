@@ -1,11 +1,18 @@
 import { useEffect, useState } from 'react';
 
 import { Icon } from '@iconify/react';
+import useSWR from 'swr';
 
 import UserSidebar from '@/components/Sidebar/UserSidebar';
 import AvatarSettings from '@/components/User/AvatarSettings';
+import API from '@/constants/API';
+import fetcher from '@/utils/fetcher';
 
 export default function DashboardLayout({ children }) {
+  const { data, error } = useSWR(API.USER, fetcher);
+  const [minecraftUUID, setMinecraftUUID] = useState(
+    '51013591-911c-4b10-bdf6-e90833b8fe23',
+  );
   const [greetingText, setGreetingText] = useState('');
   const [greetingIcon, setGreetingIcon] = useState('');
 
@@ -24,6 +31,12 @@ export default function DashboardLayout({ children }) {
     }
   }, []);
 
+  useEffect(() => {
+    if (data) {
+      setMinecraftUUID(data?.minecraft_uuid);
+    }
+  }, [data]);
+
   return (
     <div className='flex h-screen items-center justify-center dark'>
       <div className='flex h-dvh w-full'>
@@ -38,11 +51,11 @@ export default function DashboardLayout({ children }) {
             </h2>
 
             <div className='flex flex-row items-center gap-2'>
-              <AvatarSettings minecraftUUID='01e47070-8bfa-4666-b405-e9da208d626d' />
+              <AvatarSettings minecraftUUID={minecraftUUID} />
             </div>
           </header>
 
-          <main className='mt-4 h-dvh w-full overflow-visible'>
+          <main className='mt-4 w-full overflow-visible'>
             <div className='flex w-full flex-col gap-4 rounded-medium border-small border-divider p-4'>
               {children}
             </div>
