@@ -15,15 +15,16 @@ export async function GET() {
     const jwtValue = cookie?.value;
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
-    const { uuid } = jose.decodeJwt(jwtValue, secret);
+    const { id } = jose.decodeJwt(jwtValue, secret);
 
-    if (!uuid) {
+    if (!id) {
+      cookies().delete('authorization');
       return new Response('Unauthorized', { status: 401 });
     }
 
     let user = await prisma.users.findFirst({
       where: {
-        uuid: uuid,
+        id: id,
       },
     });
 

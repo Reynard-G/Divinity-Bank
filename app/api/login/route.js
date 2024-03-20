@@ -31,7 +31,7 @@ export async function POST(req) {
   const secret = new TextEncoder().encode(process.env.JWT_SECRET);
   const expirationTime = remember ? '30 d' : '1 hr';
 
-  const token = await new jose.SignJWT({ uuid: user.uuid })
+  const token = await new jose.SignJWT({ id: user.id })
     .setProtectedHeader({ alg: 'HS256' })
     .setIssuedAt()
     .setExpirationTime(expirationTime)

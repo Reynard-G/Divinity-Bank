@@ -106,7 +106,7 @@ export default function Settings() {
           </div>
 
           <div className='flex flex-row gap-8 px-6'>
-            <div className='flex w-1/2 flex-col gap-4'>
+            <div className='flex w-full flex-col gap-4 lg:w-1/2'>
               <h2 className='text-xl font-bold'>Account Information</h2>
 
               <Input
@@ -153,7 +153,7 @@ export default function Settings() {
               </div>
             </div>
 
-            <div className='w-1/2'>
+            <div className='hidden lg:flex lg:w-1/2'>
               <div className='flex flex-col gap-1'>
                 <p className='text-default-500'>
                   <span className='font-bold'>Created At:</span>{' '}
@@ -168,7 +168,7 @@ export default function Settings() {
           </div>
 
           <div className='flex flex-row gap-8 px-6'>
-            <div className='flex w-1/2 flex-col gap-4'>
+            <div className='flex w-full flex-col gap-4 lg:w-1/2'>
               <h2 className='text-xl font-bold'>Change Password</h2>
 
               <Input
@@ -203,7 +203,7 @@ export default function Settings() {
               </div>
             </div>
 
-            <div className='w-1/2'>
+            <div className='hidden lg:flex lg:w-1/2'>
               {/*
                 <h2 className='text-xl font-bold'>Make sure it's:</h2>
                 

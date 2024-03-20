@@ -1,5 +1,4 @@
 import { hash } from 'bcrypt';
-import { v4 as uuidv4 } from 'uuid';
 
 import prisma from '@/lib/db';
 import redashUUID from '@/utils/redashUUID';
@@ -33,7 +32,6 @@ export async function POST(req) {
 
   await prisma.users.create({
     data: {
-      uuid: uuidv4(),
       minecraft_uuid: redashUUID(minecraftUser.id),
       minecraft_username: minecraftUsername,
       discord_username: discordUsername,

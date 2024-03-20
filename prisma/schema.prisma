@@ -25,10 +25,9 @@ model Transactions {
 
 model Users {
   id                 Int           @id @default(autoincrement()) @db.UnsignedInt
-  uuid               String        @db.VarChar(36)
-  minecraft_uuid     String        @db.VarChar(36)
-  minecraft_username String        @db.VarChar(24)
-  discord_username   String        @db.VarChar(32)
+  minecraft_uuid     String        @unique(map: "minecraft_uuid") @db.VarChar(36)
+  minecraft_username String        @unique(map: "minecraft_username") @db.VarChar(24)
+  discord_username   String        @unique(map: "discord_username") @db.VarChar(32)
   password           String        @db.Char(60)
   created_at         DateTime      @default(now()) @db.Timestamp(0)
   updated_at         DateTime      @default(now()) @db.Timestamp(0)
