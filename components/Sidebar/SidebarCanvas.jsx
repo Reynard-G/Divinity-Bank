@@ -9,7 +9,7 @@ import SidebarItems from '@/components/Sidebar/SidebarItems';
 import API from '@/constants/API';
 import Page from '@/constants/Page';
 
-export default function Sidebar({ items = [] }) {
+export default function SidebarCanvas({ items = [] }) {
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -29,7 +29,7 @@ export default function Sidebar({ items = [] }) {
   };
 
   return (
-    <div className='fixed flex h-full w-full max-w-[288px] flex-1 flex-col border-r-small border-divider p-6 transition-[transform,opacity,margin] duration-250 ease-in-out'>
+    <div className='fixed flex h-full w-full max-w-[288px] flex-1 flex-col border-r-small border-divider p-6'>
       <SidebarBrand />
 
       <ScrollShadow className='max-h-full flex-1 py-[10vh]'>

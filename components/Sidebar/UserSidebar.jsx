@@ -1,6 +1,6 @@
-import Sidebar from '@/components/Sidebar/Sidebar';
+import SidebarCanvas from '@/components/Sidebar/SidebarCanvas';
 import UserSidebarItem from '@/constants/UserSidebarItem';
 
 export default function UserSidebar() {
-  return <Sidebar items={UserSidebarItem} />;
+  return <SidebarCanvas items={UserSidebarItem} />;
 }
