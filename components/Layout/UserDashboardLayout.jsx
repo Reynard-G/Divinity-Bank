@@ -35,7 +35,7 @@ export default function DashboardLayout({ children }) {
 
   return (
     <div className='flex h-screen items-center justify-center dark'>
-      <div className='flex h-dvh w-full'>
+      <div className='flex h-lvh w-full'>
         <div className='relative hidden w-72 max-w-[288px] flex-1 flex-col bg-transparent sm:flex'>
           <UserSidebar />
 

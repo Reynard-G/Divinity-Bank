@@ -2,13 +2,10 @@
 
 import { useEffect, useState } from 'react';
 
-import { Icon } from '@iconify/react';
 import { Avatar } from '@nextui-org/avatar';
-import { Badge } from '@nextui-org/badge';
 import { Button } from '@nextui-org/button';
 import { Divider } from '@nextui-org/divider';
 import { Input } from '@nextui-org/input';
-import { Popover, PopoverContent, PopoverTrigger } from '@nextui-org/popover';
 import { Link } from '@nextui-org/react';
 import useSWR from 'swr';
 

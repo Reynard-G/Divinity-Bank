@@ -42,11 +42,9 @@ export default function SidebarDrawer({
         }}
       >
         <ModalContent>
-          {(onClose) => (
-            <ModalBody>
-              <SidebarCanvas items={UserSidebarItem} />
-            </ModalBody>
-          )}
+          <ModalBody>
+            <SidebarCanvas items={UserSidebarItem} />
+          </ModalBody>
         </ModalContent>
       </Modal>
     </div>
