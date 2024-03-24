@@ -1,4 +1,4 @@
-export default async function minecraftProfileFromUUID({ uuid }) {
+export default async function minecraftProfileFromUUID(uuid) {
   try {
     const mojangResponse = await fetch(
       `https://sessionserver.mojang.com/session/minecraft/profile/${uuid}`,

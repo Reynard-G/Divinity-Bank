@@ -1,6 +1,4 @@
-export default async function minecraftProfileFromUsername({
-  minecraftUsername,
-}) {
+export default async function minecraftProfileFromUsername(minecraftUsername) {
   try {
     const mojangResponse = await fetch(
       `https://api.mojang.com/users/profiles/minecraft/${minecraftUsername}`,

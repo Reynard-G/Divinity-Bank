@@ -3,11 +3,7 @@ import { Modal, ModalBody, ModalContent } from '@nextui-org/modal';
 import SidebarCanvas from '@/components/Sidebar/SidebarCanvas';
 import UserSidebarItem from '@/constants/UserSidebarItem';
 
-export default function SidebarDrawer({
-  isOpen,
-  onOpenChange,
-  ...props
-}) {
+export default function SidebarDrawer({ isOpen, onOpenChange, ...props }) {
   return (
     <div {...props}>
       <Modal

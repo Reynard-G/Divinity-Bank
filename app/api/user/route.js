@@ -3,6 +3,7 @@ import { cookies } from 'next/headers';
 import { decodeJwt } from 'jose';
 
 import prisma from '@/lib/db';
+import minecraftProfileFromUUID from '@/utils/minecraftProfileFromUUID';
 
 export async function GET() {
   const cookie = cookies().get('authorization');
@@ -44,6 +45,20 @@ export async function GET() {
       created_at: Math.floor(new Date(user.created_at).getTime() / 1000),
       updated_at: Math.floor(new Date(user.updated_at).getTime() / 1000),
     };
+
+    // Check if minecraft_username has changed
+    // If it has, update the database
+    const minecraftProfile = await minecraftProfileFromUUID(
+      user.minecraft_uuid,
+    );
+    if (minecraftProfile?.name !== user.minecraft_username) {
+      await prisma.users.update({
+        where: { id },
+        data: { minecraft_username: minecraftProfile?.name },
+      });
+
+      formattedUser.minecraft_username = minecraftProfile?.name;
+    }
 
     return new Response(JSON.stringify(formattedUser), { status: 200 });
   } catch (error) {
