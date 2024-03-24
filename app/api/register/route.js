@@ -1,7 +1,7 @@
 import { hash } from 'bcrypt';
 
 import prisma from '@/lib/db';
-import doesMinecraftUsernameExist from '@/utils/doesMinecraftUsernameExist';
+import minecraftProfileFromUsername from '@/utils/minecraftProfileFromUsername';
 import redashUUID from '@/utils/redashUUID';
 
 export async function POST(req) {
@@ -20,7 +20,7 @@ export async function POST(req) {
     return new Response('Username already exists', { status: 409 });
   }
 
-  const minecraftUser = await doesMinecraftUsernameExist(minecraftUsername);
+  const minecraftUser = await minecraftProfileFromUsername({ minecraftUsername });
   if (!minecraftUser) {
     return new Response('Minecraft username is invalid or does not exist', {
       status: 400,
