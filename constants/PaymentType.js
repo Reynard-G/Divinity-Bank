@@ -4,4 +4,4 @@ export default {
   TRANSFER: 'TRANSFER',
   ACH: 'ACH',
   INTEREST: 'INTEREST',
-}
+};
