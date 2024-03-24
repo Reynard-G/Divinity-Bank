@@ -20,7 +20,9 @@ export async function POST(req) {
     return new Response('Username already exists', { status: 409 });
   }
 
-  const minecraftUser = await minecraftProfileFromUsername({ minecraftUsername });
+  const minecraftUser = await minecraftProfileFromUsername({
+    minecraftUsername,
+  });
   if (!minecraftUser) {
     return new Response('Minecraft username is invalid or does not exist', {
       status: 400,
