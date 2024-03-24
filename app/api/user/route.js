@@ -1,6 +1,6 @@
 import { cookies } from 'next/headers';
 
-import * as jose from 'jose';
+import { decodeJwt } from 'jose';
 
 import prisma from '@/lib/db';
 
@@ -12,31 +12,40 @@ export async function GET() {
   }
 
   try {
-    const jwtValue = cookie?.value;
+    const jwtValue = cookie.value;
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
 
-    const { id } = jose.decodeJwt(jwtValue, secret);
+    const { id } = decodeJwt(jwtValue, secret);
 
     if (!id) {
       cookies().delete('authorization');
       return new Response('Unauthorized', { status: 401 });
     }
 
-    let user = await prisma.users.findFirst({
-      where: {
-        id: id,
+    const user = await prisma.users.findFirst({
+      where: { id },
+      select: {
+        id: true,
+        discord_username: true,
+        minecraft_uuid: true,
+        minecraft_username: true,
+        created_at: true,
+        updated_at: true,
       },
     });
 
-    if (user) {
-      user.created_at = Math.floor(new Date(user.created_at).getTime() / 1000);
-      user.updated_at = Math.floor(new Date(user.updated_at).getTime() / 1000);
-    } else {
+    if (!user) {
       cookies().delete('authorization');
       return new Response('User not found', { status: 404 });
     }
 
-    return new Response(JSON.stringify(user), { status: 200 });
+    const formattedUser = {
+      ...user,
+      created_at: Math.floor(new Date(user.created_at).getTime() / 1000),
+      updated_at: Math.floor(new Date(user.updated_at).getTime() / 1000),
+    };
+
+    return new Response(JSON.stringify(formattedUser), { status: 200 });
   } catch (error) {
     console.error(error);
     return new Response('Unauthorized', { status: 401 });

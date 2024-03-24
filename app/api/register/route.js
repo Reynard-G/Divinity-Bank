@@ -10,6 +10,9 @@ export async function POST(req) {
     where: {
       minecraft_username: minecraftUsername,
     },
+    select: {
+      id: true,
+    },
   });
 
   if (user) {
