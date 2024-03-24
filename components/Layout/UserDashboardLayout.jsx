@@ -10,6 +10,7 @@ import UserSidebar from '@/components/Sidebar/UserSidebar';
 import AvatarSettings from '@/components/User/AvatarSettings';
 import API from '@/constants/API';
 import fetcher from '@/utils/fetcher';
+import greetingBasedOnTime from '@/utils/greetingBasedOnTime';
 
 export default function DashboardLayout({ children }) {
   const { data, error } = useSWR(API.USER, fetcher);
@@ -21,18 +22,9 @@ export default function DashboardLayout({ children }) {
   const [greetingIcon, setGreetingIcon] = useState('');
 
   useEffect(() => {
-    const currentHour = new Date().getHours();
-
-    if (currentHour >= 5 && currentHour < 12) {
-      setGreetingText('Good Morning!');
-      setGreetingIcon('meteocons:fog-day-fill');
-    } else if (currentHour >= 12 && currentHour < 18) {
-      setGreetingText('Good Afternoon!');
-      setGreetingIcon('meteocons:clear-day-fill');
-    } else {
-      setGreetingText('Good Night!');
-      setGreetingIcon('meteocons:fog-night-fill');
-    }
+    const { text, icon } = greetingBasedOnTime();
+    setGreetingText(text);
+    setGreetingIcon(icon);
   }, []);
 
   useEffect(() => {
