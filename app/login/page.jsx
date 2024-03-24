@@ -37,6 +37,7 @@ export default function Login() {
         className='flex flex-col gap-3'
         action={async (formData) => {
           await login(formData).then((user) => {
+            setIsLoading(false);
             if (user) {
               setIsCredentialsInvalid(false);
               router.push(Page.DASHBOARD);
@@ -45,6 +46,7 @@ export default function Login() {
             }
           });
         }}
+        onSubmit={() => setIsLoading(true)}
       >
         <div className='flex flex-col'>
           <Input
