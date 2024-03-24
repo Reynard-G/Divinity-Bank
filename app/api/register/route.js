@@ -1,6 +1,7 @@
 import { hash } from 'bcrypt';
 
 import prisma from '@/lib/db';
+import doesMinecraftUsernameExist from '@/utils/doesMinecraftUsernameExist';
 import redashUUID from '@/utils/redashUUID';
 
 export async function POST(req) {
@@ -19,13 +20,8 @@ export async function POST(req) {
     return new Response('Username already exists', { status: 409 });
   }
 
-  // Check if username exists in Minecraft API
-  const mojangResponse = await fetch(
-    `https://api.mojang.com/users/profiles/minecraft/${minecraftUsername}`,
-  );
-  const minecraftUser = await mojangResponse.json();
-
-  if (!mojangResponse.ok) {
+  const minecraftUser = await doesMinecraftUsernameExist(minecraftUsername);
+  if (!minecraftUser) {
     return new Response('Minecraft username is invalid or does not exist', {
       status: 400,
     });
