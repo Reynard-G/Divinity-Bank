@@ -11,8 +11,8 @@ import { Link } from '@nextui-org/link';
 import LoginBrand from '@/components/Brand/LoginBrand';
 import PasswordVisibleButton from '@/components/Button/PasswordVisibleButton';
 import LoginLayout from '@/components/Layout/LoginLayout';
-import API from '@/constants/API';
 import Page from '@/constants/Page';
+import { login } from '@/lib/actions/form.actions';
 
 export default function Login() {
   const router = useRouter();
@@ -24,39 +24,6 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [isFormValid, setIsFormValid] = useState(false);
 
-  async function handleSubmit(event) {
-    event.preventDefault();
-
-    // Prepare form data
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData);
-
-    setIsLoading(true);
-    try {
-      // Make API request
-      const res = await fetch(API.LOGIN, {
-        method: 'POST',
-        body: JSON.stringify({ ...data, remember: rememberMe }),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      // Handle response
-      if (res.ok) {
-        setIsCredentialsInvalid(false);
-        router.push(Page.DASHBOARD);
-      } else {
-        setIsCredentialsInvalid(true);
-      }
-    } catch (error) {
-      console.error('Error during login:', error);
-      // Handle error if needed
-    } finally {
-      setIsLoading(false);
-    }
-  }
-
   useEffect(() => {
     // If username and password are not empty, form is valid
     setIsFormValid(username && password);
@@ -66,13 +33,25 @@ export default function Login() {
     <LoginLayout>
       <LoginBrand />
 
-      <form className='flex flex-col gap-3' onSubmit={handleSubmit}>
+      <form
+        className='flex flex-col gap-3'
+        action={async (formData) => {
+          await login(formData).then((user) => {
+            if (user) {
+              setIsCredentialsInvalid(false);
+              router.push(Page.DASHBOARD);
+            } else {
+              setIsCredentialsInvalid(true);
+            }
+          });
+        }}
+      >
         <div className='flex flex-col'>
           <Input
             type='text'
             variant='bordered'
-            name='username'
-            label='Username'
+            name='minecraftUsername'
+            label='Minecraft Username'
             placeholder='Enter your username'
             isInvalid={isCredentialsInvalid}
             onValueChange={setUsername}
@@ -108,7 +87,8 @@ export default function Login() {
 
         <div className='flex items-center justify-between'>
           <Checkbox
-            name='remember me'
+            name='remember'
+            value={rememberMe}
             size='md'
             isSelected={rememberMe}
             onValueChange={setRememberMe}

@@ -70,7 +70,8 @@ export default function Register() {
         discordUsername &&
         password &&
         confirmPassword &&
-        acceptTerms,
+        acceptTerms &&
+        password === confirmPassword,
     );
   }, [
     minecraftUsername,
