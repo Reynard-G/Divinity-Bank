@@ -16,25 +16,14 @@ import Page from '@/constants/Page';
 import fetcher from '@/utils/fetcher';
 
 export default function Settings() {
-  const { data, isLoading, error } = useSWR(API.USER, fetcher);
+  const { data, isLoading } = useSWR(API.USER, fetcher);
   const [minecraftUUID, setMinecraftUUID] = useState('');
   const [discordUsername, setDiscordUsername] = useState('');
-  const [accountCreatedAt, setAccountCreatedAt] = useState('');
-  const [accountUpdatedAt, setAccountUpdatedAt] = useState('');
 
   useEffect(() => {
     if (data) {
       setMinecraftUUID(data?.minecraft_uuid || 'Unknown UUID');
       setDiscordUsername(data?.discord_username || 'Unknown Username');
-
-      const createdAt = data?.created_at
-        ? new Date(data.created_at * 1000).toLocaleString()
-        : 'Unknown Date';
-      const updatedAt = data?.updated_at
-        ? new Date(data.updated_at * 1000).toLocaleString()
-        : 'Unknown Date';
-      setAccountCreatedAt(createdAt);
-      setAccountUpdatedAt(updatedAt);
     }
   }, [data]);
 

@@ -5,7 +5,6 @@ import UserSidebarItem from '@/constants/UserSidebarItem';
 
 export default function SidebarDrawer({
   isOpen,
-  onClose,
   onOpenChange,
   ...props
 }) {

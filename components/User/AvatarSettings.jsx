@@ -15,7 +15,7 @@ import Page from '@/constants/Page';
 import fetcher from '@/utils/fetcher';
 
 export default function AvatarSettings({ minecraftUUID }) {
-  const { data, error } = useSWR(API.USER, fetcher);
+  const { data } = useSWR(API.USER, fetcher);
   const router = useRouter();
   const [username, setUsername] = useState('Loading...');
 

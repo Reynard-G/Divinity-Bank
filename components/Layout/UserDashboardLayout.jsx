@@ -13,7 +13,7 @@ import fetcher from '@/utils/fetcher';
 import greetingBasedOnTime from '@/utils/greetingBasedOnTime';
 
 export default function DashboardLayout({ children }) {
-  const { data, error } = useSWR(API.USER, fetcher);
+  const { data } = useSWR(API.USER, fetcher);
   const { isOpen, onOpen, onOpenChange } = useDisclosure(false);
   const [minecraftUUID, setMinecraftUUID] = useState(
     '51013591-911c-4b10-bdf6-e90833b8fe23',
