@@ -8,16 +8,14 @@ export async function GET() {
   const cookie = cookies().get('authorization')?.value;
 
   if (!cookie) {
+    cookies().delete('authorization');
     return new Response('Unauthorized', { status: 401 });
   }
 
   try {
     const id = (await getPayloadFromJWT(cookie))?.id;
 
-    if (!id) {
-      cookies().delete('authorization');
-      return new Response('Unauthorized', { status: 401 });
-    }
+    if (!id) return new Response('Unauthorized', { status: 401 });
 
     const user = await prisma.users.findFirst({
       where: { id },
@@ -31,10 +29,7 @@ export async function GET() {
       },
     });
 
-    if (!user) {
-      cookies().delete('authorization');
-      return new Response('User not found', { status: 404 });
-    }
+    if (!user) return new Response('User not found', { status: 404 });
 
     const formattedUser = {
       ...user,
