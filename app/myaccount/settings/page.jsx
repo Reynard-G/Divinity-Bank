@@ -71,6 +71,7 @@ export default function Settings() {
                     });
                   }}
                   onSubmit={() => setIsAccountUpdating(true)}
+                  className='flex flex-col gap-2'
                 >
                   <Input
                     isDisabled={true}
@@ -96,7 +97,7 @@ export default function Settings() {
                     }}
                   />
 
-                  <div className='flex flex-row gap-2'>
+                  <div className='flex flex-row'>
                     <Button
                       type='submit'
                       isDisabled={
