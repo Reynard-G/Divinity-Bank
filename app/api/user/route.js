@@ -7,11 +7,6 @@ import minecraftProfileFromUUID from '@/utils/minecraftProfileFromUUID';
 export async function GET() {
   const cookie = cookies().get('authorization')?.value;
 
-  if (!cookie) {
-    cookies().delete('authorization');
-    return new Response('Unauthorized', { status: 401 });
-  }
-
   try {
     const id = (await getPayloadFromJWT(cookie))?.id;
 
