@@ -1,3 +1,5 @@
+import { cookies } from 'next/headers';
+
 import { jwtVerify } from 'jose';
 
 export default async function getPayloadFromJWT(jwt) {
@@ -5,6 +7,8 @@ export default async function getPayloadFromJWT(jwt) {
     const jwtSecret = process.env.JWT_SECRET;
     const encodedJwtSecret = new TextEncoder().encode(jwtSecret);
     const { payload } = await jwtVerify(jwt, encodedJwtSecret);
+
+    if (!payload) cookies().delete('authorization');
 
     return payload;
   } catch (error) {
