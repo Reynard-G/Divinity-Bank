@@ -1,22 +1,18 @@
 import { cookies } from 'next/headers';
 
-import { decodeJwt } from 'jose';
-
 import prisma from '@/lib/db';
+import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 import minecraftProfileFromUUID from '@/utils/minecraftProfileFromUUID';
 
 export async function GET() {
-  const cookie = cookies().get('authorization');
+  const cookie = cookies().get('authorization')?.value;
 
   if (!cookie) {
     return new Response('Unauthorized', { status: 401 });
   }
 
   try {
-    const jwtValue = cookie.value;
-    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
-
-    const { id } = decodeJwt(jwtValue, secret);
+    const id = (await getPayloadFromJWT(cookie))?.id;
 
     if (!id) {
       cookies().delete('authorization');
