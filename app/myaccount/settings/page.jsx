@@ -13,17 +13,19 @@ import UserDashboardLayout from '@/components/Layout/UserDashboardLayout';
 import LoadingSpinner from '@/components/Loading/LoadingSpinner';
 import API from '@/constants/API';
 import Page from '@/constants/Page';
+import { updateAccountInfo } from '@/lib/actions/form.actions';
 import fetcher from '@/utils/fetcher';
 
 export default function Settings() {
-  const { data, isLoading } = useSWR(API.USER, fetcher);
+  const { data, isLoading, mutate } = useSWR(API.USER, fetcher);
+  const [isAccountUpdating, setIsAccountUpdating] = useState(false);
   const [minecraftUUID, setMinecraftUUID] = useState('');
   const [discordUsername, setDiscordUsername] = useState('');
 
   useEffect(() => {
     if (data) {
-      setMinecraftUUID(data?.minecraft_uuid || 'Unknown UUID');
-      setDiscordUsername(data?.discord_username || 'Unknown Username');
+      setMinecraftUUID(data?.minecraft_uuid);
+      setDiscordUsername(data?.discord_username);
     }
   }, [data]);
 
@@ -51,13 +53,28 @@ export default function Settings() {
               />
             </div>
 
-            <div className='flex flex-col gap-8 lg:w-2/3'>
-              <div className='flex flex-row gap-8 '>
-                <div className='flex w-full flex-col gap-4'>
-                  <h2 className='text-xl font-bold'>Account Information</h2>
+            <div className='flex flex-col lg:w-2/3'>
+              <div className='mt-2 flex w-full flex-col gap-4'>
+                <h2 className='text-xl font-bold'>Account Information</h2>
 
+                <form
+                  action={async (formData) => {
+                    await updateAccountInfo(formData).then((user) => {
+                      if (user) {
+                        setIsAccountUpdating(false);
+                        setDiscordUsername(user.discord_username);
+                        mutate({
+                          ...data,
+                          discord_username: user.discord_username,
+                        });
+                      }
+                    });
+                  }}
+                  onSubmit={() => setIsAccountUpdating(true)}
+                >
                   <Input
                     isDisabled={true}
+                    name='minecraftUUID'
                     label='Minecraft UUID'
                     variant='bordered'
                     description='Your minecraft UUID is used to verify your account with your username.'
@@ -68,6 +85,7 @@ export default function Settings() {
                     }}
                   />
                   <Input
+                    name='discordUsername'
                     label='Discord Username'
                     variant='bordered'
                     value={discordUsername}
@@ -80,55 +98,59 @@ export default function Settings() {
 
                   <div className='flex flex-row gap-2'>
                     <Button
-                      isDisabled={true}
-                      isLoading={false}
+                      type='submit'
+                      isDisabled={
+                        minecraftUUID === data?.minecraft_uuid &&
+                        discordUsername === data?.discord_username
+                      }
+                      isLoading={isAccountUpdating}
                       color='primary'
                       variant='ghost'
                     >
                       Update Account
                     </Button>
                   </div>
-                </div>
+                </form>
               </div>
 
-              <div className='flex flex-row gap-8'>
-                <div className='flex w-full flex-col gap-4'>
-                  <h2 className='text-xl font-bold'>Change Password</h2>
+              <div className='mt-6 flex w-full flex-col gap-4'>
+                <h2 className='text-xl font-bold'>Change Password</h2>
 
-                  <Input
-                    type='password'
-                    variant='bordered'
-                    label='Current Password'
-                  />
-                  <Input
-                    type='password'
-                    variant='bordered'
-                    label='New Password'
-                  />
-                  <Input
-                    type='password'
-                    variant='bordered'
-                    label='Confirm New Password'
-                  />
+                <Input
+                  type='password'
+                  variant='bordered'
+                  label='Current Password'
+                />
+                <Input
+                  type='password'
+                  variant='bordered'
+                  name='password'
+                  label='New Password'
+                />
+                <Input
+                  type='password'
+                  variant='bordered'
+                  name='confirmPassword'
+                  label='Confirm New Password'
+                />
 
-                  <div className='flex flex-row gap-2'>
-                    <Button
-                      isDisabled={true}
-                      isLoading={false}
-                      color='primary'
-                      variant='ghost'
-                    >
-                      Update Password
-                    </Button>
-                    <Link
-                      size='sm'
-                      underline='hover'
-                      href={Page.FORGOT_PASSWORD}
-                      className='text-primary-500'
-                    >
-                      I forgot my password
-                    </Link>
-                  </div>
+                <div className='flex flex-row gap-2'>
+                  <Button
+                    isDisabled={true}
+                    isLoading={false}
+                    color='primary'
+                    variant='ghost'
+                  >
+                    Update Password
+                  </Button>
+                  <Link
+                    size='sm'
+                    underline='hover'
+                    href={Page.FORGOT_PASSWORD}
+                    className='text-primary-500'
+                  >
+                    I forgot my password
+                  </Link>
                 </div>
               </div>
             </div>
