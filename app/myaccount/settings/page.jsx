@@ -1,6 +1,7 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
+import { useRouter } from 'next/navigation';
 
 import { Avatar } from '@nextui-org/avatar';
 import { Button } from '@nextui-org/button';
@@ -13,14 +14,20 @@ import UserDashboardLayout from '@/components/Layout/UserDashboardLayout';
 import LoadingSpinner from '@/components/Loading/LoadingSpinner';
 import API from '@/constants/API';
 import Page from '@/constants/Page';
-import { updateAccountInfo } from '@/lib/actions/form.actions';
+import { updateAccountInfo, updatePassword } from '@/lib/actions/form.actions';
 import fetcher from '@/utils/fetcher';
 
 export default function Settings() {
   const { data, isLoading, mutate } = useSWR(API.USER, fetcher);
+  const router = useRouter();
   const [isAccountUpdating, setIsAccountUpdating] = useState(false);
+  const [isPasswordUpdating, setIsPasswordUpdating] = useState(false);
+  const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
   const [minecraftUUID, setMinecraftUUID] = useState('');
   const [discordUsername, setDiscordUsername] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
 
   useEffect(() => {
     if (data) {
@@ -117,47 +124,86 @@ export default function Settings() {
               <div className='mt-6 flex w-full flex-col gap-4'>
                 <h2 className='text-xl font-bold'>Change Password</h2>
 
-                <Input
-                  type='password'
-                  variant='bordered'
-                  label='Current Password'
-                />
-                <Input
-                  type='password'
-                  variant='bordered'
-                  name='password'
-                  label='New Password'
-                />
-                <Input
-                  type='password'
-                  variant='bordered'
-                  name='confirmPassword'
-                  label='Confirm New Password'
-                />
+                <form
+                  action={async (formData) => {
+                    await updatePassword(formData).then((success) => {
+                      if (success) {
+                        router.replace(Page.LOGIN);
+                      } else {
+                        setIsPasswordInvalid(true);
+                      }
+                      setIsPasswordUpdating(false);
+                    });
+                  }}
+                  onSubmit={() => setIsPasswordUpdating(true)}
+                  className='flex flex-col gap-2'
+                >
+                  <Input
+                    type='password'
+                    variant='bordered'
+                    label='Current Password'
+                    name='currentPassword'
+                    value={currentPassword}
+                    isInvalid={isPasswordInvalid}
+                    errorMessage={isPasswordInvalid && 'Invalid password'}
+                    onValueChange={(value) => {
+                      setCurrentPassword(value);
+                      setIsPasswordInvalid(false);
+                    }}
+                  />
+                  <Input
+                    type='password'
+                    variant='bordered'
+                    name='newPassword'
+                    label='New Password'
+                    value={newPassword}
+                    onValueChange={setNewPassword}
+                  />
+                  <Input
+                    type='password'
+                    variant='bordered'
+                    name='confirmPassword'
+                    label='Confirm New Password'
+                    value={confirmPassword}
+                    isInvalid={confirmPassword && (newPassword !== confirmPassword)}
+                    errorMessage={
+                      confirmPassword &&
+                      newPassword !== confirmPassword &&
+                      'Passwords do not match'
+                    }
+                    onValueChange={setConfirmPassword}
+                  />
 
-                <div className='flex flex-row gap-2'>
-                  <Button
-                    isDisabled={true}
-                    isLoading={false}
-                    color='primary'
-                    variant='ghost'
-                  >
-                    Update Password
-                  </Button>
-                  <Link
-                    size='sm'
-                    underline='hover'
-                    href={Page.FORGOT_PASSWORD}
-                    className='text-primary-500'
-                  >
-                    I forgot my password
-                  </Link>
-                </div>
+                  <div className='flex flex-row gap-2'>
+                    <Button
+                      type='submit'
+                      isDisabled={
+                        currentPassword === '' ||
+                        newPassword === '' ||
+                        confirmPassword === '' ||
+                        newPassword !== confirmPassword
+                      }
+                      isLoading={isPasswordUpdating}
+                      color='primary'
+                      variant='ghost'
+                    >
+                      Update Password
+                    </Button>
+                    <Link
+                      size='sm'
+                      underline='hover'
+                      href={Page.FORGOT_PASSWORD}
+                      className='text-primary-500'
+                    >
+                      I forgot my password
+                    </Link>
+                  </div>
+                </form>
               </div>
             </div>
           </div>
         </>
       )}
-    </UserDashboardLayout>
+    </UserDashboardLayout >
   );
 }
