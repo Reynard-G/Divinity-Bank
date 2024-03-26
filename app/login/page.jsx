@@ -56,7 +56,10 @@ export default function Login() {
             label='Minecraft Username'
             placeholder='Enter your username'
             isInvalid={isCredentialsInvalid}
-            onValueChange={setUsername}
+            onValueChange={(value) => {
+              setUsername(value);
+              setIsCredentialsInvalid(false);
+            }}
             classNames={{
               base: '-mb-[2px]',
               inputWrapper:
@@ -80,7 +83,10 @@ export default function Login() {
                 setIsVisible={setIsPasswordVisible}
               />
             }
-            onValueChange={setPassword}
+            onValueChange={(value) => {
+              setPassword(value);
+              setIsCredentialsInvalid(false);
+            }}
             classNames={{
               inputWrapper: 'rounded-t-none',
             }}
