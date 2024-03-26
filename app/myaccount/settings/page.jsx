@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Avatar } from '@nextui-org/avatar';
@@ -165,7 +165,9 @@ export default function Settings() {
                     name='confirmPassword'
                     label='Confirm New Password'
                     value={confirmPassword}
-                    isInvalid={confirmPassword && (newPassword !== confirmPassword)}
+                    isInvalid={
+                      confirmPassword && newPassword !== confirmPassword
+                    }
                     errorMessage={
                       confirmPassword &&
                       newPassword !== confirmPassword &&
@@ -204,6 +206,6 @@ export default function Settings() {
           </div>
         </>
       )}
-    </UserDashboardLayout >
+    </UserDashboardLayout>
   );
 }
