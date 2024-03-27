@@ -8,8 +8,8 @@
     "dev": "next dev --turbo",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix",
+    "lint": "next lint --dir .",
+    "lint:fix": "next lint --dir . --fix",
     "format": "prettier --check .",
     "format:fix": "prettier --write .",
     "prisma:generate": "dotenv -e .env.local -- pnpx prisma db pull && pnpx prisma generate"

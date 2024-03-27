@@ -1,4 +1,5 @@
 import { Icon } from '@iconify/react';
+
 import Page from '@/constants/Page';
 
 export default [

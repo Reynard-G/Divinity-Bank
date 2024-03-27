@@ -1,7 +1,9 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+
 import { Ratelimit } from '@upstash/ratelimit';
 import { kv } from '@vercel/kv';
+
 import Page from '@/constants/Page';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
