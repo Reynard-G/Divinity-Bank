@@ -10,8 +10,6 @@ export async function GET() {
   try {
     const id = (await getPayloadFromJWT(cookie))?.id;
 
-    if (!id) return new Response('Unauthorized', { status: 401 });
-
     const user = await prisma.users.findFirst({
       where: { id },
       select: {

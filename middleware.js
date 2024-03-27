@@ -1,11 +1,26 @@
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { Ratelimit } from '@upstash/ratelimit';
+import { kv } from '@vercel/kv';
 import Page from '@/constants/Page';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
-export async function middleware(req) {
-  const cookie = cookies().get('authorization')?.value;
+const ratelimit = new Ratelimit({
+  redis: kv,
+  // 5 requests from the same IP in 5 seconds
+  limiter: Ratelimit.slidingWindow(5, '5 s'),
+});
 
+export async function middleware(req) {
+  const ip = req.ip ?? '127.0.0.1';
+  const { remaining } = await ratelimit.limit(ip);
+
+  // If rate limit is reached, redirect to /blocked page
+  if (remaining <= 0) {
+    return NextResponse.redirect(new URL(Page.BLOCKED, req.url));
+  }
+
+  const cookie = cookies().get('authorization')?.value;
   try {
     const payload = await getPayloadFromJWT(cookie);
     console.log(payload);
@@ -27,5 +42,5 @@ export async function middleware(req) {
 }
 
 export const config = {
-  matcher: ['/myaccount/:path*', '/login'],
+  matcher: ['/myaccount/:path*', '/api/:path*', '/login'],
 };
