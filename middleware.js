@@ -9,8 +9,8 @@ import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
 const ratelimit = new Ratelimit({
   redis: kv,
-  // 5 requests from the same IP in 5 seconds
-  limiter: Ratelimit.slidingWindow(5, '5 s'),
+  // 25 requests from the same IP in 5 seconds
+  limiter: Ratelimit.slidingWindow(25, '5 s'),
 });
 
 export async function middleware(req) {
@@ -43,6 +43,12 @@ export async function middleware(req) {
   }
 }
 
+/**
+ * The following routes are protected:
+ * - /myaccount/*: Protected user subdirectory.
+ * - /api/*: Getting data, not mutations.
+ * - /login: Auto redirect to /myaccount if the user is already logged in.
+ */
 export const config = {
   matcher: ['/myaccount/:path*', '/api/:path*', '/login'],
 };
