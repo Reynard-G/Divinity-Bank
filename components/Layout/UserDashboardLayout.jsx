@@ -15,9 +15,7 @@ import greetingBasedOnTime from '@/utils/greetingBasedOnTime';
 export default function DashboardLayout({ children }) {
   const { data } = useSWR(API.USER, fetcher);
   const { isOpen, onOpen, onOpenChange } = useDisclosure(false);
-  const [minecraftUUID, setMinecraftUUID] = useState(
-    '51013591-911c-4b10-bdf6-e90833b8fe23',
-  );
+  const [minecraftUUID, setMinecraftUUID] = useState('');
   const [greetingText, setGreetingText] = useState('');
   const [greetingIcon, setGreetingIcon] = useState('');
 

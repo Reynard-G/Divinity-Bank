@@ -17,7 +17,7 @@ import fetcher from '@/utils/fetcher';
 export default function AvatarSettings({ minecraftUUID }) {
   const { data } = useSWR(API.USER, fetcher);
   const router = useRouter();
-  const [username, setUsername] = useState('Loading...');
+  const [username, setUsername] = useState('');
 
   const handleLogout = async () => {
     try {
@@ -25,11 +25,7 @@ export default function AvatarSettings({ minecraftUUID }) {
         method: 'POST',
       });
 
-      if (res.ok) {
-        router.replace(Page.LOGIN);
-      } else {
-        console.error('An error occurred during logout');
-      }
+      if (res.ok) router.replace(Page.LOGIN);
     } catch (error) {
       console.error('An error occurred during logout:', error);
     }
@@ -46,6 +42,7 @@ export default function AvatarSettings({ minecraftUUID }) {
       <DropdownTrigger>
         <Avatar
           as='button'
+          showFallback
           isBordered
           radius='lg'
           name={username}

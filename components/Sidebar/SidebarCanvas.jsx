@@ -18,11 +18,7 @@ export default function SidebarCanvas({ items = [] }) {
         method: 'POST',
       });
 
-      if (res.ok) {
-        router.replace(Page.LOGIN);
-      } else {
-        console.error('An error occurred during logout');
-      }
+      if (res.ok) router.replace(Page.LOGIN);
     } catch (error) {
       console.error('An error occurred during logout:', error);
     }
