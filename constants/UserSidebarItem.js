@@ -1,36 +1,43 @@
-import { Icon } from '@iconify/react';
+import {
+  ArrowLeftRight,
+  Banknote,
+  LayoutDashboard,
+  ScrollText,
+  Settings,
+  Users,
+} from 'lucide-react';
 
 import Page from '@/constants/Page';
 
 export default [
   {
     name: 'Dashboard',
-    icon: <Icon icon='tabler:layout-dashboard' fontSize='1.5rem' />,
+    icon: <LayoutDashboard size={20} />,
     href: Page.DASHBOARD,
   },
   {
     name: 'My Accounts',
-    icon: <Icon icon='mdi:accounts-outline' fontSize='1.5rem' />,
+    icon: <Users size={20} />,
     href: Page.ACCOUNTS,
   },
   {
     name: 'Transactions',
-    icon: <Icon icon='bitcoin-icons:transactions-outline' fontSize='1.5rem' />,
+    icon: <ArrowLeftRight size={20} />,
     href: Page.TRANSACTIONS,
   },
   {
     name: 'Transfer Money',
-    icon: <Icon icon='ph:money' fontSize='1.5rem' />,
+    icon: <Banknote size={20} />,
     href: Page.TRANSFER,
   },
   {
     name: 'Loans',
-    icon: <Icon icon='carbon:white-paper' fontSize='1.5rem' />,
+    icon: <ScrollText size={20} />,
     href: Page.LOANS,
   },
   {
     name: 'Settings',
-    icon: <Icon icon='lucide:settings' fontSize='1.5rem' />,
+    icon: <Settings size={20} />,
     href: Page.SETTINGS,
   },
 ];

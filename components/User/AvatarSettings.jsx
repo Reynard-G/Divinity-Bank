@@ -12,24 +12,13 @@ import useSWR from 'swr';
 
 import API from '@/constants/API';
 import Page from '@/constants/Page';
+import { logout } from '@/lib/actions/form.actions';
 import fetcher from '@/utils/fetcher';
 
 export default function AvatarSettings({ minecraftUUID }) {
   const { data } = useSWR(API.USER, fetcher);
   const router = useRouter();
   const [username, setUsername] = useState('');
-
-  const handleLogout = async () => {
-    try {
-      const res = await fetch(API.LOGOUT, {
-        method: 'POST',
-      });
-
-      if (res.ok) router.replace(Page.LOGIN);
-    } catch (error) {
-      console.error('An error occurred during logout:', error);
-    }
-  };
 
   useEffect(() => {
     if (data) {
@@ -59,7 +48,14 @@ export default function AvatarSettings({ minecraftUUID }) {
         <DropdownItem key='settings' href={Page.SETTINGS}>
           Settings
         </DropdownItem>
-        <DropdownItem key='logout' onPress={handleLogout}>
+        <DropdownItem
+          key='logout'
+          onPress={async () => {
+            await logout().then(() => {
+              router.replace(Page.LOGIN);
+            });
+          }}
+        >
           Logout
         </DropdownItem>
       </DropdownMenu>

@@ -1,4 +1,4 @@
-import { Icon } from '@iconify/react';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function PasswordVisibleButton({ isVisible, setIsVisible }) {
   return (
@@ -7,11 +7,7 @@ export default function PasswordVisibleButton({ isVisible, setIsVisible }) {
       className='focus:outline-none'
       onClick={() => setIsVisible(!isVisible)}
     >
-      {isVisible ? (
-        <Icon icon='lucide:eye' fontSize='1.5rem' />
-      ) : (
-        <Icon icon='lucide:eye-off' fontSize='1.5rem' />
-      )}
+      {isVisible ? <Eye size={20} /> : <EyeOff size={20} />}
     </button>
   );
 }

@@ -1,8 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import { Icon } from '@iconify/react';
 import { Button } from '@nextui-org/button';
 import { useDisclosure } from '@nextui-org/use-disclosure';
+import { Menu } from 'lucide-react';
 import useSWR from 'swr';
 
 import SidebarDrawer from '@/components/Sidebar/SidebarDrawer';
@@ -20,14 +20,12 @@ export default function DashboardLayout({ children }) {
   const [greetingIcon, setGreetingIcon] = useState('');
 
   useEffect(() => {
-    const { text, icon } = greetingBasedOnTime();
-    setGreetingText(text);
-    setGreetingIcon(icon);
-  }, []);
-
-  useEffect(() => {
     if (data) {
       setMinecraftUUID(data?.minecraft_uuid);
+
+      const { text, icon } = greetingBasedOnTime(data?.minecraft_username);
+      setGreetingText(text);
+      setGreetingIcon(icon);
     }
   }, [data]);
 
@@ -51,11 +49,11 @@ export default function DashboardLayout({ children }) {
               onPress={onOpen}
               className='flex sm:hidden'
             >
-              <Icon icon='lucide:menu' fontSize='1.5rem' />
+              <Menu size={20} />
             </Button>
 
             <h2 className='flex flex-row items-center gap-2 text-xl font-medium text-default-700'>
-              {greetingText} <Icon icon={greetingIcon} fontSize='2rem' />
+              {greetingText} {greetingIcon}
             </h2>
 
             <div className='flex flex-row items-center gap-2'>
