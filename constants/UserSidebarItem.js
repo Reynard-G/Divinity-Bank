@@ -22,12 +22,12 @@ export default [
   },
   {
     name: 'Transactions',
-    icon: <ArrowLeftRight size={20} />,
+    icon: <Banknote size={20} />,
     href: Page.TRANSACTIONS,
   },
   {
     name: 'Transfer Money',
-    icon: <Banknote size={20} />,
+    icon: <ArrowLeftRight size={20} />,
     href: Page.TRANSFER,
   },
   {
