@@ -5,8 +5,8 @@ import useSWR from 'swr';
 
 import UserDashboardLayout from '@/components/Layout/UserDashboardLayout';
 import TransactionsTable from '@/components/Table/TransactionsTable';
-import fetcher from '@/utils/fetcher';
 import API from '@/constants/API';
+import fetcher from '@/utils/fetcher';
 
 export default function Transactions() {
   const { data, isLoading } = useSWR(API.TRANSACTIONS, fetcher);
@@ -24,10 +24,7 @@ export default function Transactions() {
         <Divider />
 
         <div className='flex flex-col'>
-          <TransactionsTable
-            isLoading={isLoading}
-            data={data ?? []}
-          />
+          <TransactionsTable isLoading={isLoading} data={data ?? []} />
         </div>
       </UserDashboardLayout>
     </>

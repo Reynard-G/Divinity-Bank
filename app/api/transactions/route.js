@@ -19,7 +19,7 @@ export async function GET() {
             select: {
               minecraft_username: true,
             },
-          }
+          },
         },
       })) ?? [];
 
@@ -28,9 +28,14 @@ export async function GET() {
       const { Users_Transactions_user_idToUsers, ...rest } = transaction;
       return {
         ...rest,
-        minecraft_username: Users_Transactions_user_idToUsers.minecraft_username,
-        created_at: Math.floor(new Date(transaction.created_at).getTime() / 1000),
-        updated_at: Math.floor(new Date(transaction.updated_at).getTime() / 1000),
+        minecraft_username:
+          Users_Transactions_user_idToUsers.minecraft_username,
+        created_at: Math.floor(
+          new Date(transaction.created_at).getTime() / 1000,
+        ),
+        updated_at: Math.floor(
+          new Date(transaction.updated_at).getTime() / 1000,
+        ),
       };
     });
 

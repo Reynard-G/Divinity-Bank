@@ -1,5 +1,7 @@
-import { useState, useMemo } from 'react';
+import { useMemo, useState } from 'react';
 
+import { Pagination } from '@nextui-org/pagination';
+import { Spinner } from '@nextui-org/spinner';
 import {
   Table,
   TableBody,
@@ -8,8 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from '@nextui-org/table';
-import { Pagination } from '@nextui-org/pagination';
-import { Spinner } from '@nextui-org/spinner';
 
 import formatCurrency from '@/utils/formatCurrency';
 import formatUnix from '@/utils/formatUnix';
@@ -30,14 +30,14 @@ export default function TransactionsTable({ isLoading, data }) {
   return (
     <Table
       aria-label='Example static collection table'
-      selectionMode="multiple"
+      selectionMode='multiple'
       bottomContent={
-        <div className="flex w-full justify-center">
+        <div className='flex w-full justify-center'>
           <Pagination
             isCompact
             showControls
             showShadow
-            color="primary"
+            color='primary'
             page={page}
             total={pages || 1}
             onChange={(page) => setPage(page)}
@@ -46,11 +46,24 @@ export default function TransactionsTable({ isLoading, data }) {
       }
     >
       <TableHeader>
-        <TableColumn key='Username' className="text-left">Username</TableColumn>
-        <TableColumn key='Date' className="hidden sm:table-cell">Date</TableColumn>
-        <TableColumn key='Type' className="hidden md:table-cell">Type</TableColumn>
-        <TableColumn key='Amount' className="text-left rounded-r-lg md:rounded-none">Amount</TableColumn>
-        <TableColumn key='Status' className="hidden md:table-cell">Status</TableColumn>
+        <TableColumn key='Username' className='text-left'>
+          Username
+        </TableColumn>
+        <TableColumn key='Date' className='hidden sm:table-cell'>
+          Date
+        </TableColumn>
+        <TableColumn key='Type' className='hidden md:table-cell'>
+          Type
+        </TableColumn>
+        <TableColumn
+          key='Amount'
+          className='rounded-r-lg text-left md:rounded-none'
+        >
+          Amount
+        </TableColumn>
+        <TableColumn key='Status' className='hidden md:table-cell'>
+          Status
+        </TableColumn>
       </TableHeader>
       <TableBody
         items={items}
@@ -61,10 +74,16 @@ export default function TransactionsTable({ isLoading, data }) {
         {(item) => (
           <TableRow key={item.id}>
             <TableCell>{item.minecraft_username}</TableCell>
-            <TableCell className="hidden sm:table-cell">{formatUnix(item.created_at)}</TableCell>
-            <TableCell className="hidden md:table-cell">{item.payment_type}</TableCell>
+            <TableCell className='hidden sm:table-cell'>
+              {formatUnix(item.created_at)}
+            </TableCell>
+            <TableCell className='hidden md:table-cell'>
+              {item.payment_type}
+            </TableCell>
             <TableCell>{formatCurrency(item.amount)}</TableCell>
-            <TableCell className="hidden md:table-cell">{item.status}</TableCell>
+            <TableCell className='hidden md:table-cell'>
+              {item.status}
+            </TableCell>
           </TableRow>
         )}
       </TableBody>
