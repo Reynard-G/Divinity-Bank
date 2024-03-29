@@ -8,25 +8,17 @@ import useSWR from 'swr';
 import DesktopUserSidebar from '@/components/Sidebar/DesktopUserSidebar';
 import MobileUserSidebar from '@/components/Sidebar/MobileUserSidebar';
 import AvatarSettings from '@/components/User/AvatarSettings';
+import DashboardGreeting from '@/components/User/DashboardGreeting';
 import API from '@/constants/API';
 import fetcher from '@/utils/fetcher';
-import greetingBasedOnTime from '@/utils/greetingBasedOnTime';
 
 export default function DashboardLayout({ children }) {
   const { data } = useSWR(API.USER, fetcher);
   const { isOpen, onOpen, onOpenChange } = useDisclosure(false);
   const [minecraftUUID, setMinecraftUUID] = useState('');
-  const [greetingText, setGreetingText] = useState('');
-  const [greetingIcon, setGreetingIcon] = useState('');
 
   useEffect(() => {
-    if (data) {
-      setMinecraftUUID(data?.minecraft_uuid);
-
-      const { text, icon } = greetingBasedOnTime(data?.minecraft_username);
-      setGreetingText(text);
-      setGreetingIcon(icon);
-    }
+    if (data) setMinecraftUUID(data?.minecraft_uuid);
   }, [data]);
 
   return (
@@ -48,12 +40,7 @@ export default function DashboardLayout({ children }) {
               <Menu size={20} />
             </Button>
 
-            <div className='flex flex-row items-center gap-2'>
-              <h2 className='text-sm font-medium text-default-700 md:text-base lg:text-xl'>
-                {greetingText}
-              </h2>
-              {greetingIcon}
-            </div>
+            <DashboardGreeting />
 
             <div className='flex flex-row items-center gap-2'>
               <AvatarSettings minecraftUUID={minecraftUUID} />
