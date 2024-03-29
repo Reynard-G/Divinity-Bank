@@ -46,7 +46,7 @@ export default function TransactionsTable({ isLoading, data }) {
       }
     >
       <TableHeader>
-        <TableColumn key='Username' className="text-left rounded-l-lg">Username</TableColumn>
+        <TableColumn key='Username' className="text-left">Username</TableColumn>
         <TableColumn key='Date' className="hidden sm:table-cell">Date</TableColumn>
         <TableColumn key='Type' className="hidden md:table-cell">Type</TableColumn>
         <TableColumn key='Amount' className="text-left rounded-r-lg md:rounded-none">Amount</TableColumn>
