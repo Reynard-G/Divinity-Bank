@@ -32,7 +32,7 @@ export default function DashboardLayout({ children }) {
   return (
     <div className='flex h-screen items-center justify-center dark'>
       <div className='flex h-svh w-full'>
-        <div className='relative hidden w-72 max-w-[288px] flex-1 flex-col bg-transparent sm:flex'>
+        <div className='relative hidden w-72 max-w-[288px] flex-1 flex-col bg-transparent md:flex'>
           <UserSidebar />
 
           {isOpen && (
@@ -47,7 +47,7 @@ export default function DashboardLayout({ children }) {
               size='sm'
               variant='light'
               onPress={onOpen}
-              className='flex sm:hidden'
+              className='flex md:hidden'
             >
               <Menu size={20} />
             </Button>

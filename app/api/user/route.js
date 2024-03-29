@@ -24,6 +24,7 @@ export async function GET() {
 
     if (!user) return new Response('User not found', { status: 404 });
 
+    // Convert UTC Datetime to Unix Timestamp
     const formattedUser = {
       ...user,
       created_at: Math.floor(new Date(user.created_at).getTime() / 1000),

@@ -23,23 +23,25 @@ model TransactionTypes {
 }
 
 model Transactions {
-  id                  Int                 @id @default(autoincrement()) @db.UnsignedInt
-  user_id             Int                 @db.UnsignedInt
-  created_user_id     Int                 @db.UnsignedInt
-  amount              Decimal             @db.Decimal(32, 2)
-  fee                 Decimal             @default(0.00) @db.Decimal(32, 2)
-  transaction_type    String              @db.VarChar(16)
-  payment_type        String              @db.VarChar(16)
-  attachment          Bytes?              @db.MediumBlob
-  note                String?             @db.VarChar(256)
-  status              String              @db.VarChar(16)
-  created_at          DateTime            @default(now()) @db.Timestamp(0)
-  updated_at          DateTime            @default(now()) @db.Timestamp(0)
-  PaymentTypes        PaymentTypes        @relation(fields: [payment_type], references: [name], onUpdate: Restrict, map: "FK_PaymentType")
-  TransactionStatuses TransactionStatuses @relation(fields: [status], references: [name], onUpdate: Restrict, map: "FK_TransactionStatuses")
-  TransactionTypes    TransactionTypes    @relation(fields: [transaction_type], references: [name], onUpdate: Restrict, map: "FK_TransactionType")
-  Users               Users               @relation(fields: [user_id], references: [id], onUpdate: Restrict, map: "FK_Transactions_UserId")
+  id                                        Int                 @id @default(autoincrement()) @db.UnsignedInt
+  user_id                                   Int                 @db.UnsignedInt
+  created_user_id                           Int                 @db.UnsignedInt
+  amount                                    Decimal             @db.Decimal(32, 2)
+  fee                                       Decimal             @default(0.00) @db.Decimal(32, 2)
+  transaction_type                          String              @db.VarChar(16)
+  payment_type                              String              @db.VarChar(16)
+  attachment                                Bytes?              @db.MediumBlob
+  note                                      String?             @db.VarChar(256)
+  status                                    String              @db.VarChar(16)
+  created_at                                DateTime            @default(now()) @db.Timestamp(0)
+  updated_at                                DateTime            @default(now()) @db.Timestamp(0)
+  PaymentTypes                              PaymentTypes        @relation(fields: [payment_type], references: [name], onUpdate: Restrict, map: "FK_PaymentType")
+  TransactionStatuses                       TransactionStatuses @relation(fields: [status], references: [name], onUpdate: Restrict, map: "FK_TransactionStatuses")
+  TransactionTypes                          TransactionTypes    @relation(fields: [transaction_type], references: [name], onUpdate: Restrict, map: "FK_TransactionType")
+  Users_Transactions_created_user_idToUsers Users               @relation("Transactions_created_user_idToUsers", fields: [created_user_id], references: [id], onUpdate: Restrict, map: "FK_Transactions_CreatedUserId")
+  Users_Transactions_user_idToUsers         Users               @relation("Transactions_user_idToUsers", fields: [user_id], references: [id], onUpdate: Restrict, map: "FK_Transactions_UserId")
 
+  @@index([created_user_id], map: "FK_Transactions_CreatedUserId")
   @@index([payment_type], map: "FK_Transactions_PaymentType")
   @@index([status], map: "FK_Transactions_Status")
   @@index([transaction_type], map: "FK_Transactions_TransactionType")
@@ -47,12 +49,13 @@ model Transactions {
 }
 
 model Users {
-  id                 Int            @id @default(autoincrement()) @db.UnsignedInt
-  minecraft_uuid     String         @unique(map: "AK_Users_MinecraftUUID") @db.VarChar(36)
-  minecraft_username String         @unique(map: "AK_Users_MinecraftUsername") @db.VarChar(24)
-  discord_username   String         @unique(map: "AK_Users_DiscordUsername") @db.VarChar(32)
-  password           String         @db.Char(60)
-  created_at         DateTime       @default(now()) @db.Timestamp(0)
-  updated_at         DateTime       @default(now()) @db.Timestamp(0)
-  Transactions       Transactions[]
+  id                                               Int            @id @default(autoincrement()) @db.UnsignedInt
+  minecraft_uuid                                   String         @unique(map: "AK_Users_MinecraftUUID") @db.VarChar(36)
+  minecraft_username                               String         @unique(map: "AK_Users_MinecraftUsername") @db.VarChar(24)
+  discord_username                                 String         @unique(map: "AK_Users_DiscordUsername") @db.VarChar(32)
+  password                                         String         @db.Char(60)
+  created_at                                       DateTime       @default(now()) @db.Timestamp(0)
+  updated_at                                       DateTime       @default(now()) @db.Timestamp(0)
+  Transactions_Transactions_created_user_idToUsers Transactions[] @relation("Transactions_created_user_idToUsers")
+  Transactions_Transactions_user_idToUsers         Transactions[] @relation("Transactions_user_idToUsers")
 }
