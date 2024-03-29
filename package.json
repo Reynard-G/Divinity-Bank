@@ -20,10 +20,10 @@
     "@upstash/ratelimit": "^1.0.1",
     "@upstash/redis": "^1.29.0",
     "bcrypt": "^5.1.1",
-    "framer-motion": "^11.0.20",
+    "framer-motion": "^11.0.24",
     "jose": "^5.2.3",
     "lucide-react": "^0.363.0",
-    "next": "14.1.3",
+    "next": "14.1.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "swr": "^2.2.5",
@@ -38,9 +38,9 @@
     "eslint-plugin-simple-import-sort": "^12.0.0",
     "postcss": "^8.4.38",
     "prettier": "^3.2.5",
-    "prettier-plugin-tailwindcss": "^0.5.12",
+    "prettier-plugin-tailwindcss": "^0.5.13",
     "prisma": "^5.11.0",
     "tailwind-merge": "^2.2.2",
-    "tailwindcss": "^3.4.1"
+    "tailwindcss": "^3.4.3"
   }
 }
