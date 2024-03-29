@@ -3,4 +3,5 @@ export default {
   LOGIN: '/api/login',
   LOGOUT: '/api/logout',
   USER: '/api/user',
+  TRANSACTIONS: '/api/transactions',
 };
