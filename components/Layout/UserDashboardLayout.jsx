@@ -5,8 +5,8 @@ import { useDisclosure } from '@nextui-org/use-disclosure';
 import { Menu } from 'lucide-react';
 import useSWR from 'swr';
 
-import SidebarDrawer from '@/components/Sidebar/SidebarDrawer';
-import UserSidebar from '@/components/Sidebar/UserSidebar';
+import DesktopUserSidebar from '@/components/Sidebar/DesktopUserSidebar';
+import MobileUserSidebar from '@/components/Sidebar/MobileUserSidebar';
 import AvatarSettings from '@/components/User/AvatarSettings';
 import API from '@/constants/API';
 import fetcher from '@/utils/fetcher';
@@ -30,15 +30,11 @@ export default function DashboardLayout({ children }) {
   }, [data]);
 
   return (
-    <div className='flex h-screen items-center justify-center dark'>
+    <div className='flex h-screen items-center justify-center'>
       <div className='flex h-svh w-full'>
-        <div className='relative hidden w-72 max-w-[288px] flex-1 flex-col bg-transparent md:flex'>
-          <UserSidebar />
-
-          {isOpen && (
-            <SidebarDrawer isOpen={isOpen} onOpenChange={onOpenChange} />
-          )}
-        </div>
+        {/* Sidebar (CSS will handle the visibility based on screen size) */}
+        <DesktopUserSidebar />
+        <MobileUserSidebar isOpen={isOpen} onOpenChange={onOpenChange} />
 
         <div className='w-full flex-1 flex-col p-4'>
           <header className='flex items-center justify-between gap-3 rounded-medium border-small border-divider px-4 py-3'>
@@ -52,9 +48,12 @@ export default function DashboardLayout({ children }) {
               <Menu size={20} />
             </Button>
 
-            <h2 className='flex flex-row items-center gap-2 text-xl font-medium text-default-700'>
-              {greetingText} {greetingIcon}
-            </h2>
+            <div className='flex flex-row items-center gap-2'>
+              <h2 className='text-sm font-medium text-default-700 md:text-base lg:text-xl'>
+                {greetingText}
+              </h2>
+              {greetingIcon}
+            </div>
 
             <div className='flex flex-row items-center gap-2'>
               <AvatarSettings minecraftUUID={minecraftUUID} />
