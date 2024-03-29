@@ -2,13 +2,13 @@ import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 import { Ratelimit } from '@upstash/ratelimit';
-import { kv } from '@vercel/kv';
+import { Redis } from '@upstash/redis';
 
 import Page from '@/constants/Page';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
 const ratelimit = new Ratelimit({
-  redis: kv,
+  redis: Redis.fromEnv(),
   // 25 requests from the same IP in 5 seconds
   limiter: Ratelimit.slidingWindow(25, '5 s'),
 });

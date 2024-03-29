@@ -18,7 +18,7 @@
     "@nextui-org/react": "^2.2.10",
     "@prisma/client": "5.11.0",
     "@upstash/ratelimit": "^1.0.1",
-    "@vercel/kv": "^1.0.1",
+    "@upstash/redis": "^1.29.0",
     "bcrypt": "^5.1.1",
     "framer-motion": "^11.0.20",
     "jose": "^5.2.3",
