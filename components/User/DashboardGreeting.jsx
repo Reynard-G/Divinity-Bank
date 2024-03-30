@@ -14,7 +14,7 @@ export default function DashboardGreeting() {
       setGreetingIcon(<CloudSun size={20} />);
     } else if (currentHour >= 12 && currentHour < 18) {
       setGreeting('Good Afternoon!');
-      setGreetingIcon(<Sun color='#FBBF24' size={20} className='transition animate-spin' />);
+      setGreetingIcon(<Sun color='#FBBF24' size={20} />);
     } else {
       setGreeting('Good Night!');
       setGreetingIcon(<Moon size={20} />);

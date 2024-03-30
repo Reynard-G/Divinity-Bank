@@ -15,6 +15,7 @@
     "prisma:generate": "dotenv -e .env.local -- pnpx prisma db pull && pnpx prisma generate"
   },
   "dependencies": {
+    "@iconify/react": "^4.1.1",
     "@nextui-org/react": "^2.2.10",
     "@prisma/client": "5.11.0",
     "@upstash/ratelimit": "^1.0.1",
