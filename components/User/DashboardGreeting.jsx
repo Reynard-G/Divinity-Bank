@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 
-import { CloudSun, Moon, Sun } from 'lucide-react';
+import { Icon } from '@iconify/react';
 
 export default function DashboardGreeting() {
   const [greeting, setGreeting] = useState(null);
@@ -11,13 +11,13 @@ export default function DashboardGreeting() {
 
     if (currentHour >= 5 && currentHour < 12) {
       setGreeting('Good Morning!');
-      setGreetingIcon(<CloudSun size={20} />);
+      setGreetingIcon(<Icon icon='meteocons:sunrise-fill' fontSize='2rem' />);
     } else if (currentHour >= 12 && currentHour < 18) {
       setGreeting('Good Afternoon!');
-      setGreetingIcon(<Sun color='#FBBF24' size={20} />);
+      setGreetingIcon(<Icon icon='meteocons:clear-day-fill' fontSize='2rem' />);
     } else {
       setGreeting('Good Night!');
-      setGreetingIcon(<Moon size={20} />);
+      setGreetingIcon(<Icon icon='meteocons:moonrise-fill' fontSize='2rem' />);
     }
   }, []);
 
