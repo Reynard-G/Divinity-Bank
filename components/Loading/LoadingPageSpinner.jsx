@@ -1,8 +1,8 @@
 import { Spinner } from '@nextui-org/spinner';
 
-export default function LoadingSpinner() {
+export default function LoadingPageSpinner() {
   return (
-    <div className='flex h-full items-center justify-center'>
+    <div className='flex h-svh items-center justify-center'>
       <Spinner color='primary' />
     </div>
   );

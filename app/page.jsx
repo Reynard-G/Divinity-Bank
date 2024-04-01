@@ -4,7 +4,7 @@ import DefaultFooter from '@/components/Footer/DefaultFooter';
 
 export default function Home() {
   return (
-    <div className='flex flex-col items-center justify-end min-h-screen py-2'>
+    <div className='flex min-h-screen flex-col items-center justify-end py-2'>
       <DefaultFooter />
     </div>
   );

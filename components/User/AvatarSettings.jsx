@@ -1,4 +1,3 @@
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
 
 import { Avatar } from '@nextui-org/avatar';
@@ -8,23 +7,12 @@ import {
   DropdownMenu,
   DropdownTrigger,
 } from '@nextui-org/dropdown';
-import useSWR from 'swr';
 
-import API from '@/constants/API';
 import Page from '@/constants/Page';
 import { logout } from '@/lib/actions/form.actions';
-import fetcher from '@/utils/fetcher';
 
-export default function AvatarSettings({ minecraftUUID }) {
-  const { data } = useSWR(API.USER, fetcher);
+export default function AvatarSettings({ minecraftUsername, minecraftUUID }) {
   const router = useRouter();
-  const [username, setUsername] = useState('');
-
-  useEffect(() => {
-    if (data) {
-      setUsername(data?.minecraft_username || 'Unknown User');
-    }
-  }, [data]);
 
   return (
     <Dropdown>
@@ -34,8 +22,8 @@ export default function AvatarSettings({ minecraftUUID }) {
           showFallback
           isBordered
           radius='lg'
-          name={username}
-          src={`https://crafatar.com/avatars/${minecraftUUID}`}
+          name={minecraftUsername}
+          src={`https://crafatar.com/avatars/${minecraftUUID}?size=40`}
           alt='Minecraft Avatar'
         />
       </DropdownTrigger>
@@ -43,7 +31,7 @@ export default function AvatarSettings({ minecraftUUID }) {
       <DropdownMenu aria-label='Profile Actions' variant='faded'>
         <DropdownItem key='profile' textValue='Signed in as'>
           <p>Signed in as</p>
-          <p className='font-bold'>{username}</p>
+          <p className='font-bold'>{minecraftUsername}</p>
         </DropdownItem>
         <DropdownItem key='settings' href={Page.SETTINGS}>
           Settings
