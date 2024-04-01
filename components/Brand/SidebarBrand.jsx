@@ -16,7 +16,7 @@ export default function SidebarBrand() {
             height={0}
             width={0}
             style={{ width: '48px', height: 'auto' }}
-            alt='Divinity'
+            alt='Divinity Logo'
           />
         </div>
         <p

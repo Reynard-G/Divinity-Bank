@@ -35,8 +35,8 @@ export default function DashboardLayout({ children }) {
   const { isOpen, onOpen, onOpenChange } = useDisclosure(false);
 
   return (
-    <div className='flex h-screen items-center justify-center'>
-      <div className='flex h-svh w-full'>
+    <div className='flex h-svh items-center justify-center'>
+      <div className='flex h-full w-full'>
         {/* Sidebar (CSS will handle the visibility based on screen size) */}
         <DesktopUserSidebar />
         <MobileUserSidebar isOpen={isOpen} onOpenChange={onOpenChange} />
@@ -44,6 +44,7 @@ export default function DashboardLayout({ children }) {
         <div className='w-full flex-1 flex-col p-4'>
           <header className='flex items-center justify-between gap-3 rounded-medium border-small border-divider px-4 py-3'>
             <Button
+              aria-label={isOpen ? 'Close Sidebar' : 'Open Sidebar'}
               isIconOnly={true}
               size='sm'
               variant='light'

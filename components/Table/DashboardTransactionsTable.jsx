@@ -111,11 +111,13 @@ export default function DashboardTransactionsTable({ transactions = [] }) {
                       underline='hover'
                       href={`/myaccount/transactions/${transaction.id}`}
                     >
-                      View transaction
+                      View
+                      <span className='hidden md:inline'>&nbsp;details</span>
                     </Link>
                   </div>
                   <div className='mt-1 text-xs leading-5 text-neutral-500'>
-                    Transaction #{transaction.id}
+                    <span className='hidden md:inline'>Transaction&nbsp;</span>
+                    ID #{transaction.id}
                   </div>
                 </td>
               </tr>

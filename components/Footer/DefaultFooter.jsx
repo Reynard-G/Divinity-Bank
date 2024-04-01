@@ -28,10 +28,20 @@ export default function DefaultFooter() {
         <Spacer y={6} />
 
         <div className='flex justify-center gap-x-4'>
-          <Link href='discord.gg' isExternal className='text-default-400'>
+          <Link
+            aria-label='Discord'
+            isExternal
+            href='discord.gg'
+            className='text-default-400'
+          >
             <Icon icon='ic:baseline-discord' fontSize='1.25rem' />
           </Link>
-          <Link href='cityrp.org' isExternal className='text-default-400'>
+          <Link
+            aria-label='Minecraft'
+            isExternal
+            href='cityrp.org'
+            className='text-default-400'
+          >
             <Icon icon='mdi:minecraft' fontSize='1.25rem' />
           </Link>
         </div>
