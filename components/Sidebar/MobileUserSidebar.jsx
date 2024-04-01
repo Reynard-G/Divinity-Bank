@@ -43,11 +43,9 @@ export default function MobileUserSidebar({ isOpen, onOpenChange }) {
       }}
     >
       <ModalContent>
-        {(onClose) => (
-          <ModalBody>
-            <SidebarCanvas items={UserSidebarItem} onClose={onClose} />
-          </ModalBody>
-        )}
+        <ModalBody>
+          <SidebarCanvas items={UserSidebarItem} />
+        </ModalBody>
       </ModalContent>
     </Modal>
   );

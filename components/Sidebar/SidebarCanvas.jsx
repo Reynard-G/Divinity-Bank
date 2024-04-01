@@ -9,7 +9,7 @@ import SidebarItems from '@/components/Sidebar/SidebarItems';
 import Page from '@/constants/Page';
 import { logout } from '@/lib/actions/form.actions';
 
-export default function SidebarCanvas({ items = [], onClose }) {
+export default function SidebarCanvas({ items = [] }) {
   const router = useRouter();
 
   return (
@@ -26,7 +26,6 @@ export default function SidebarCanvas({ items = [], onClose }) {
           startContent={<LogOut size={20} />}
           className='justify-start text-lg font-medium text-default-500 data-[hover=true]:text-foreground'
           onPress={async () => {
-            onClose();
             await logout().then(() => {
               router.replace(Page.LOGIN);
             });
