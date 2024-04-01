@@ -15,7 +15,12 @@ export async function GET() {
           user_id: id,
         },
         include: {
-          Users_Transactions_user_idToUsers: {
+          user_username: {
+            select: {
+              minecraft_username: true,
+            },
+          },
+          created_by_username: {
             select: {
               minecraft_username: true,
             },
@@ -24,20 +29,22 @@ export async function GET() {
       })) ?? [];
 
     // Convert UTC Datetime to Unix Timestamp
-    const formattedTransactions = transactions.map((transaction) => {
-      const { Users_Transactions_user_idToUsers, ...rest } = transaction;
-      return {
-        ...rest,
-        minecraft_username:
-          Users_Transactions_user_idToUsers.minecraft_username,
-        created_at: Math.floor(
-          new Date(transaction.created_at).getTime() / 1000,
-        ),
-        updated_at: Math.floor(
-          new Date(transaction.updated_at).getTime() / 1000,
-        ),
-      };
-    });
+    const formattedTransactions = transactions
+      .map((transaction) => {
+        const { user_username, created_by_username, ...rest } = transaction;
+        return {
+          ...rest,
+          minecraft_username: user_username.minecraft_username,
+          created_minecraft_username: created_by_username.minecraft_username,
+          created_at: Math.floor(
+            new Date(transaction.created_at).getTime() / 1000,
+          ),
+          updated_at: Math.floor(
+            new Date(transaction.updated_at).getTime() / 1000,
+          ),
+        };
+      })
+      .sort((a, b) => b.created_at - a.created_at);
 
     return new Response(JSON.stringify(formattedTransactions), { status: 200 });
   } catch (error) {

@@ -2,6 +2,5 @@ export default {
   DEPOSIT: 'DEPOSIT',
   WITHDRAW: 'WITHDRAW',
   TRANSFER: 'TRANSFER',
-  ACH: 'ACH',
   INTEREST: 'INTEREST',
 };
