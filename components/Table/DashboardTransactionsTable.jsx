@@ -90,11 +90,11 @@ export default function DashboardTransactionsTable({ transactions = [] }) {
                   <div className='flex items-center gap-x-3'>
                     <Avatar
                       radius='lg'
-                      src={`https://crafatar.com/avatars/${transaction.minecraftUUID}`}
+                      src={`https://crafatar.com/avatars/${transaction.created_minecraft_uuid}`}
                     />
                     <div>
                       <div className='text-sm leading-6 text-neutral-200'>
-                        {transaction.minecraft_username}
+                        {transaction.created_minecraft_username}
                       </div>
                       <div className='mt-1 text-xs leading-5 text-neutral-500'>
                         {transaction.note}

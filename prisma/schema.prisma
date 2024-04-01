@@ -38,8 +38,8 @@ model Transactions {
   PaymentTypes        PaymentTypes        @relation(fields: [payment_type], references: [name], onUpdate: Restrict, map: "FK_PaymentType")
   TransactionStatuses TransactionStatuses @relation(fields: [status], references: [name], onUpdate: Restrict, map: "FK_TransactionStatuses")
   TransactionTypes    TransactionTypes    @relation(fields: [transaction_type], references: [name], onUpdate: Restrict, map: "FK_TransactionType")
-  created_by_username Users               @relation("created_by_username", fields: [created_by_user_id], references: [id], onUpdate: Restrict, map: "FK_Transactions_CreatedUserId")
-  user_username       Users               @relation("user_username", fields: [user_id], references: [id], onUpdate: Restrict, map: "FK_Transactions_UserId")
+  created_by_user     Users               @relation("created_by_user", fields: [created_by_user_id], references: [id], onUpdate: Restrict, map: "FK_Transactions_CreatedUserId")
+  user_user           Users               @relation("user_user", fields: [user_id], references: [id], onUpdate: Restrict, map: "FK_Transactions_UserId")
 
   @@index([created_by_user_id], map: "FK_Transactions_CreatedUserId")
   @@index([payment_type], map: "FK_Transactions_PaymentType")
@@ -56,6 +56,6 @@ model Users {
   password                String         @db.Char(60)
   created_at              DateTime       @default(now()) @db.Timestamp(0)
   updated_at              DateTime       @default(now()) @db.Timestamp(0)
-  created_by_transactions Transactions[] @relation("created_by_username")
-  user_transactions       Transactions[] @relation("user_username")
+  created_by_transactions Transactions[] @relation("created_by_user")
+  user_transactions       Transactions[] @relation("user_user")
 }

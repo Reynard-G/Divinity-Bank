@@ -14,18 +14,18 @@ import {
 import formatCurrency from '@/utils/formatCurrency';
 import formatUnix from '@/utils/formatUnix';
 
-export default function TransactionsTable({ isLoading, data }) {
+export default function TransactionsTable({ isLoading, transactions = [] }) {
   const [page, setPage] = useState(1);
 
   const rowsPerPage = 15;
-  const pages = Math.ceil(data.length / rowsPerPage);
+  const pages = Math.ceil(transactions.length / rowsPerPage);
 
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return data.slice(start, end);
-  }, [page, data]);
+    return transactions.slice(start, end);
+  }, [page, transactions]);
 
   return (
     <Table
@@ -73,7 +73,7 @@ export default function TransactionsTable({ isLoading, data }) {
       >
         {(item) => (
           <TableRow key={item.id}>
-            <TableCell>{item.minecraft_username}</TableCell>
+            <TableCell>{item.created_minecraft_username}</TableCell>
             <TableCell className='hidden sm:table-cell'>
               {formatUnix(item.created_at)}
             </TableCell>

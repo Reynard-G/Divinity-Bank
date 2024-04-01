@@ -24,7 +24,7 @@ export default function Transactions() {
         <Divider />
 
         <div className='flex flex-col'>
-          <TransactionsTable isLoading={isLoading} data={data ?? []} />
+          <TransactionsTable isLoading={isLoading} transactions={data} />
         </div>
       </UserDashboardLayout>
     </>
