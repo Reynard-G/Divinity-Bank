@@ -20,6 +20,7 @@
     "@next/bundle-analyzer": "^14.1.4",
     "@nextui-org/react": "^2.2.10",
     "@prisma/client": "5.11.0",
+    "@sentry/nextjs": "^7.109.0",
     "@upstash/ratelimit": "^1.0.1",
     "@upstash/redis": "^1.29.0",
     "bcrypt": "^5.1.1",
