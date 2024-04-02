@@ -101,7 +101,6 @@ export default function Dashboard() {
             />
             <StatCard
               title='Pending Transactions'
-              percentageChange={+54.02}
               value='$12,787.00'
               className='sm:border-l-1'
             />
