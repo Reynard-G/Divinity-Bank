@@ -11,13 +11,13 @@ export default function DashboardGreeting() {
 
     if (currentHour >= 5 && currentHour < 12) {
       setGreeting('Good Morning!');
-      setGreetingIcon(<Icon icon='meteocons:sunrise-fill' fontSize='2rem' />);
+      setGreetingIcon('meteocons:sunrise-fill');
     } else if (currentHour >= 12 && currentHour < 18) {
       setGreeting('Good Afternoon!');
-      setGreetingIcon(<Icon icon='meteocons:clear-day-fill' fontSize='2rem' />);
+      setGreetingIcon('meteocons:clear-day-fill');
     } else {
       setGreeting('Good Night!');
-      setGreetingIcon(<Icon icon='meteocons:moonrise-fill' fontSize='2rem' />);
+      setGreetingIcon('meteocons:moonrise-fill');
     }
   }, []);
 
@@ -26,7 +26,7 @@ export default function DashboardGreeting() {
       <h2 className='text-sm font-medium text-default-700 md:text-base lg:text-xl'>
         {greeting}
       </h2>
-      {greetingIcon}
+      <Icon icon={greetingIcon} fontSize='2rem' />
     </div>
   );
 }
