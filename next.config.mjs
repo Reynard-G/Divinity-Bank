@@ -10,7 +10,7 @@ const cspHeader = `
   script-src 'self' 'unsafe-inline' 'unsafe-eval';
   style-src 'self' 'unsafe-inline';
   img-src 'self' https://crafatar.com data:;
-  font-src https://fonts.gstatic.com;
+  font-src 'self' https://fonts.gstatic.com;
   object-src 'none';
   base-uri 'self';
   form-action 'self';
