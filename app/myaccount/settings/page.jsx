@@ -9,7 +9,6 @@ import { Divider } from '@nextui-org/divider';
 import { Input } from '@nextui-org/input';
 import { Link } from '@nextui-org/react';
 
-import UserDashboardLayout from '@/components/Layout/UserDashboardLayout';
 import Page from '@/constants/Page';
 import { useUserContext } from '@/contexts';
 import { updateAccountInfo, updatePassword } from '@/lib/actions/form.actions';
@@ -30,7 +29,7 @@ export default function Settings() {
   const [confirmPassword, setConfirmPassword] = useState('');
 
   return (
-    <UserDashboardLayout>
+    <>
       <div className='p-6'>
         <div className='flex flex-col'>
           <h1 className='text-3xl font-bold'>Settings</h1>
@@ -184,6 +183,6 @@ export default function Settings() {
           </div>
         </div>
       </div>
-    </UserDashboardLayout>
+    </>
   );
 }
