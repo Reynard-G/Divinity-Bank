@@ -15,7 +15,7 @@ const cspHeader = `
   base-uri 'self';
   form-action 'self';
   frame-ancestors 'none';
-  connect-src 'self' https://*.ingest.sentry.io;
+  connect-src 'self' https://*.ingest.sentry.io https://api.unisvg.com;
   block-all-mixed-content;
   upgrade-insecure-requests;
 `;
