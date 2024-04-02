@@ -17,8 +17,9 @@ export default function Settings() {
   const router = useRouter();
   const {
     minecraftUUID,
+    minecraftUsername,
     discordUsername,
-    setMinecraftUUID,
+    setMinecraftUsername,
     setDiscordUsername,
   } = useUserContext();
   const [isAccountUpdating, setIsAccountUpdating] = useState(false);
@@ -66,12 +67,12 @@ export default function Settings() {
               >
                 <Input
                   isDisabled={true}
-                  name='minecraftUUID'
-                  label='Minecraft UUID'
+                  name='minecraftUsername'
+                  label='Minecraft Username'
                   variant='bordered'
-                  description='Your minecraft UUID is used to verify your account with your username.'
-                  value={minecraftUUID}
-                  onValueChange={setMinecraftUUID}
+                  description='Your Minecraft Username is used to verify your account.'
+                  value={minecraftUsername}
+                  onValueChange={setMinecraftUsername}
                   classNames={{
                     description: 'text-default-600',
                   }}
