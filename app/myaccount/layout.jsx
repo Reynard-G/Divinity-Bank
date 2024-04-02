@@ -1,3 +1,4 @@
+import Providers from '@/app/myaccount/providers';
 import DashboardLayout from '@/components/Layout/UserDashboardLayout';
 
 export const metadata = {
@@ -6,5 +7,9 @@ export const metadata = {
 };
 
 export default function MyAccountLayout({ children }) {
-  return <DashboardLayout>{children}</DashboardLayout>;
+  return (
+    <Providers>
+      <DashboardLayout>{children}</DashboardLayout>
+    </Providers>
+  );
 }
