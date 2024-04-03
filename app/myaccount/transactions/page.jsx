@@ -8,7 +8,7 @@ import API from '@/constants/API';
 import fetcher from '@/utils/fetcher';
 
 export default function Transactions() {
-  const { data, isLoading } = useSWR(API.TRANSACTIONS, fetcher);
+  const { data, isLoading } = useSWR(API.USER_TRANSACTIONS, fetcher);
 
   return (
     <>

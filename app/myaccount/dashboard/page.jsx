@@ -22,7 +22,7 @@ export default function Dashboard() {
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(
     timeFrameButtons[0].value,
   );
-  const { isLoading } = useSWR(API.TRANSACTIONS, fetcher, {
+  const { isLoading } = useSWR(API.USER_TRANSACTIONS, fetcher, {
     onSuccess: (data) => {
       // Reformat data to group transactions by date
       // and display relative time for each date, up to 7 days
