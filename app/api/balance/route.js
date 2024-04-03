@@ -12,32 +12,31 @@ export async function GET() {
   try {
     const id = (await getPayloadFromJWT(cookie))?.id;
 
-    const creditSum =
-      (
-        await prisma.transactions.aggregate({
-          _sum: {
-            amount: true,
-          },
-          where: {
-            user_id: id,
-            transaction_type: TransactionType.CREDIT,
-          },
-        })
-      )._sum.amount || Prisma.Decimal(0.0);
+    // Using Promise.all to execute both queries concurrently
+    // This is more efficient than executing them sequentially with await
+    const [creditSumResult, debitSumResult] = await Promise.all([
+      prisma.transactions.aggregate({
+        _sum: {
+          amount: true,
+        },
+        where: {
+          user_id: id,
+          transaction_type: TransactionType.CREDIT,
+        },
+      }),
+      prisma.transactions.aggregate({
+        _sum: {
+          amount: true,
+        },
+        where: {
+          user_id: id,
+          transaction_type: TransactionType.DEBIT,
+        },
+      }),
+    ]);
 
-    const debitSum =
-      (
-        await prisma.transactions.aggregate({
-          _sum: {
-            amount: true,
-          },
-          where: {
-            user_id: id,
-            transaction_type: TransactionType.DEBIT,
-          },
-        })
-      )._sum.amount || Prisma.Decimal(0.0);
-
+    const creditSum = creditSumResult._sum.amount || Prisma.Decimal(0.0);
+    const debitSum = debitSumResult._sum.amount || Prisma.Decimal(0.0);
     const userBalance = creditSum.sub(debitSum).toString();
 
     return new Response(JSON.stringify({ userId: id, balance: userBalance }), {
