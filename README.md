@@ -4,8 +4,6 @@
 </a>
 </p>
 
-
-
 <p align="center">
 <img src="https://img.shields.io/github/languages/code-size/Reynard-G/Divinity-Bank-Website?style=flat-square" alt="GitHub code size in bytes" />
 <img src="https://img.shields.io/github/last-commit/Reynard-G/Divinity-Bank-Website?style=flat-square" alt="GitHub last commit" />
@@ -48,7 +46,7 @@
 
 ## ⚙️ Setting Up
 
-#### Your Environment Variables
+### Your Environment Variables
 
 ```env
 JWT_SECRET=
@@ -60,18 +58,24 @@ SENTRY_AUTH_TOKEN=
 ```
 
 ## 🚀 Run Locally
+
 1.Clone the Divinity-Bank-Website repository:
+
 ```sh
 git clone https://github.com/Reynard-G/Divinity-Bank-Website
 ```
+
 2.Install the dependencies with one of the package managers listed below:
+
 ```bash
 pnpm install
 bun install
 npm install
 yarn install
 ```
+
 3.Start the development mode:
+
 ```bash
 pnpm dev
 bun dev
@@ -82,4 +86,3 @@ yarn dev
 ## 📄 License
 
 This project is licensed under the **GNU General Public License v3.0** - see the [**GNU General Public License v3.0**](https://github.com/Reynard-G/Divinity-Bank-Website/blob/development/LICENSE.md) file for details.
-
