@@ -5,6 +5,7 @@ import { useDisclosure } from '@nextui-org/use-disclosure';
 import { Menu } from 'lucide-react';
 import useSWR from 'swr';
 
+import LoadingComponentSpinner from '@/components/Loading/LoadingComponentSpinner';
 import DesktopUserSidebar from '@/components/Sidebar/DesktopUserSidebar';
 import MobileUserSidebar from '@/components/Sidebar/MobileUserSidebar';
 import AvatarSettings from '@/components/User/AvatarSettings';
@@ -27,7 +28,7 @@ export default function DashboardLayout({ children }) {
     setCreatedAt,
     setUpdatedAt,
   } = useUserContext();
-  useSWR(API.USER, fetcher, {
+  const { isLoading } = useSWR(API.USER, fetcher, {
     onSuccess: (data) => {
       setUserId(data?.id);
       setAccountType(data?.account_type);
@@ -49,35 +50,39 @@ export default function DashboardLayout({ children }) {
         <DesktopUserSidebar />
         <MobileUserSidebar isOpen={isOpen} onOpenChange={onOpenChange} />
 
-        <div className='w-full flex-1 flex-col p-4'>
-          <header className='flex items-center justify-between gap-3 rounded-medium border-small border-divider px-4 py-3'>
-            <Button
-              aria-label={isOpen ? 'Close Sidebar' : 'Open Sidebar'}
-              isIconOnly={true}
-              size='sm'
-              variant='light'
-              onPress={onOpen}
-              className='flex md:hidden'
-            >
-              <Menu size={20} />
-            </Button>
+        {isLoading ? (
+          <LoadingComponentSpinner />
+        ) : (
+          <div className='w-full flex-1 flex-col p-4'>
+            <header className='flex items-center justify-between gap-3 rounded-medium border-small border-divider px-4 py-3'>
+              <Button
+                aria-label={isOpen ? 'Close Sidebar' : 'Open Sidebar'}
+                isIconOnly={true}
+                size='sm'
+                variant='light'
+                onPress={onOpen}
+                className='flex md:hidden'
+              >
+                <Menu size={20} />
+              </Button>
 
-            <DashboardGreeting />
+              <DashboardGreeting />
 
-            <div className='flex flex-row items-center gap-2'>
-              <AvatarSettings
-                minecraftUsername={minecraftUsername}
-                minecraftUUID={minecraftUUID}
-              />
-            </div>
-          </header>
+              <div className='flex flex-row items-center gap-2'>
+                <AvatarSettings
+                  minecraftUsername={minecraftUsername}
+                  minecraftUUID={minecraftUUID}
+                />
+              </div>
+            </header>
 
-          <main className='mt-4 w-full overflow-visible'>
-            <div className='w-full rounded-medium border-small border-divider'>
-              {children}
-            </div>
-          </main>
-        </div>
+            <main className='mt-4 w-full overflow-visible'>
+              <div className='w-full rounded-medium border-small border-divider'>
+                {children}
+              </div>
+            </main>
+          </div>
+        )}
       </div>
     </div>
   );
