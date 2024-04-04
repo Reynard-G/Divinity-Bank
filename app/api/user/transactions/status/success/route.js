@@ -1,5 +1,6 @@
 import { cookies } from 'next/headers';
 
+import TransactionStatus from '@/constants/TransactionStatus';
 import prisma from '@/lib/db';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
@@ -13,6 +14,7 @@ export async function GET() {
       (await prisma.transactions.findMany({
         where: {
           user_id: id,
+          status: TransactionStatus.SUCCESS,
         },
         include: {
           user_user: {

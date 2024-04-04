@@ -13,13 +13,13 @@ const ratelimit = new Ratelimit({
   limiter: Ratelimit.slidingWindow(25, '5 s'),
 });
 
-export async function middleware(req) {
-  const ip = req.ip ?? '127.0.0.1';
+export async function middleware(request) {
+  const ip = request.ip ?? '127.0.0.1';
   const { remaining } = await ratelimit.limit(ip);
 
   // If rate limit is reached, redirect to /blocked page
   if (remaining <= 0) {
-    return NextResponse.redirect(new URL(Page.BLOCKED, req.url));
+    return NextResponse.redirect(new URL(Page.BLOCKED, request.url));
   }
 
   const cookie = cookies().get('authorization')?.value;
@@ -30,16 +30,16 @@ export async function middleware(req) {
     if (!payload) throw new Error('Unauthorized');
 
     // If the user is trying to access the login page with a valid cookie, redirect to /myaccount
-    if (req.nextUrl.pathname === Page.LOGIN) {
-      return NextResponse.redirect(new URL(Page.DASHBOARD, req.url));
+    if (request.nextUrl.pathname === Page.LOGIN) {
+      return NextResponse.redirect(new URL(Page.DASHBOARD, request.url));
     }
 
     return NextResponse.next();
   } catch (error) {
     // If the user is already on the login page with an invalid cookie, do nothing to avoid redirect loops
-    if (req.nextUrl.pathname === Page.LOGIN) return NextResponse.next();
+    if (request.nextUrl.pathname === Page.LOGIN) return NextResponse.next();
 
-    return NextResponse.redirect(new URL(Page.LOGIN, req.url));
+    return NextResponse.redirect(new URL(Page.LOGIN, request.url));
   }
 }
 
