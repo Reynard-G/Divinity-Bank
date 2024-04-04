@@ -1,3 +1,7 @@
+'use client';
+
+import { useState } from 'react';
+
 const messages = [
   {
     title: 'Temporarily Blocked',
@@ -30,7 +34,9 @@ const messages = [
 ];
 
 export default function Blocked() {
-  const [randomMessage] = messages.sort(() => Math.random() - 0.5);
+  const [randomMessage] = useState(
+    messages[Math.floor(Math.random() * messages.length)],
+  );
 
   return (
     <div className='flex h-dvh w-full flex-col items-center justify-center gap-4 px-12 py-4 text-center lg:px-52 xl:px-96'>
