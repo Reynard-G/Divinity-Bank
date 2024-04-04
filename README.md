@@ -1,6 +1,6 @@
 <p align="center">
 <a href=https://github.com/Reynard-G/Divinity-Bank-Website target="_blank">
-<img src='/placeholder.jpg' width="100%" alt="Banner" />
+<img src='https://github.com/Reynard-G/Divinity-Bank-Website/assets/40525094/8c58c7f0-b743-469a-89d8-1bd495f70a40' width="100%" alt="Banner" />
 </a>
 </p>
 
