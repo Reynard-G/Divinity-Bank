@@ -19,6 +19,13 @@ export async function GET() {
         minecraft_username: true,
         created_at: true,
         updated_at: true,
+        AccountTypes: {
+          select: {
+            name: true,
+            interest_rate: true,
+            transaction_fee: true,
+          },
+        },
       },
     });
 
@@ -27,9 +34,13 @@ export async function GET() {
     // Convert UTC Datetime to Unix Timestamp
     const formattedUser = {
       ...user,
+      account_type: user.AccountTypes.name,
+      interest_rate: user.AccountTypes.interest_rate,
+      transaction_fee: user.AccountTypes.transaction_fee,
       created_at: Math.floor(new Date(user.created_at).getTime() / 1000),
       updated_at: Math.floor(new Date(user.updated_at).getTime() / 1000),
     };
+    delete formattedUser.AccountTypes;
 
     // Check if minecraft_username has changed
     // If it has, update the database

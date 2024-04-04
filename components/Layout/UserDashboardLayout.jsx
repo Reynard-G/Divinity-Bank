@@ -18,18 +18,24 @@ export default function DashboardLayout({ children }) {
     minecraftUsername,
     minecraftUUID,
     setUserId,
+    setAccountType,
     setMinecraftUsername,
     setMinecraftUUID,
     setDiscordUsername,
+    setInterestRate,
+    setTransactionFee,
     setCreatedAt,
     setUpdatedAt,
   } = useUserContext();
   useSWR(API.USER, fetcher, {
     onSuccess: (data) => {
       setUserId(data?.id);
+      setAccountType(data?.account_type);
       setMinecraftUsername(data?.minecraft_username);
       setMinecraftUUID(data?.minecraft_uuid);
       setDiscordUsername(data?.discord_username);
+      setInterestRate(data?.interest_rate);
+      setTransactionFee(data?.transaction_fee);
       setCreatedAt(data?.created_at);
       setUpdatedAt(data?.updated_at);
     },

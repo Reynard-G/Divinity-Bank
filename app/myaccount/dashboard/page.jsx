@@ -9,7 +9,9 @@ import StatCard from '@/components/Card/StatCard';
 import LoadingComponentSpinner from '@/components/Loading/LoadingComponentSpinner';
 import DashboardTransactionsTable from '@/components/Table/DashboardTransactionsTable';
 import API from '@/constants/API';
+import { useUserContext } from '@/contexts';
 import fetcher from '@/utils/fetcher';
+import formatPercentage from '@/utils/formatPercentage';
 
 const timeFrameButtons = [
   { name: 'Last 7 days', value: 7 },
@@ -18,6 +20,7 @@ const timeFrameButtons = [
 ];
 
 export default function Dashboard() {
+  const { accountType, interestRate } = useUserContext();
   const [transactions, setTransactions] = useState([]);
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(
     timeFrameButtons[0].value,
@@ -72,7 +75,7 @@ export default function Dashboard() {
         <header className='pb-4 pt-6 sm:pb-6'>
           <div className='mx-auto flex max-w-7xl flex-wrap items-center gap-6 px-4 sm:flex-nowrap sm:px-6 lg:px-8'>
             <h1 className='text-base font-semibold leading-7 text-gray-200'>
-              Personal Account
+              {accountType} Account
             </h1>
             <div className='order-last flex w-full gap-x-8 text-sm font-semibold leading-6 sm:order-none sm:w-auto sm:border-l sm:border-white/15 sm:pl-6 sm:leading-7'>
               {timeFrameButtons.map((button) => (
@@ -106,7 +109,7 @@ export default function Dashboard() {
             />
             <StatCard
               title='Interest Rate'
-              value='1.5%'
+              value={formatPercentage(interestRate)}
               className='lg:border-l-1'
             />
             <StatCard

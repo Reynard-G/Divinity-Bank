@@ -9,6 +9,7 @@ import { Divider } from '@nextui-org/divider';
 import { Input } from '@nextui-org/input';
 import { Link } from '@nextui-org/react';
 
+import AccountType from '@/constants/AccountType';
 import Page from '@/constants/Page';
 import { useUserContext } from '@/contexts';
 import { updateAccountInfo, updatePassword } from '@/lib/actions/form.actions';
@@ -16,6 +17,7 @@ import { updateAccountInfo, updatePassword } from '@/lib/actions/form.actions';
 export default function Settings() {
   const router = useRouter();
   const {
+    accountType,
     minecraftUUID,
     minecraftUsername,
     discordUsername,
@@ -51,56 +53,58 @@ export default function Settings() {
           </div>
 
           <div className='flex flex-col lg:w-2/3'>
-            <div className='mt-2 flex w-full flex-col gap-4'>
-              <h2 className='text-xl font-bold'>Account Information</h2>
+            {accountType === AccountType.PERSONAL && (
+              <div className='mt-2 flex w-full flex-col gap-4'>
+                <h2 className='text-xl font-bold'>Account Information</h2>
 
-              <form
-                action={async (formData) => {
-                  await updateAccountInfo(formData).then((user) => {
-                    if (user) {
-                      setIsAccountUpdating(false);
-                    }
-                  });
-                }}
-                onSubmit={() => setIsAccountUpdating(true)}
-                className='flex flex-col gap-2'
-              >
-                <Input
-                  isDisabled={true}
-                  name='minecraftUsername'
-                  label='Minecraft Username'
-                  variant='bordered'
-                  description='Your Minecraft Username is used to verify your account.'
-                  value={minecraftUsername}
-                  onValueChange={setMinecraftUsername}
-                  classNames={{
-                    description: 'text-default-600',
+                <form
+                  action={async (formData) => {
+                    await updateAccountInfo(formData).then((user) => {
+                      if (user) {
+                        setIsAccountUpdating(false);
+                      }
+                    });
                   }}
-                />
-                <Input
-                  name='discordUsername'
-                  label='Discord Username'
-                  variant='bordered'
-                  value={discordUsername}
-                  description='Your discord username is used to verify your ownership when contacting support.'
-                  onValueChange={setDiscordUsername}
-                  classNames={{
-                    description: 'text-default-600',
-                  }}
-                />
+                  onSubmit={() => setIsAccountUpdating(true)}
+                  className='flex flex-col gap-2'
+                >
+                  <Input
+                    isDisabled={true}
+                    name='minecraftUsername'
+                    label='Minecraft Username'
+                    variant='bordered'
+                    description='Your Minecraft Username is used to verify your account.'
+                    value={minecraftUsername}
+                    onValueChange={setMinecraftUsername}
+                    classNames={{
+                      description: 'text-default-600',
+                    }}
+                  />
+                  <Input
+                    name='discordUsername'
+                    label='Discord Username'
+                    variant='bordered'
+                    value={discordUsername}
+                    description='Your discord username is used to verify your ownership when contacting support.'
+                    onValueChange={setDiscordUsername}
+                    classNames={{
+                      description: 'text-default-600',
+                    }}
+                  />
 
-                <div className='flex flex-row'>
-                  <Button
-                    type='submit'
-                    isLoading={isAccountUpdating}
-                    color='primary'
-                    variant='ghost'
-                  >
-                    Update Account
-                  </Button>
-                </div>
-              </form>
-            </div>
+                  <div className='flex flex-row'>
+                    <Button
+                      type='submit'
+                      isLoading={isAccountUpdating}
+                      color='primary'
+                      variant='ghost'
+                    >
+                      Update Account
+                    </Button>
+                  </div>
+                </form>
+              </div>
+            )}
 
             <div className='mt-6 flex w-full flex-col gap-4'>
               <h2 className='text-xl font-bold'>Change Password</h2>
