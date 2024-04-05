@@ -76,7 +76,7 @@ export default function DashboardLayout({ children }) {
               </div>
             </header>
 
-            <main className='mt-4 w-full animate-[fadeIn_500ms_ease-in-out] overflow-visible'>
+            <main className='mt-4 w-full animate-[fadeIn_600ms_ease-in-out] overflow-visible'>
               <div className='w-full rounded-medium border-small border-divider'>
                 {children}
               </div>
