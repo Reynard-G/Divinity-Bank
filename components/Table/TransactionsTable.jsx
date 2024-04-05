@@ -11,40 +11,143 @@ import {
   TableRow,
 } from '@nextui-org/table';
 
+import PaymentTypeFilterButton from '@/components/Button/PaymentTypeFilterButton';
+import StatusFilterButton from '@/components/Button/StatusFilterButton';
+import TransactionTypeFilterButton from '@/components/Button/TransactionTypeFilterButton';
+import PaymentType from '@/constants/PaymentType';
+import TransactionStatus from '@/constants/TransactionStatus';
 import TransactionType from '@/constants/TransactionType';
 import formatCurrency from '@/utils/formatCurrency';
 import formatUnix from '@/utils/formatUnix';
 
 export default function TransactionsTable({ isLoading, transactions = [] }) {
+  const [transactionTypeFilter, setTransactionTypeFilter] = useState(
+    Array.from(Object.values(TransactionType)),
+  );
+  const [paymentTypeFilter, setPaymentTypeFilter] = useState(
+    Array.from(Object.values(PaymentType)),
+  );
+  const [statusFilter, setStatusFilter] = useState(
+    Array.from(Object.values(TransactionStatus)),
+  );
   const [page, setPage] = useState(1);
 
+  const filteredTransactions = useMemo(() => {
+    return transactions.filter((transaction) => {
+      if (
+        transactionTypeFilter &&
+        Array.from(transactionTypeFilter).every(
+          (type) => type !== transaction.transaction_type,
+        )
+      ) {
+        return false;
+      }
+
+      if (
+        paymentTypeFilter &&
+        Array.from(paymentTypeFilter).every(
+          (type) => type !== transaction.payment_type,
+        )
+      ) {
+        return false;
+      }
+
+      if (
+        statusFilter &&
+        Array.from(statusFilter).every(
+          (status) => status !== transaction.status,
+        )
+      ) {
+        return false;
+      }
+
+      return true;
+    });
+  }, [transactions, transactionTypeFilter, paymentTypeFilter, statusFilter]);
+
   const rowsPerPage = 15;
-  const pages = Math.ceil(transactions.length / rowsPerPage);
+  const pages = Math.ceil(filteredTransactions.length / rowsPerPage);
 
   const items = useMemo(() => {
     const start = (page - 1) * rowsPerPage;
     const end = start + rowsPerPage;
 
-    return transactions.slice(start, end);
-  }, [page, transactions]);
+    return filteredTransactions.slice(start, end);
+  }, [page, filteredTransactions]);
+
+  const topContent = useMemo(() => {
+    return (
+      <header className='relative flex flex-col gap-2 rounded-medium bg-default-50 px-4 pb-3 pt-2 md:pt-3'>
+        {/* Mobile header */}
+        <div className='flex items-center gap-2 lg:hidden lg:gap-2'>
+          <h2 className='text-large font-medium'>Transactions</h2>
+          <span className='text-small text-default-400'>
+            ({filteredTransactions.length})
+          </span>
+        </div>
+
+        {/* Desktop header */}
+        <div className='flex items-center justify-between gap-2'>
+          <div className='flex flex-row gap-2'>
+            <div className='hidden items-center gap-2 lg:flex'>
+              <h2 className='text-medium font-medium'>Transactions</h2>
+              <span className='text-small text-default-400'>
+                ({filteredTransactions.length})
+              </span>
+            </div>
+          </div>
+          <div className='-ml-2 flex w-full flex-wrap items-center justify-start gap-2 lg:ml-0 lg:justify-end'>
+            <TransactionTypeFilterButton
+              selectedKeys={transactionTypeFilter}
+              onSelectionChange={setTransactionTypeFilter}
+            />
+            <PaymentTypeFilterButton
+              selectedKeys={paymentTypeFilter}
+              onSelectionChange={setPaymentTypeFilter}
+            />
+            <StatusFilterButton
+              selectedKeys={statusFilter}
+              onSelectionChange={setStatusFilter}
+            />
+          </div>
+        </div>
+      </header>
+    );
+  }, [
+    filteredTransactions,
+    transactionTypeFilter,
+    paymentTypeFilter,
+    statusFilter,
+  ]);
+
+  const bottomContent = useMemo(() => {
+    return (
+      <div className='flex w-full justify-center'>
+        <Pagination
+          isCompact
+          showControls
+          showShadow
+          color='primary'
+          page={page}
+          total={pages || 1}
+          onChange={(page) => setPage(page)}
+        />
+      </div>
+    );
+  }, [page, pages]);
 
   return (
     <Table
       aria-label='Example static collection table'
+      isHeaderStick={true}
+      topContent={topContent}
+      topContentPlacement='outside'
+      bottomContent={bottomContent}
+      bottomContentPlacement='outside'
       selectionMode='multiple'
-      bottomContent={
-        <div className='flex w-full justify-center'>
-          <Pagination
-            isCompact
-            showControls
-            showShadow
-            color='primary'
-            page={page}
-            total={pages || 1}
-            onChange={(page) => setPage(page)}
-          />
-        </div>
-      }
+      classNames={{
+        wrapper: 'bg-transparent max-w-full',
+      }}
     >
       <TableHeader>
         <TableColumn key='Username' className='text-left'>

@@ -21,9 +21,7 @@ export default function Transactions() {
 
       <Divider />
 
-      <div className='flex'>
-        <TransactionsTable isLoading={isLoading} transactions={data} />
-      </div>
+      <TransactionsTable isLoading={isLoading} transactions={data} />
     </div>
   );
 }
