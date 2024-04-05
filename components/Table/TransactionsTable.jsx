@@ -77,7 +77,7 @@ export default function TransactionsTable({ isLoading, transactions = [] }) {
 
   const topContent = useMemo(() => {
     return (
-      <header className='relative flex flex-col gap-2 rounded-medium bg-default-50 px-4 pb-3 pt-2 md:pt-3'>
+      <header className='relative flex flex-col gap-2 rounded-medium bg-default-100/75 px-4 pb-3 pt-2 md:pt-3'>
         {/* Mobile header */}
         <div className='flex items-center gap-2 lg:hidden lg:gap-2'>
           <h2 className='text-large font-medium'>Transactions</h2>
