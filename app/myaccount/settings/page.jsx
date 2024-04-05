@@ -7,7 +7,7 @@ import { Avatar } from '@nextui-org/avatar';
 import { Button } from '@nextui-org/button';
 import { Divider } from '@nextui-org/divider';
 import { Input } from '@nextui-org/input';
-import { Link } from '@nextui-org/react';
+import { Link } from '@nextui-org/link';
 
 import AccountType from '@/constants/AccountType';
 import Page from '@/constants/Page';
