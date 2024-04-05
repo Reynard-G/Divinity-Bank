@@ -11,6 +11,7 @@ import {
   TableRow,
 } from '@nextui-org/table';
 
+import TransactionType from '@/constants/TransactionType';
 import formatCurrency from '@/utils/formatCurrency';
 import formatUnix from '@/utils/formatUnix';
 
@@ -52,7 +53,7 @@ export default function TransactionsTable({ isLoading, transactions = [] }) {
         <TableColumn key='Date' className='hidden sm:table-cell'>
           Date
         </TableColumn>
-        <TableColumn key='Type' className='hidden md:table-cell'>
+        <TableColumn key='Type' className='hidden lg:table-cell'>
           Type
         </TableColumn>
         <TableColumn
@@ -60,6 +61,9 @@ export default function TransactionsTable({ isLoading, transactions = [] }) {
           className='rounded-r-lg text-left md:rounded-none'
         >
           Amount
+        </TableColumn>
+        <TableColumn key='Note' className='hidden xl:table-cell'>
+          Note
         </TableColumn>
         <TableColumn key='Status' className='hidden md:table-cell'>
           Status
@@ -77,10 +81,15 @@ export default function TransactionsTable({ isLoading, transactions = [] }) {
             <TableCell className='hidden sm:table-cell'>
               {formatUnix(item.created_at)}
             </TableCell>
-            <TableCell className='hidden md:table-cell'>
+            <TableCell className='hidden lg:table-cell'>
               {item.payment_type}
             </TableCell>
-            <TableCell>{formatCurrency(item.amount)}</TableCell>
+            <TableCell>
+              {item.transaction_type === TransactionType.CREDIT
+                ? `+${formatCurrency(item.amount)}`
+                : `-${formatCurrency(item.amount)}`}
+            </TableCell>
+            <TableCell className='hidden xl:table-cell'>{item.note}</TableCell>
             <TableCell className='hidden md:table-cell'>
               {item.status}
             </TableCell>

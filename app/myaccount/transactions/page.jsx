@@ -11,7 +11,7 @@ export default function Transactions() {
   const { data, isLoading } = useSWR(API.USER_TRANSACTIONS, fetcher);
 
   return (
-    <>
+    <div className='flex flex-col gap-4 p-6'>
       <div className='flex flex-col'>
         <h1 className='text-3xl font-bold'>Transactions</h1>
         <p className='text-sm text-default-500'>
@@ -21,9 +21,9 @@ export default function Transactions() {
 
       <Divider />
 
-      <div className='flex flex-col'>
+      <div className='flex'>
         <TransactionsTable isLoading={isLoading} transactions={data} />
       </div>
-    </>
+    </div>
   );
 }
