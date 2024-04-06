@@ -8,8 +8,6 @@ export default {
   FORGOT_PASSWORD: '/forgot-password',
   TOS: '/terms-of-service',
   DASHBOARD: '/myaccount/dashboard',
-  DEPOSIT: '/myaccount/deposit',
-  WITHDRAW: '/myaccount/withdraw',
   TRANSACTIONS: '/myaccount/transactions',
   TRANSFER: '/myaccount/transfer',
   LOANS: '/myaccount/loans',

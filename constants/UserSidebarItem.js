@@ -17,16 +17,6 @@ export default [
     href: Page.DASHBOARD,
   },
   {
-    name: 'Deposit',
-    icon: <ArrowUpToLine size={20} />,
-    href: Page.DEPOSIT,
-  },
-  {
-    name: 'Withdraw',
-    icon: <ArrowDownToLine size={20} />,
-    href: Page.WITHDRAW,
-  },
-  {
     name: 'Transfer Money',
     icon: <ArrowLeftRight size={20} />,
     href: Page.TRANSFER,
