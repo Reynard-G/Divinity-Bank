@@ -4,6 +4,7 @@ import { useState } from 'react';
 
 import { Button } from '@nextui-org/button';
 import useSWR from 'swr';
+import { ArrowDownToLine, ArrowUpToLine } from 'lucide-react';
 
 import StatCard from '@/components/Card/StatCard';
 import DashboardTransactionsTable from '@/components/Table/DashboardTransactionsTable';
@@ -13,6 +14,8 @@ import { useUserContext } from '@/contexts';
 import fetcher from '@/utils/fetcher';
 import formatCurrency from '@/utils/formatCurrency';
 import formatPercentage from '@/utils/formatPercentage';
+import DepositModalButton from '@/components/Button/DepositModalButton';
+import WithdrawModalButton from '@/components/Button/WithdrawModalButton';
 
 const timeFrameButtons = [
   { name: 'Last 7 days', value: 7 },
@@ -146,10 +149,14 @@ export default function Dashboard() {
       <div className='space-y-16 py-16 xl:space-y-20'>
         {/* Recent Activity Table */}
         <div>
-          <div className='mx-auto max-w-7xl px-4 sm:px-6 lg:px-8'>
-            <h2 className='mx-auto max-w-2xl text-base font-semibold leading-6 text-gray-200 lg:mx-0 lg:max-w-none'>
+          <div className='mx-auto flex max-w-7xl flex-wrap items-center gap-6 px-4 sm:flex-nowrap sm:px-6 lg:px-8'>
+            <h2 className='text-base font-semibold leading-6 text-gray-200 lg:mx-0 lg:max-w-none'>
               Recent Activity
             </h2>
+            <div className='order-last flex w-full gap-x-4 text-sm leading-6 sm:order-none sm:w-auto sm:border-l sm:border-white/15 sm:pl-6 sm:leading-7'>
+              <DepositModalButton color='primary' size='sm' variant='ghost' startContent={<ArrowUpToLine size={16} />} />
+              <WithdrawModalButton color='primary' size='sm' variant='ghost' startContent={<ArrowDownToLine size={16} />} />
+            </div>
           </div>
 
           <div className='mt-6 overflow-hidden border-t-0 border-gray-100'>
