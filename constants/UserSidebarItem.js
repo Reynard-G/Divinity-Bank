@@ -1,7 +1,5 @@
 import {
-  ArrowDownToLine,
   ArrowLeftRight,
-  ArrowUpToLine,
   Banknote,
   LayoutDashboard,
   ScrollText,

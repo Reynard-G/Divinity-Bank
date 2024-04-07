@@ -1,5 +1,13 @@
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/modal';
 import { Button } from '@nextui-org/button';
+import { Input } from '@nextui-org/input';
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from '@nextui-org/modal';
+import { DollarSign } from 'lucide-react';
 
 export default function WithdrawModal({ isOpen, onOpenChange, ...props }) {
   return (
@@ -9,7 +17,14 @@ export default function WithdrawModal({ isOpen, onOpenChange, ...props }) {
           <>
             <ModalHeader>Withdraw</ModalHeader>
             <ModalBody>
-              <p>Withdraw funds from your account</p>
+              {/**
+               * Amount
+               */}
+              <Input
+                type='number'
+                placeholder='Enter the amount to withdraw'
+                startContent={<DollarSign size={20} />}
+              />
             </ModalBody>
             <ModalFooter>
               <Button onPress={onClose} color='danger' variant='ghost'>

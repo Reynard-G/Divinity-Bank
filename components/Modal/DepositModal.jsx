@@ -1,5 +1,12 @@
-import { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/modal';
 import { Button } from '@nextui-org/button';
+import { Input } from '@nextui-org/input';
+import {
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+} from '@nextui-org/modal';
 
 export default function DepositModal({ isOpen, onOpenChange, ...props }) {
   return (
@@ -9,7 +16,15 @@ export default function DepositModal({ isOpen, onOpenChange, ...props }) {
           <>
             <ModalHeader>Deposit</ModalHeader>
             <ModalBody>
-              <p>Deposit funds into your account</p>
+              {/**
+               * Amount
+               * Screenshot
+               */}
+              <Input
+                label='Amount'
+                placeholder='Enter the amount to deposit'
+                type='number'
+              />
             </ModalBody>
             <ModalFooter>
               <Button onPress={onClose} color='danger' variant='ghost'>

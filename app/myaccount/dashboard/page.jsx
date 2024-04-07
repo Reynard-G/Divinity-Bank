@@ -3,9 +3,11 @@
 import { useState } from 'react';
 
 import { Button } from '@nextui-org/button';
-import useSWR from 'swr';
 import { ArrowDownToLine, ArrowUpToLine } from 'lucide-react';
+import useSWR from 'swr';
 
+import DepositModalButton from '@/components/Button/DepositModalButton';
+import WithdrawModalButton from '@/components/Button/WithdrawModalButton';
 import StatCard from '@/components/Card/StatCard';
 import DashboardTransactionsTable from '@/components/Table/DashboardTransactionsTable';
 import API from '@/constants/API';
@@ -14,8 +16,6 @@ import { useUserContext } from '@/contexts';
 import fetcher from '@/utils/fetcher';
 import formatCurrency from '@/utils/formatCurrency';
 import formatPercentage from '@/utils/formatPercentage';
-import DepositModalButton from '@/components/Button/DepositModalButton';
-import WithdrawModalButton from '@/components/Button/WithdrawModalButton';
 
 const timeFrameButtons = [
   { name: 'Last 7 days', value: 7 },
@@ -154,8 +154,18 @@ export default function Dashboard() {
               Recent Activity
             </h2>
             <div className='order-last flex w-full gap-x-4 text-sm leading-6 sm:order-none sm:w-auto sm:border-l sm:border-white/15 sm:pl-6 sm:leading-7'>
-              <DepositModalButton color='primary' size='sm' variant='ghost' startContent={<ArrowUpToLine size={16} />} />
-              <WithdrawModalButton color='primary' size='sm' variant='ghost' startContent={<ArrowDownToLine size={16} />} />
+              <DepositModalButton
+                color='primary'
+                size='sm'
+                variant='ghost'
+                startContent={<ArrowUpToLine size={16} />}
+              />
+              <WithdrawModalButton
+                color='primary'
+                size='sm'
+                variant='ghost'
+                startContent={<ArrowDownToLine size={16} />}
+              />
             </div>
           </div>
 
