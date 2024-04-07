@@ -1,7 +1,5 @@
 import { cookies } from 'next/headers';
 
-import { Prisma } from '@prisma/client';
-
 import TransactionType from '@/constants/TransactionType';
 import prisma from '@/lib/db';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
@@ -35,8 +33,8 @@ export async function GET() {
       }),
     ]);
 
-    const creditSum = creditSumResult._sum.amount || Prisma.Decimal(0.0);
-    const debitSum = debitSumResult._sum.amount || Prisma.Decimal(0.0);
+    const creditSum = creditSumResult?._sum?.amount ?? 0.0;
+    const debitSum = debitSumResult?._sum?.amount ?? 0.0;
     const userBalance = creditSum.sub(debitSum).toString();
 
     return new Response(JSON.stringify({ userId: id, balance: userBalance }), {
