@@ -16,6 +16,7 @@ import { useUserContext } from '@/contexts';
 import fetcher from '@/utils/fetcher';
 import formatCurrency from '@/utils/formatCurrency';
 import formatPercentage from '@/utils/formatPercentage';
+import reformatTransactionByDate from '@/utils/reformatTransactionByDate';
 
 const timeFrameButtons = [
   { name: 'Last 7 days', value: 7 },
@@ -43,43 +44,7 @@ export default function Dashboard() {
       );
       setPendingTransactions(pendingTransactionsData.length);
 
-      // Reformat data to group transactions by date
-      // and display relative time for each date, up to 7 days
-      const reformattedData = data.reduce((acc, transaction) => {
-        const date = new Date(transaction.created_at * 1000);
-        const now = new Date();
-
-        const rtf = new Intl.RelativeTimeFormat('en', { numeric: 'auto' });
-
-        const daysDifference = Math.round(
-          (now.getTime() - date.getTime()) / (1000 * 60 * 60 * 24),
-        );
-
-        let formattedDate;
-
-        if (daysDifference === 0) {
-          formattedDate = 'Today';
-        } else if (daysDifference === 1) {
-          formattedDate = 'Yesterday';
-        } else if (daysDifference < 7) {
-          formattedDate = rtf.format(-daysDifference, 'day');
-        } else {
-          formattedDate = date.toISOString().split('T')[0];
-        }
-
-        const existingEntry = acc.find(
-          (entry) => entry.dateTime === formattedDate,
-        );
-
-        if (existingEntry) {
-          existingEntry.transactions.push(transaction);
-        } else {
-          acc.push({ dateTime: formattedDate, transactions: [transaction] });
-        }
-
-        return acc;
-      }, []);
-
+      const reformattedData = reformatTransactionByDate(data.slice(0, 5));
       setTransactions(reformattedData);
     },
   });
