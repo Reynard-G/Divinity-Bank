@@ -1,4 +1,5 @@
 export default {
+  BASE_URL: 'https://divinity.milklegend.xyz',
   HOME: '/',
   ABOUT: '/about',
   FAQ: '/faq',
