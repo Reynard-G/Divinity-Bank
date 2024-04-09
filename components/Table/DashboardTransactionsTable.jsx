@@ -24,12 +24,6 @@ const paymentTypeIcons = {
   ),
 };
 
-const transactionStatusColors = {
-  [TransactionStatus.PENDING]: 'warning',
-  [TransactionStatus.SUCCESS]: 'success',
-  [TransactionStatus.FAILED]: 'error',
-};
-
 export default function DashboardTransactionsTable({ transactions = [] }) {
   return (
     <table className='w-full text-left'>
@@ -62,12 +56,14 @@ export default function DashboardTransactionsTable({ transactions = [] }) {
                   <div className='flex gap-x-6'>
                     {paymentTypeIcons[transaction.payment_type]}
                     <div className='flex-auto'>
-                      <div className='flex items-start gap-x-3'>
+                      <div className='flex items-center gap-x-3'>
                         <div className='text-sm font-medium leading-6 text-neutral-200'>
                           {formatCurrency(transaction.amount)}
                         </div>
                         <Chip
-                          color={transactionStatusColors[transaction.status]}
+                          color={
+                            TransactionStatus[`${transaction.status}_COLOR`]
+                          }
                           size='md'
                           radius='sm'
                           variant='flat'

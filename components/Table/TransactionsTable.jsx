@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 
+import { Chip } from '@nextui-org/chip';
 import { Pagination } from '@nextui-org/pagination';
 import { Spinner } from '@nextui-org/spinner';
 import {
@@ -194,7 +195,14 @@ export default function TransactionsTable({ isLoading, transactions = [] }) {
             </TableCell>
             <TableCell className='hidden xl:table-cell'>{item.note}</TableCell>
             <TableCell className='hidden md:table-cell'>
-              {item.status}
+              <Chip
+                color={TransactionStatus[`${item.status}_COLOR`]}
+                size='sm'
+                radius='sm'
+                variant='flat'
+              >
+                {item.status}
+              </Chip>
             </TableCell>
           </TableRow>
         )}
