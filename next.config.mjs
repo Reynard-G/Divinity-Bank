@@ -9,7 +9,7 @@ const cspHeader = `
   default-src 'self';
   script-src 'self' 'unsafe-inline' 'unsafe-eval';
   style-src 'self' 'unsafe-inline';
-  img-src 'self' https://crafatar.com data:;
+  img-src 'self' https://crafatar.com data: blob:;
   font-src 'self' https://fonts.gstatic.com;
   object-src 'none';
   base-uri 'self';
@@ -58,6 +58,7 @@ const nextConfig = {
   experimental: {
     serverActions: {
       allowedOrigins: ['localhost:3000'],
+      bodySizeLimit: '8mb',
     },
   },
   compiler: {
