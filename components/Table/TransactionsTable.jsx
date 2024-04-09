@@ -17,6 +17,7 @@ import StatusFilterButton from '@/components/Button/StatusFilterButton';
 import TransactionTypeFilterButton from '@/components/Button/TransactionTypeFilterButton';
 import PaymentType from '@/constants/PaymentType';
 import TransactionStatus from '@/constants/TransactionStatus';
+import TransactionStatusColor from '@/constants/TransactionStatusColor';
 import TransactionType from '@/constants/TransactionType';
 import formatCurrency from '@/utils/formatCurrency';
 import formatUnix from '@/utils/formatUnix';
@@ -179,29 +180,31 @@ export default function TransactionsTable({ isLoading, transactions = [] }) {
         emptyContent={isLoading || 'No transactions found.'}
         loadingContent={<Spinner />}
       >
-        {(item) => (
-          <TableRow key={item.id}>
-            <TableCell>{item.created_minecraft_username}</TableCell>
+        {(transaction) => (
+          <TableRow key={transaction.id}>
+            <TableCell>{transaction.created_minecraft_username}</TableCell>
             <TableCell className='hidden sm:table-cell'>
-              {formatUnix(item.created_at)}
+              {formatUnix(transaction.created_at)}
             </TableCell>
             <TableCell className='hidden lg:table-cell'>
-              {item.payment_type}
+              {transaction.payment_type}
             </TableCell>
             <TableCell>
-              {item.transaction_type === TransactionType.CREDIT
-                ? `+${formatCurrency(item.amount)}`
-                : `-${formatCurrency(item.amount)}`}
+              {transaction.transaction_type === TransactionType.CREDIT
+                ? `+${formatCurrency(transaction.amount)}`
+                : `-${formatCurrency(transaction.amount)}`}
             </TableCell>
-            <TableCell className='hidden xl:table-cell'>{item.note}</TableCell>
+            <TableCell className='hidden xl:table-cell'>
+              {transaction.note}
+            </TableCell>
             <TableCell className='hidden md:table-cell'>
               <Chip
-                color={TransactionStatus[`${item.status}_COLOR`]}
+                color={TransactionStatusColor[transaction.status]}
                 size='sm'
                 radius='sm'
                 variant='flat'
               >
-                {item.status}
+                {transaction.status}
               </Chip>
             </TableCell>
           </TableRow>

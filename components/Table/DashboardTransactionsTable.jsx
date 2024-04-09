@@ -6,7 +6,7 @@ import { Link } from '@nextui-org/link';
 import { ArrowRightLeft, Coins, Minus, Plus } from 'lucide-react';
 
 import PaymentType from '@/constants/PaymentType';
-import TransactionStatus from '@/constants/TransactionStatus';
+import TransactionStatusColor from '@/constants/TransactionStatusColor';
 import formatCurrency from '@/utils/formatCurrency';
 
 const paymentTypeIcons = {
@@ -61,9 +61,7 @@ export default function DashboardTransactionsTable({ transactions = [] }) {
                           {formatCurrency(transaction.amount)}
                         </div>
                         <Chip
-                          color={
-                            TransactionStatus[`${transaction.status}_COLOR`]
-                          }
+                          color={TransactionStatusColor[transaction.status]}
                           size='md'
                           radius='sm'
                           variant='flat'
