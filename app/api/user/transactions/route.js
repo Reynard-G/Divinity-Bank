@@ -38,10 +38,10 @@ export async function GET() {
       const { user_user, created_by_user, ...rest } = transaction;
       return {
         ...rest,
-        minecraft_username: user_user.minecraft_username,
-        minecraft_uuid: user_user.minecraft_uuid,
-        created_minecraft_username: created_by_user.minecraft_username,
-        created_minecraft_uuid: created_by_user.minecraft_uuid,
+        minecraft_username: user_user?.minecraft_username,
+        minecraft_uuid: user_user?.minecraft_uuid,
+        created_minecraft_username: created_by_user?.minecraft_username,
+        created_minecraft_uuid: created_by_user?.minecraft_uuid,
         created_at: Math.floor(
           new Date(transaction.created_at).getTime() / 1000,
         ),
