@@ -92,7 +92,7 @@ export default function DepositModal({ isOpen, onOpenChange, ...props }) {
                 Close
               </Button>
               <Button
-                isDisabled={!amount}
+                isDisabled={!amount || !attachment || amount <= 0}
                 isLoading={isDepositLoading}
                 color='primary'
                 variant='ghost'

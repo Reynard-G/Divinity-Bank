@@ -1,10 +1,4 @@
-import {
-  ArrowLeftRight,
-  Banknote,
-  LayoutDashboard,
-  ScrollText,
-  Settings,
-} from 'lucide-react';
+import { Banknote, LayoutDashboard, ScrollText, Settings } from 'lucide-react';
 
 import Page from '@/constants/Page';
 
@@ -13,11 +7,6 @@ export default [
     name: 'Dashboard',
     icon: <LayoutDashboard size={20} />,
     href: Page.DASHBOARD,
-  },
-  {
-    name: 'Transfer Money',
-    icon: <ArrowLeftRight size={20} />,
-    href: Page.TRANSFER,
   },
   {
     name: 'Transactions',

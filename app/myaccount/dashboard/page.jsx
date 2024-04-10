@@ -3,10 +3,11 @@
 import { useState } from 'react';
 
 import { Button } from '@nextui-org/button';
-import { ArrowDownToLine, ArrowUpToLine } from 'lucide-react';
+import { ArrowDownToLine, ArrowLeftRight, ArrowUpToLine } from 'lucide-react';
 import useSWR from 'swr';
 
 import DepositModalButton from '@/components/Button/DepositModalButton';
+import TransferModalButton from '@/components/Button/TransferModalButton';
 import WithdrawModalButton from '@/components/Button/WithdrawModalButton';
 import StatCard from '@/components/Card/StatCard';
 import DashboardTransactionsTable from '@/components/Table/DashboardTransactionsTable';
@@ -130,6 +131,12 @@ export default function Dashboard() {
                 size='sm'
                 variant='ghost'
                 startContent={<ArrowDownToLine size={16} />}
+              />
+              <TransferModalButton
+                color='primary'
+                size='sm'
+                variant='ghost'
+                startContent={<ArrowLeftRight size={16} />}
               />
             </div>
           </div>

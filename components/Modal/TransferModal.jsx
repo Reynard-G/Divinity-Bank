@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
 
+//import { useRouter } from 'next/navigation';
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import {
@@ -12,23 +12,30 @@ import {
 } from '@nextui-org/modal';
 import { DollarSign } from 'lucide-react';
 
-import { withdraw } from '@/lib/actions/transaction.actions';
+import { transfer } from '@/lib/actions/transaction.actions';
 
-export default function WithdrawModal({ isOpen, onOpenChange, ...props }) {
-  const router = useRouter();
+export default function TransferModal({ isOpen, onOpenChange, ...props }) {
+  //const router = useRouter();
   const [amount, setAmount] = useState('');
-  const [isWithdrawalLoading, setIsWithdrawalLoading] = useState(false);
+  const [isTransferLoading /*, setIsTransferLoading*/] = useState(false);
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} {...props}>
       <ModalContent>
         {(onClose) => (
           <>
-            <ModalHeader>Withdraw</ModalHeader>
+            <ModalHeader>Transfer</ModalHeader>
             <ModalBody>
               {/**
+               * Player
                * Amount
                */}
+              <Input
+                type='text'
+                placeholder='Player'
+                startContent={<DollarSign size={20} />}
+                onValueChange={setAmount}
+              />
               <Input
                 type='number'
                 placeholder='0.00'
@@ -43,21 +50,11 @@ export default function WithdrawModal({ isOpen, onOpenChange, ...props }) {
               </Button>
               <Button
                 isDisabled={!amount || amount <= 0}
-                isLoading={isWithdrawalLoading}
+                isLoading={isTransferLoading}
                 color='primary'
                 variant='ghost'
-                onPress={async () => {
-                  setIsWithdrawalLoading(true);
-                  await withdraw(amount).then((transaction) => {
-                    if (transaction) {
-                      onClose();
-                      router.push(`/myaccount/transactions/${transaction.id}`);
-                    }
-                    setIsWithdrawalLoading(false);
-                  });
-                }}
               >
-                Withdraw
+                Transfer
               </Button>
             </ModalFooter>
           </>

@@ -10,7 +10,6 @@ export default {
   TOS: '/terms-of-service',
   DASHBOARD: '/myaccount/dashboard',
   TRANSACTIONS: '/myaccount/transactions',
-  TRANSFER: '/myaccount/transfer',
   LOANS: '/myaccount/loans',
   SETTINGS: '/myaccount/settings',
 };
