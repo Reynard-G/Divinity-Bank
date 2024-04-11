@@ -16,11 +16,13 @@ import { DollarSign } from 'lucide-react';
 import useSWR from 'swr';
 
 import API from '@/constants/API';
+import { useUserContext } from '@/contexts';
 import { transfer } from '@/lib/actions/transaction.actions';
 import fetcher from '@/utils/fetcher';
 
 export default function TransferModal({ isOpen, onOpenChange, ...props }) {
   const router = useRouter();
+  const { userId } = useUserContext();
   const [recipientUserId, setRecipientUserId] = useState(null);
   const [amount, setAmount] = useState('');
   const [isTransferLoading, setIsTransferLoading] = useState(false);
@@ -34,7 +36,7 @@ export default function TransferModal({ isOpen, onOpenChange, ...props }) {
             <ModalHeader>Transfer</ModalHeader>
             <ModalBody>
               <Autocomplete
-                defaultItems={users}
+                defaultItems={users.filter((user) => user.id !== userId)}
                 label='Player'
                 variant='bordered'
                 placeholder='Search for a player'
