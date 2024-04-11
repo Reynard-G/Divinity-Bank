@@ -47,7 +47,7 @@ export default function Settings() {
           <div className='relative flex flex-row justify-center gap-4 lg:w-1/3'>
             <Avatar
               radius='lg'
-              src={`https://crafatar.com/avatars/${minecraftUUID}?size=192`}
+              src={`https://crafatar.com/avatars/${minecraftUUID}?size=192&overlay=true`}
               className='mb-12 h-48 w-48 lg:mt-12'
             />
           </div>

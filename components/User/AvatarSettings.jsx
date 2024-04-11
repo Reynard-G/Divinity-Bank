@@ -23,7 +23,7 @@ export default function AvatarSettings({ minecraftUsername, minecraftUUID }) {
           isBordered
           radius='lg'
           name={minecraftUsername}
-          src={`https://crafatar.com/avatars/${minecraftUUID}?size=40`}
+          src={`https://crafatar.com/avatars/${minecraftUUID}?size=40&overlay=true`}
           alt='Minecraft Avatar'
         />
       </DropdownTrigger>

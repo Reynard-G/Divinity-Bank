@@ -84,7 +84,7 @@ export default function DashboardTransactionsTable({ transactions = [] }) {
                   <div className='flex items-center gap-x-3'>
                     <Avatar
                       radius='lg'
-                      src={`https://crafatar.com/avatars/${transaction.created_minecraft_uuid}?size=40`}
+                      src={`https://crafatar.com/avatars/${transaction.created_minecraft_uuid}?size=40&overlay=true`}
                     />
                     <div>
                       <div className='text-sm leading-6 text-neutral-200'>
