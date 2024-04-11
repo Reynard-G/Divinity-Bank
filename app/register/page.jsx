@@ -11,8 +11,8 @@ import { Link } from '@nextui-org/link';
 import RegisterBrand from '@/components/Brand/RegisterBrand';
 import PasswordVisibleButton from '@/components/Button/PasswordVisibleButton';
 import RegisterLayout from '@/components/Layout/RegisterLayout';
-import API from '@/constants/API';
 import Page from '@/constants/Page';
+import { register } from '@/lib/actions/form.actions';
 
 export default function Register() {
   const router = useRouter();
@@ -28,41 +28,6 @@ export default function Register() {
   const [isUsernameInvalid, setIsUsernameInvalid] = useState(false);
   const [isPasswordInvalid, setIsPasswordInvalid] = useState(false);
   const [isFormValid, setIsFormValid] = useState(false);
-
-  async function handleSubmit(event) {
-    event.preventDefault();
-
-    const formData = new FormData(event.target);
-    const data = Object.fromEntries(formData);
-
-    // Check if password & confirm password fields match
-    if (data.password !== data.confirmPassword) {
-      setIsPasswordInvalid(true);
-      return;
-    }
-
-    setIsLoading(true);
-    try {
-      const res = await fetch(API.REGISTER, {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      });
-
-      if (res.ok) {
-        router.push(Page.LOGIN);
-      } else {
-        setIsUsernameInvalid(true);
-      }
-    } catch (error) {
-      console.error(error);
-      // handle error
-    } finally {
-      setIsLoading(false);
-    }
-  }
 
   useEffect(() => {
     setIsFormValid(
@@ -85,7 +50,21 @@ export default function Register() {
     <RegisterLayout>
       <RegisterBrand />
 
-      <form className='flex flex-col gap-3' onSubmit={handleSubmit}>
+      <form
+        className='flex flex-col gap-3'
+        action={async (formData) => {
+          await register(formData).then((user) => {
+            setIsLoading(false);
+            if (user) {
+              setIsUsernameInvalid(false);
+              router.push(Page.DASHBOARD);
+            } else {
+              setIsUsernameInvalid(true);
+            }
+          });
+        }}
+        onSubmit={() => setIsLoading(true)}
+      >
         <div className='flex flex-col'>
           <Input
             type='text'
@@ -129,7 +108,12 @@ export default function Register() {
                 setIsVisible={setIsPasswordVisible}
               />
             }
-            onValueChange={setPassword}
+            onValueChange={(value) => {
+              setPassword(value);
+              setIsPasswordInvalid(
+                confirmPassword && confirmPassword !== value,
+              );
+            }}
             classNames={{
               base: '-mb-[2px]',
               inputWrapper:
@@ -151,7 +135,10 @@ export default function Register() {
                 setIsVisible={setIsConfirmPasswordVisible}
               />
             }
-            onValueChange={setConfirmPassword}
+            onValueChange={(value) => {
+              setConfirmPassword(value);
+              setIsPasswordInvalid(password && password !== value);
+            }}
             classNames={{
               inputWrapper: 'rounded-t-none',
             }}
