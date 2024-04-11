@@ -10,6 +10,7 @@ import {
 
 import Page from '@/constants/Page';
 import { logout } from '@/lib/actions/form.actions';
+import crafatarURL from '@/utils/crafatarURL';
 
 export default function AvatarSettings({ minecraftUsername, minecraftUUID }) {
   const router = useRouter();
@@ -23,7 +24,7 @@ export default function AvatarSettings({ minecraftUsername, minecraftUUID }) {
           isBordered
           radius='lg'
           name={minecraftUsername}
-          src={`https://crafatar.com/avatars/${minecraftUUID}?size=40&overlay=true`}
+          src={crafatarURL(minecraftUUID, 40)}
           alt='Minecraft Avatar'
         />
       </DropdownTrigger>

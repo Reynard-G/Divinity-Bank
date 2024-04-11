@@ -18,6 +18,7 @@ import useSWR from 'swr';
 import API from '@/constants/API';
 import { useUserContext } from '@/contexts';
 import { transfer } from '@/lib/actions/transaction.actions';
+import crafatarURL from '@/utils/crafatarURL';
 import fetcher from '@/utils/fetcher';
 
 export default function TransferModal({ isOpen, onOpenChange, ...props }) {
@@ -54,7 +55,7 @@ export default function TransferModal({ isOpen, onOpenChange, ...props }) {
                         alt={user.minecraft_username}
                         className='flex-shrink-0'
                         size='sm'
-                        src={`https://crafatar.com/avatars/${user.minecraft_uuid}?size=36&overlay=true`}
+                        src={crafatarURL(user.uuid, 32)}
                       />
                       <div className='flex flex-col'>
                         <span className='text-small'>

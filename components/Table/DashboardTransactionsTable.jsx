@@ -7,6 +7,7 @@ import { ArrowRightLeft, Coins, Minus, Plus } from 'lucide-react';
 
 import PaymentType from '@/constants/PaymentType';
 import TransactionStatusColor from '@/constants/TransactionStatusColor';
+import crafatarURL from '@/utils/crafatarURL';
 import formatCurrency from '@/utils/formatCurrency';
 
 const paymentTypeIcons = {
@@ -84,7 +85,7 @@ export default function DashboardTransactionsTable({ transactions = [] }) {
                   <div className='flex items-center gap-x-3'>
                     <Avatar
                       radius='lg'
-                      src={`https://crafatar.com/avatars/${transaction.created_minecraft_uuid}?size=40&overlay=true`}
+                      src={crafatarURL(transaction.created_minecraft_uuid, 40)}
                     />
                     <div>
                       <div className='text-sm leading-6 text-neutral-200'>

@@ -13,6 +13,7 @@ import AccountType from '@/constants/AccountType';
 import Page from '@/constants/Page';
 import { useUserContext } from '@/contexts';
 import { updateAccountInfo, updatePassword } from '@/lib/actions/form.actions';
+import crafatarURL from '@/utils/crafatarURL';
 
 export default function Settings() {
   const router = useRouter();
@@ -47,7 +48,7 @@ export default function Settings() {
           <div className='relative flex flex-row justify-center gap-4 lg:w-1/3'>
             <Avatar
               radius='lg'
-              src={`https://crafatar.com/avatars/${minecraftUUID}?size=192&overlay=true`}
+              src={crafatarURL(minecraftUUID, 192)}
               className='mb-12 h-48 w-48 lg:mt-12'
             />
           </div>
