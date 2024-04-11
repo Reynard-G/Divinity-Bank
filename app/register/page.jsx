@@ -111,7 +111,7 @@ export default function Register() {
             onValueChange={(value) => {
               setPassword(value);
               setIsPasswordInvalid(
-                confirmPassword && confirmPassword !== value,
+                !confirmPassword || confirmPassword !== value,
               );
             }}
             classNames={{
@@ -137,7 +137,7 @@ export default function Register() {
             }
             onValueChange={(value) => {
               setConfirmPassword(value);
-              setIsPasswordInvalid(password && password !== value);
+              setIsPasswordInvalid(!password || password !== value);
             }}
             classNames={{
               inputWrapper: 'rounded-t-none',
