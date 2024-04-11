@@ -26,9 +26,6 @@ export default function WithdrawModal({ isOpen, onOpenChange, ...props }) {
           <>
             <ModalHeader>Withdraw</ModalHeader>
             <ModalBody>
-              {/**
-               * Amount
-               */}
               <Input
                 type='number'
                 placeholder='0.00'

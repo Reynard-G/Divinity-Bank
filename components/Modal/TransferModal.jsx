@@ -1,6 +1,8 @@
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 
-//import { useRouter } from 'next/navigation';
+import { Autocomplete, AutocompleteItem } from '@nextui-org/autocomplete';
+import { Avatar } from '@nextui-org/avatar';
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import {
@@ -11,13 +13,18 @@ import {
   ModalHeader,
 } from '@nextui-org/modal';
 import { DollarSign } from 'lucide-react';
+import useSWR from 'swr';
 
+import API from '@/constants/API';
 import { transfer } from '@/lib/actions/transaction.actions';
+import fetcher from '@/utils/fetcher';
 
 export default function TransferModal({ isOpen, onOpenChange, ...props }) {
-  //const router = useRouter();
+  const router = useRouter();
+  const [recipientUserId, setRecipientUserId] = useState(null);
   const [amount, setAmount] = useState('');
-  const [isTransferLoading /*, setIsTransferLoading*/] = useState(false);
+  const [isTransferLoading, setIsTransferLoading] = useState(false);
+  const { data: users } = useSWR(API.USERS, fetcher);
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} {...props}>
@@ -26,16 +33,39 @@ export default function TransferModal({ isOpen, onOpenChange, ...props }) {
           <>
             <ModalHeader>Transfer</ModalHeader>
             <ModalBody>
-              {/**
-               * Player
-               * Amount
-               */}
-              <Input
-                type='text'
-                placeholder='Player'
-                startContent={<DollarSign size={20} />}
-                onValueChange={setAmount}
-              />
+              <Autocomplete
+                defaultItems={users}
+                label='Player'
+                variant='bordered'
+                placeholder='Search for a player'
+                onSelectionChange={(userId) =>
+                  setRecipientUserId(parseInt(userId))
+                }
+              >
+                {(user) => (
+                  <AutocompleteItem
+                    key={user.id}
+                    textValue={user.minecraft_username}
+                  >
+                    <div className='flex items-center gap-2'>
+                      <Avatar
+                        alt={user.minecraft_username}
+                        className='flex-shrink-0'
+                        size='sm'
+                        src={`https://crafatar.com/avatars/${user.minecraft_uuid}?size=36&overlay=true`}
+                      />
+                      <div className='flex flex-col'>
+                        <span className='text-small'>
+                          {user.minecraft_username}
+                        </span>
+                        <span className='text-tiny text-default-400'>
+                          {user.discord_username}
+                        </span>
+                      </div>
+                    </div>
+                  </AutocompleteItem>
+                )}
+              </Autocomplete>
               <Input
                 type='number'
                 placeholder='0.00'
@@ -49,10 +79,24 @@ export default function TransferModal({ isOpen, onOpenChange, ...props }) {
                 Close
               </Button>
               <Button
-                isDisabled={!amount || amount <= 0}
+                isDisabled={!recipientUserId || !amount || amount <= 0}
                 isLoading={isTransferLoading}
                 color='primary'
                 variant='ghost'
+                onPress={async () => {
+                  setIsTransferLoading(true);
+                  await transfer(amount, recipientUserId).then(
+                    (transaction) => {
+                      if (transaction) {
+                        onClose();
+                        router.push(
+                          `/myaccount/transactions/${transaction.id}`,
+                        );
+                      }
+                      setIsTransferLoading(false);
+                    },
+                  );
+                }}
               >
                 Transfer
               </Button>

@@ -51,10 +51,6 @@ export default function DepositModal({ isOpen, onOpenChange, ...props }) {
           <>
             <ModalHeader>Deposit</ModalHeader>
             <ModalBody>
-              {/**
-               * Amount
-               * Screenshot
-               */}
               <Input
                 type='number'
                 placeholder='0.00'
