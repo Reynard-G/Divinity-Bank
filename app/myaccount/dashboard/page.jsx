@@ -16,7 +16,7 @@ const TransferModalButton = dynamic(
 const WithdrawModalButton = dynamic(
   () => import('@/components/Button/WithdrawModalButton'),
 );
-import StatCard from '@/components/Card/StatCard';
+const StatCard = dynamic(() => import('@/components/Card/StatCard'));
 import DashboardTransactionsTable from '@/components/Table/DashboardTransactionsTable';
 import API from '@/constants/API';
 import TransactionStatus from '@/constants/TransactionStatus';
