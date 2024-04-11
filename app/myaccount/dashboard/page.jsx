@@ -1,14 +1,21 @@
 'use client';
 
 import { useState } from 'react';
+import dynamic from 'next/dynamic';
 
 import { Button } from '@nextui-org/button';
 import { ArrowDownToLine, ArrowLeftRight, ArrowUpToLine } from 'lucide-react';
 import useSWR from 'swr';
 
-import DepositModalButton from '@/components/Button/DepositModalButton';
-import TransferModalButton from '@/components/Button/TransferModalButton';
-import WithdrawModalButton from '@/components/Button/WithdrawModalButton';
+const DepositModalButton = dynamic(
+  () => import('@/components/Button/DepositModalButton'),
+);
+const TransferModalButton = dynamic(
+  () => import('@/components/Button/TransferModalButton'),
+);
+const WithdrawModalButton = dynamic(
+  () => import('@/components/Button/WithdrawModalButton'),
+);
 import StatCard from '@/components/Card/StatCard';
 import DashboardTransactionsTable from '@/components/Table/DashboardTransactionsTable';
 import API from '@/constants/API';

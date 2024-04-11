@@ -1,9 +1,13 @@
 'use client';
 
+import dynamic from 'next/dynamic';
+
 import { Divider } from '@nextui-org/divider';
 import useSWR from 'swr';
 
-import TransactionsTable from '@/components/Table/TransactionsTable';
+const TransactionsTable = dynamic(
+  () => import('@/components/Table/TransactionsTable'),
+);
 import API from '@/constants/API';
 import fetcher from '@/utils/fetcher';
 
