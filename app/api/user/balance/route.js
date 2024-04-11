@@ -11,44 +11,28 @@ export async function GET() {
   try {
     const id = (await getPayloadFromJWT(cookie))?.id;
 
-    // Using Promise.all to execute both queries concurrently
-    // This is more efficient than executing them sequentially with await
-    const [creditSumResult, debitSumResult, feeResult] = await Promise.all([
-      prisma.transactions.aggregate({
-        _sum: {
-          amount: true,
-        },
-        where: {
-          user_id: id,
-          transaction_type: TransactionType.CREDIT,
-          status: TransactionStatus.SUCCESS,
-        },
-      }),
-      prisma.transactions.aggregate({
-        _sum: {
-          amount: true,
-        },
-        where: {
-          user_id: id,
-          transaction_type: TransactionType.DEBIT,
-          status: TransactionStatus.SUCCESS,
-        },
-      }),
-      prisma.transactions.aggregate({
-        _sum: {
-          fee: true,
-        },
-        where: {
-          user_id: id,
-          status: TransactionStatus.SUCCESS,
-        },
-      }),
-    ]);
+    const query = `
+      SELECT
+        SUM(CASE WHEN transaction_type = ? AND status = ? THEN amount ELSE 0 END) -
+        SUM(CASE WHEN transaction_type = ? AND status = ? THEN amount ELSE 0 END) -
+        SUM(fee) AS initiatorUserBalance
+      FROM Transactions
+      WHERE user_id = ?
+        AND status = ?
+    `;
 
-    const creditSum = creditSumResult?._sum?.amount ?? 0.0;
-    const debitSum = debitSumResult?._sum?.amount ?? 0.0;
-    const feeSum = feeResult?._sum?.fee ?? 0.0;
-    const userBalance = creditSum.sub(debitSum).sub(feeSum).toNumber();
+    const userBalance =
+      (
+        await prisma.$queryRawUnsafe(
+          query,
+          TransactionType.CREDIT,
+          TransactionStatus.SUCCESS,
+          TransactionType.DEBIT,
+          TransactionStatus.SUCCESS,
+          id,
+          TransactionStatus.SUCCESS,
+        )
+      )[0]?.initiatorUserBalance ?? 0.0;
 
     return new Response(JSON.stringify({ userId: id, balance: userBalance }), {
       status: 200,
