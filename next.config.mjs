@@ -7,15 +7,16 @@ const withBundleAnalyzer = NextBundleAnalyzer({
 
 const cspHeader = `
   default-src 'self';
-  script-src 'self' 'unsafe-inline' 'unsafe-eval';
+  script-src 'self' 'unsafe-inline' 'unsafe-eval' https://code.iconify.design https://api.iconify.design https://api.simplesvg.com https://api.unisvg.com;
   style-src 'self' 'unsafe-inline';
   img-src 'self' https://crafatar.com data: blob:;
   font-src 'self' https://fonts.gstatic.com;
   object-src 'none';
+  worker-src 'self' blob:;
   base-uri 'self';
   form-action 'self';
   frame-ancestors 'none';
-  connect-src 'self' https://*.ingest.sentry.io https://api.unisvg.com;
+  connect-src 'self' https://*.ingest.sentry.io;
   block-all-mixed-content;
   upgrade-insecure-requests;
 `;
@@ -63,7 +64,7 @@ const nextConfig = {
   },
   compiler: {
     removeConsole: {
-      exclude: ['error', 'warn'],
+      //exclude: ['error', 'warn'],
     },
   },
 };
