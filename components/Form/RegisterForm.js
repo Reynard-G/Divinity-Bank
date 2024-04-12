@@ -140,9 +140,9 @@ export default function RegisterForm() {
 
       <Checkbox
         size='md'
-        className='pb-4 pt-2'
         isSelected={acceptTerms}
         onValueChange={setAcceptTerms}
+        className='pb-4 pt-2'
       >
         I agree with the{' '}
         <Link size='md' underline='always' href={Page.TOS}>
