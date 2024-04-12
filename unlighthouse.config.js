@@ -7,6 +7,7 @@ export default {
   },
   scanner: {
     device: 'desktop',
+    samples: 3,
     throttle: true,
   },
   hooks: {
