@@ -1,15 +1,8 @@
-//import { spaceGrotesk } from "@/app/fonts";
-import { Space_Grotesk } from 'next/font/google';
-
+import { spaceGrotesk } from '@/app/fonts';
 import Providers from '@/app/providers';
 
 import './globals.css';
 import '@mantine/dropzone/styles.css';
-
-const spaceGrotesk = Space_Grotesk({
-  subsets: ['latin'],
-  display: 'swap',
-});
 
 export const metadata = {
   title: 'Divinity: Home',
