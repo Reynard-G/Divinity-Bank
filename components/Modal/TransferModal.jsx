@@ -57,7 +57,7 @@ export default function TransferModal({ isOpen, onOpenChange, ...props }) {
                         alt={user.minecraft_username}
                         className='flex-shrink-0'
                         size='sm'
-                        src={crafatarURL(user.uuid, 32)}
+                        src={crafatarURL(user.minecraft_uuid, 32)}
                       />
                       <div className='flex flex-col'>
                         <span className='text-small'>
