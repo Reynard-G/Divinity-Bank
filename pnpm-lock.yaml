@@ -5,21 +5,18 @@ settings:
   excludeLinksFromLockfile: false
 
 dependencies:
-  '@iconify/react':
-    specifier: ^4.1.1
-    version: 4.1.1(react@18.2.0)
   '@mantine/core':
-    specifier: ^7.7.2
-    version: 7.7.2(@mantine/hooks@7.7.2)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^7.8.0
+    version: 7.8.0(@mantine/hooks@7.8.0)(react-dom@18.2.0)(react@18.2.0)
   '@mantine/dropzone':
-    specifier: ^7.7.2
-    version: 7.7.2(@mantine/core@7.7.2)(@mantine/hooks@7.7.2)(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^7.8.0
+    version: 7.8.0(@mantine/core@7.8.0)(@mantine/hooks@7.8.0)(react-dom@18.2.0)(react@18.2.0)
   '@mantine/hooks':
-    specifier: ^7.7.2
-    version: 7.7.2(react@18.2.0)
+    specifier: ^7.8.0
+    version: 7.8.0(react@18.2.0)
   '@next/bundle-analyzer':
-    specifier: ^14.2.0
-    version: 14.2.0
+    specifier: ^14.2.1
+    version: 14.2.1
   '@nextui-org/react':
     specifier: ^2.2.10
     version: 2.2.10(framer-motion@11.0.28)(react-dom@18.2.0)(react@18.2.0)(tailwind-variants@0.2.1)(tailwindcss@3.4.3)
@@ -28,7 +25,7 @@ dependencies:
     version: 5.12.1(prisma@5.12.1)
   '@sentry/nextjs':
     specifier: ^7.110.0
-    version: 7.110.0(next@14.2.0)(react@18.2.0)
+    version: 7.110.0(next@14.2.1)(react@18.2.0)
   '@upstash/ratelimit':
     specifier: ^1.0.3
     version: 1.0.3
@@ -51,8 +48,8 @@ dependencies:
     specifier: ^0.363.0
     version: 0.363.0(react@18.2.0)
   next:
-    specifier: ^14.2.0
-    version: 14.2.0(react-dom@18.2.0)(react@18.2.0)
+    specifier: ^14.2.1
+    version: 14.2.1(react-dom@18.2.0)(react@18.2.0)
   react:
     specifier: ^18.2.0
     version: 18.2.0
@@ -74,8 +71,8 @@ devDependencies:
     specifier: ^8.57.0
     version: 8.57.0
   eslint-config-next:
-    specifier: ^14.2.0
-    version: 14.2.0(eslint@8.57.0)(typescript@5.4.5)
+    specifier: ^14.2.1
+    version: 14.2.1(eslint@8.57.0)(typescript@5.4.5)
   eslint-config-prettier:
     specifier: ^9.1.0
     version: 9.1.0(eslint@8.57.0)
@@ -261,42 +258,29 @@ packages:
     resolution: {integrity: sha512-93zYdMES/c1D69yZiKDBj0V24vqNzB/koF26KPaagAfd3P/4gUlh3Dys5ogAK+Exi9QyzlD8x/08Zt7wIKcDcA==}
     dev: true
 
-  /@iconify/react@4.1.1(react@18.2.0):
-    resolution: {integrity: sha512-jed14EjvKjee8mc0eoscGxlg7mSQRkwQG3iX3cPBCO7UlOjz0DtlvTqxqEcHUJGh+z1VJ31Yhu5B9PxfO0zbdg==}
-    peerDependencies:
-      react: '>=16'
-    dependencies:
-      '@iconify/types': 2.0.0
-      react: 18.2.0
-    dev: false
-
-  /@iconify/types@2.0.0:
-    resolution: {integrity: sha512-+wluvCrRhXrhyOmRDJ3q8mux9JkKy5SJ/v8ol2tu4FVjyYvtEzkc/3pK15ET6RKg4b4w4BmTk1+gsCUhf21Ykg==}
-    dev: false
-
   /@internationalized/date@3.5.2:
     resolution: {integrity: sha512-vo1yOMUt2hzp63IutEaTUxROdvQg1qlMRsbCvbay2AK2Gai7wIgCyK5weEX3nHkiLgo4qCXHijFNC/ILhlRpOQ==}
     dependencies:
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
     dev: false
 
   /@internationalized/message@3.1.2:
     resolution: {integrity: sha512-MHAWsZWz8jf6jFPZqpTudcCM361YMtPIRu9CXkYmKjJ/0R3pQRScV5C0zS+Qi50O5UAm8ecKhkXx6mWDDcF6/g==}
     dependencies:
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       intl-messageformat: 10.5.11
     dev: false
 
   /@internationalized/number@3.5.1:
     resolution: {integrity: sha512-N0fPU/nz15SwR9IbfJ5xaS9Ss/O5h1sVXMZf43vc9mxEG48ovglvvzBjF53aHlq20uoR6c+88CrIXipU/LSzwg==}
     dependencies:
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
     dev: false
 
   /@internationalized/string@3.2.1:
     resolution: {integrity: sha512-vWQOvRIauvFMzOO+h7QrdsJmtN1AXAFVcaLWP9AseRN2o7iHceZ6bIXhBD4teZl8i91A3gxKnWBlGgjCwU6MFQ==}
     dependencies:
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
     dev: false
 
   /@isaacs/cliui@8.0.2:
@@ -335,15 +319,15 @@ packages:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.4.15
 
-  /@mantine/core@7.7.2(@mantine/hooks@7.7.2)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-5kpAB6GWxywAiiVNBrSOYD68IRmr5Sj8nbXiotvPhypc2cvDlhJ3EI6JQhN+DS9xZHBzgAY4zjvXpk8CDKBCsA==}
+  /@mantine/core@7.8.0(@mantine/hooks@7.8.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-19RKuNdJ/s8pZjy2w2rvTsl4ybi/XM6vf+Kc0WY7kpLFCvdG+/UxNi1MuJF8t2Zs0QSFeb/H5yZQNe0XPbegHw==}
     peerDependencies:
-      '@mantine/hooks': 7.7.2
+      '@mantine/hooks': 7.8.0
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
       '@floating-ui/react': 0.26.12(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/hooks': 7.7.2(react@18.2.0)
+      '@mantine/hooks': 7.8.0(react@18.2.0)
       clsx: 2.1.0
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
@@ -355,23 +339,23 @@ packages:
       - '@types/react'
     dev: false
 
-  /@mantine/dropzone@7.7.2(@mantine/core@7.7.2)(@mantine/hooks@7.7.2)(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-s2fik+FyGVblDQzjxcwYFjN53f62IWJ5R/PzfAYOJoCl+m6cHO48B2mXP416R1kTDJvMLP32PGfYPzGCig2y/w==}
+  /@mantine/dropzone@7.8.0(@mantine/core@7.8.0)(@mantine/hooks@7.8.0)(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-rpNTR3NASvI3BnqhY5wg3BDhxkABT9UoZEGRrOGnS3YU7SYXg5rT9ch5Cm4iPwMNdwsyAIU6K2ii4wWk40dRpg==}
     peerDependencies:
-      '@mantine/core': 7.7.2
-      '@mantine/hooks': 7.7.2
+      '@mantine/core': 7.8.0
+      '@mantine/hooks': 7.8.0
       react: ^18.2.0
       react-dom: ^18.2.0
     dependencies:
-      '@mantine/core': 7.7.2(@mantine/hooks@7.7.2)(react-dom@18.2.0)(react@18.2.0)
-      '@mantine/hooks': 7.7.2(react@18.2.0)
+      '@mantine/core': 7.8.0(@mantine/hooks@7.8.0)(react-dom@18.2.0)(react@18.2.0)
+      '@mantine/hooks': 7.8.0(react@18.2.0)
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       react-dropzone-esm: 15.0.1(react@18.2.0)
     dev: false
 
-  /@mantine/hooks@7.7.2(react@18.2.0):
-    resolution: {integrity: sha512-fupbyZvH/hK7YPVlrRnx3uV5eOaMzFFF2Ll3RKMTRQnMhk4uvddzt9uUgGLIIsnZKfhPUZSIr54LZkHQTbPXhg==}
+  /@mantine/hooks@7.8.0(react@18.2.0):
+    resolution: {integrity: sha512-+70fkgjhVJeJ+nJqnburIM3UAsfvxat1Low9HMPobLbv64FIdB4Nzu5ct3qojNQ58r5sK01tg5UoFIJYslaVrg==}
     peerDependencies:
       react: ^18.2.0
     dependencies:
@@ -396,8 +380,8 @@ packages:
       - supports-color
     dev: false
 
-  /@next/bundle-analyzer@14.2.0:
-    resolution: {integrity: sha512-fFzOvgHJgqILHCoZnfBbjvvODbZNqVIVQOaMgzOrOfKnrz0RVZvaNYSXynCIpJK4J7TIhFW0bQ8vFjDhTDKSmQ==}
+  /@next/bundle-analyzer@14.2.1:
+    resolution: {integrity: sha512-Qwy3Mu/dfnu4rs2xzCy7gKZlwzZzYtiq/rjPcK/7xq3BHSyLthkHf1NAF8NNfjVTouDwo2KchisHrmAamUNWWw==}
     dependencies:
       webpack-bundle-analyzer: 4.10.1
     transitivePeerDependencies:
@@ -405,18 +389,18 @@ packages:
       - utf-8-validate
     dev: false
 
-  /@next/env@14.2.0:
-    resolution: {integrity: sha512-4+70ELtSbRtYUuyRpAJmKC8NHBW2x1HMje9KO2Xd7IkoyucmV9SjgO+qeWMC0JWkRQXgydv1O7yKOK8nu/rITQ==}
+  /@next/env@14.2.1:
+    resolution: {integrity: sha512-qsHJle3GU3CmVx7pUoXcghX4sRN+vINkbLdH611T8ZlsP//grzqVW87BSUgOZeSAD4q7ZdZicdwNe/20U2janA==}
     dev: false
 
-  /@next/eslint-plugin-next@14.2.0:
-    resolution: {integrity: sha512-QkM01VPhwcupezVevy9Uyl1rmpg2PimhMjkb+ySmnPgSKUUM/PGGRQxdFgMpHv/JzQoC8kRySgKeM441GiizcA==}
+  /@next/eslint-plugin-next@14.2.1:
+    resolution: {integrity: sha512-Fp+mthEBjkn8r9qd6o4JgxKp0IDEzW0VYHD8ZC05xS5/lFNwHKuOdr2kVhWG7BQCO9L6eeepshM1Wbs2T+LgSg==}
     dependencies:
       glob: 10.3.10
     dev: true
 
-  /@next/swc-darwin-arm64@14.2.0:
-    resolution: {integrity: sha512-kHktLlw0AceuDnkVljJ/4lTJagLzDiO3klR1Fzl2APDFZ8r+aTxNaNcPmpp0xLMkgRwwk6sggYeqq0Rz9K4zzA==}
+  /@next/swc-darwin-arm64@14.2.1:
+    resolution: {integrity: sha512-kGjnjcIJehEcd3rT/3NAATJQndAEELk0J9GmGMXHSC75TMnvpOhONcjNHbjtcWE5HUQnIHy5JVkatrnYm1QhVw==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [darwin]
@@ -424,8 +408,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-darwin-x64@14.2.0:
-    resolution: {integrity: sha512-HFSDu7lb1U3RDxXNeKH3NGRR5KyTPBSUTuIOr9jXoAso7i76gNYvnTjbuzGVWt2X5izpH908gmOYWtI7un+JrA==}
+  /@next/swc-darwin-x64@14.2.1:
+    resolution: {integrity: sha512-dAdWndgdQi7BK2WSXrx4lae7mYcOYjbHJUhvOUnJjMNYrmYhxbbvJ2xElZpxNxdfA6zkqagIB9He2tQk+l16ew==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [darwin]
@@ -433,8 +417,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-arm64-gnu@14.2.0:
-    resolution: {integrity: sha512-iQsoWziO5ZMxDWZ4ZTCAc7hbJ1C9UDj/gATSqTaMjW2bJFwAsvf9UM79AKnljBl73uPZ+V0kH4rvnHTco4Ps2w==}
+  /@next/swc-linux-arm64-gnu@14.2.1:
+    resolution: {integrity: sha512-2ZctfnyFOGvTkoD6L+DtQtO3BfFz4CapoHnyLTXkOxbZkVRgg3TQBUjTD/xKrO1QWeydeo8AWfZRg8539qNKrg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
@@ -442,8 +426,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-arm64-musl@14.2.0:
-    resolution: {integrity: sha512-0JOk2uzLUt8fJK5LpsKKZa74zAch7bJjjgJzR9aOMs231AlE4gPYzsSm430ckZitjPGKeH5bgDZjqwqJQKIS2w==}
+  /@next/swc-linux-arm64-musl@14.2.1:
+    resolution: {integrity: sha512-jazZXctiaanemy4r+TPIpFP36t1mMwWCKMsmrTRVChRqE6putyAxZA4PDujx0SnfvZHosjdkx9xIq9BzBB5tWg==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [linux]
@@ -451,8 +435,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-x64-gnu@14.2.0:
-    resolution: {integrity: sha512-uYHkuTzX0NM6biKNp7hdKTf+BF0iMV254SxO0B8PgrQkxUBKGmk5ysHKB+FYBfdf9xei/t8OIKlXJs9ckD943A==}
+  /@next/swc-linux-x64-gnu@14.2.1:
+    resolution: {integrity: sha512-VjCHWCjsAzQAAo8lkBOLEIkBZFdfW+Z18qcQ056kL4KpUYc8o59JhLDCBlhg+hINQRgzQ2UPGma2AURGOH0+Qg==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
@@ -460,8 +444,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-linux-x64-musl@14.2.0:
-    resolution: {integrity: sha512-paN89nLs2dTBDtfXWty1/NVPit+q6ldwdktixYSVwiiAz647QDCd+EIYqoiS+/rPG3oXs/A7rWcJK9HVqfnMVg==}
+  /@next/swc-linux-x64-musl@14.2.1:
+    resolution: {integrity: sha512-7HZKYKvAp4nAHiHIbY04finRqjeYvkITOGOurP1aLMexIFG/1+oCnqhGogBdc4lao/lkMW1c+AkwWSzSlLasqw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [linux]
@@ -469,8 +453,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-win32-arm64-msvc@14.2.0:
-    resolution: {integrity: sha512-j1oiidZisnymYjawFqEfeGNcE22ZQ7lGUaa4pGOCVWrWeIDkPSj8zYgS9TzMNlg17Q3wSWCQC/F5uJAhSh7qcA==}
+  /@next/swc-win32-arm64-msvc@14.2.1:
+    resolution: {integrity: sha512-YGHklaJ/Cj/F0Xd8jxgj2p8po4JTCi6H7Z3Yics3xJhm9CPIqtl8erlpK1CLv+HInDqEWfXilqatF8YsLxxA2Q==}
     engines: {node: '>= 10'}
     cpu: [arm64]
     os: [win32]
@@ -478,8 +462,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-win32-ia32-msvc@14.2.0:
-    resolution: {integrity: sha512-6ff6F4xb+QGD1jhx/dOT9Ot7PQ/GAYekV9ykwEh2EFS/cLTyU4Y3cXkX5cNtNIhpctS5NvyjW9gIksRNErYE0A==}
+  /@next/swc-win32-ia32-msvc@14.2.1:
+    resolution: {integrity: sha512-o+ISKOlvU/L43ZhtAAfCjwIfcwuZstiHVXq/BDsZwGqQE0h/81td95MPHliWCnFoikzWcYqh+hz54ZB2FIT8RA==}
     engines: {node: '>= 10'}
     cpu: [ia32]
     os: [win32]
@@ -487,8 +471,8 @@ packages:
     dev: false
     optional: true
 
-  /@next/swc-win32-x64-msvc@14.2.0:
-    resolution: {integrity: sha512-09DbG5vXAxz0eTFSf1uebWD36GF3D5toynRkgo2AlSrxwGZkWtJ1RhmrczRYQ17eD5bdo4FZ0ibiffdq5kc4vg==}
+  /@next/swc-win32-x64-msvc@14.2.1:
+    resolution: {integrity: sha512-GmRoTiLcvCLifujlisknv4zu9/C4i9r0ktsA8E51EMqJL4bD4CpO7lDYr7SrUxCR0tS4RVcrqKmCak24T0ohaw==}
     engines: {node: '>= 10'}
     cpu: [x64]
     os: [win32]
@@ -1868,7 +1852,7 @@ packages:
       '@react-aria/utils': 3.23.2(react@18.2.0)
       '@react-types/breadcrumbs': 3.7.3(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -1883,7 +1867,7 @@ packages:
       '@react-stately/toggle': 3.7.2(react@18.2.0)
       '@react-types/button': 3.9.2(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -1902,7 +1886,7 @@ packages:
       '@react-stately/toggle': 3.7.2(react@18.2.0)
       '@react-types/checkbox': 3.7.1(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -1926,7 +1910,7 @@ packages:
       '@react-types/button': 3.9.2(react@18.2.0)
       '@react-types/combobox': 3.10.1(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -1942,7 +1926,7 @@ packages:
       '@react-aria/utils': 3.23.2(react@18.2.0)
       '@react-types/dialog': 3.5.8(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -1955,7 +1939,7 @@ packages:
       '@react-aria/interactions': 3.21.1(react@18.2.0)
       '@react-aria/utils': 3.23.2(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       clsx: 2.1.0
       react: 18.2.0
     dev: false
@@ -1969,7 +1953,7 @@ packages:
       '@react-aria/utils': 3.23.2(react@18.2.0)
       '@react-stately/form': 3.0.1(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -1992,7 +1976,7 @@ packages:
       '@react-types/checkbox': 3.7.1(react@18.2.0)
       '@react-types/grid': 3.2.4(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -2009,7 +1993,7 @@ packages:
       '@react-aria/ssr': 3.9.2(react@18.2.0)
       '@react-aria/utils': 3.23.2(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2021,7 +2005,7 @@ packages:
       '@react-aria/ssr': 3.9.2(react@18.2.0)
       '@react-aria/utils': 3.23.2(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2032,7 +2016,7 @@ packages:
     dependencies:
       '@react-aria/utils': 3.23.2(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2046,7 +2030,7 @@ packages:
       '@react-aria/utils': 3.23.2(react@18.2.0)
       '@react-types/link': 3.5.3(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2064,7 +2048,7 @@ packages:
       '@react-stately/list': 3.10.3(react@18.2.0)
       '@react-types/listbox': 3.4.7(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -2072,7 +2056,7 @@ packages:
   /@react-aria/live-announcer@3.3.2:
     resolution: {integrity: sha512-aOyPcsfyY9tLCBhuUaYCruwcd1IrYLc47Ou+J7wMzjeN9v4lsaEfiN12WFl8pDqOwfy6/7It2wmlm5hOuZY8wQ==}
     dependencies:
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
     dev: false
 
   /@react-aria/menu@3.13.1(react-dom@18.2.0)(react@18.2.0):
@@ -2093,7 +2077,7 @@ packages:
       '@react-types/button': 3.9.2(react@18.2.0)
       '@react-types/menu': 3.9.7(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -2114,7 +2098,7 @@ packages:
       '@react-types/button': 3.9.2(react@18.2.0)
       '@react-types/overlays': 3.8.5(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -2129,7 +2113,7 @@ packages:
       '@react-aria/utils': 3.23.2(react@18.2.0)
       '@react-types/progress': 3.5.2(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2147,7 +2131,7 @@ packages:
       '@react-stately/radio': 3.10.2(react@18.2.0)
       '@react-types/radio': 3.7.1(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2163,7 +2147,7 @@ packages:
       '@react-aria/utils': 3.23.2(react@18.2.0)
       '@react-stately/selection': 3.14.3(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -2181,7 +2165,7 @@ packages:
       '@react-stately/slider': 3.5.2(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
       '@react-types/slider': 3.7.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2191,7 +2175,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2203,7 +2187,7 @@ packages:
       '@react-aria/toggle': 3.10.2(react@18.2.0)
       '@react-stately/toggle': 3.7.2(react@18.2.0)
       '@react-types/switch': 3.5.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2228,7 +2212,7 @@ packages:
       '@react-types/grid': 3.2.4(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
       '@react-types/table': 3.9.3(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -2246,7 +2230,7 @@ packages:
       '@react-stately/tabs': 3.6.4(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
       '@react-types/tabs': 3.3.5(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
     dev: false
@@ -2264,7 +2248,7 @@ packages:
       '@react-stately/utils': 3.9.1(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
       '@react-types/textfield': 3.9.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2278,7 +2262,7 @@ packages:
       '@react-aria/utils': 3.23.2(react@18.2.0)
       '@react-stately/toggle': 3.7.2(react@18.2.0)
       '@react-types/checkbox': 3.7.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2293,7 +2277,7 @@ packages:
       '@react-stately/tooltip': 3.4.7(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
       '@react-types/tooltip': 3.4.7(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2305,7 +2289,7 @@ packages:
       '@react-aria/ssr': 3.9.2(react@18.2.0)
       '@react-stately/utils': 3.9.1(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       clsx: 2.1.0
       react: 18.2.0
     dev: false
@@ -2318,7 +2302,7 @@ packages:
       '@react-aria/interactions': 3.21.1(react@18.2.0)
       '@react-aria/utils': 3.23.2(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2331,7 +2315,7 @@ packages:
       '@react-stately/utils': 3.9.1(react@18.2.0)
       '@react-types/checkbox': 3.7.1(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2341,7 +2325,7 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2358,7 +2342,7 @@ packages:
       '@react-stately/utils': 3.9.1(react@18.2.0)
       '@react-types/combobox': 3.10.1(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2374,7 +2358,7 @@ packages:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2387,7 +2371,7 @@ packages:
       '@react-stately/selection': 3.14.3(react@18.2.0)
       '@react-types/grid': 3.2.4(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2400,7 +2384,7 @@ packages:
       '@react-stately/selection': 3.14.3(react@18.2.0)
       '@react-stately/utils': 3.9.1(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2412,7 +2396,7 @@ packages:
       '@react-stately/overlays': 3.6.5(react@18.2.0)
       '@react-types/menu': 3.9.7(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2423,7 +2407,7 @@ packages:
     dependencies:
       '@react-stately/utils': 3.9.1(react@18.2.0)
       '@react-types/overlays': 3.8.5(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2436,7 +2420,7 @@ packages:
       '@react-stately/utils': 3.9.1(react@18.2.0)
       '@react-types/radio': 3.7.1(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2450,7 +2434,7 @@ packages:
       '@react-stately/overlays': 3.6.5(react@18.2.0)
       '@react-types/select': 3.9.2(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2462,7 +2446,7 @@ packages:
       '@react-stately/collections': 3.10.5(react@18.2.0)
       '@react-stately/utils': 3.9.1(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2474,7 +2458,7 @@ packages:
       '@react-stately/utils': 3.9.1(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
       '@react-types/slider': 3.7.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2491,7 +2475,7 @@ packages:
       '@react-types/grid': 3.2.4(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
       '@react-types/table': 3.9.3(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2503,7 +2487,7 @@ packages:
       '@react-stately/list': 3.10.3(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
       '@react-types/tabs': 3.3.5(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2514,7 +2498,7 @@ packages:
     dependencies:
       '@react-stately/utils': 3.9.1(react@18.2.0)
       '@react-types/checkbox': 3.7.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2525,7 +2509,7 @@ packages:
     dependencies:
       '@react-stately/overlays': 3.6.5(react@18.2.0)
       '@react-types/tooltip': 3.4.7(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2538,7 +2522,7 @@ packages:
       '@react-stately/selection': 3.14.3(react@18.2.0)
       '@react-stately/utils': 3.9.1(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2547,7 +2531,7 @@ packages:
     peerDependencies:
       react: ^16.8.0 || ^17.0.0-rc.1 || ^18.0.0
     dependencies:
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2558,7 +2542,7 @@ packages:
     dependencies:
       '@react-aria/utils': 3.23.2(react@18.2.0)
       '@react-types/shared': 3.22.1(react@18.2.0)
-      '@swc/helpers': 0.5.8
+      '@swc/helpers': 0.5.9
       react: 18.2.0
     dev: false
 
@@ -2868,7 +2852,7 @@ packages:
       localforage: 1.10.0
     dev: false
 
-  /@sentry/nextjs@7.110.0(next@14.2.0)(react@18.2.0):
+  /@sentry/nextjs@7.110.0(next@14.2.1)(react@18.2.0):
     resolution: {integrity: sha512-6CGDtgo2aoAG3r1L7bJIZiW/ySpj4E7fvl92DxTgcxsT2sh9nLuj2s1XrU6n1T6HgaW1kUSjGazhH7GURYwRAg==}
     engines: {node: '>=8'}
     peerDependencies:
@@ -2889,7 +2873,7 @@ packages:
       '@sentry/vercel-edge': 7.110.0
       '@sentry/webpack-plugin': 1.21.0
       chalk: 3.0.0
-      next: 14.2.0(react-dom@18.2.0)(react@18.2.0)
+      next: 14.2.1(react-dom@18.2.0)(react@18.2.0)
       react: 18.2.0
       resolve: 1.22.8
       rollup: 2.78.0
@@ -2990,8 +2974,8 @@ packages:
       tslib: 2.6.2
     dev: false
 
-  /@swc/helpers@0.5.8:
-    resolution: {integrity: sha512-lruDGw3pnfM3wmZHeW7JuhkGQaJjPyiKjxeGhdmfoOT53Ic9qb5JLDNaK2HUdl1zLDeX28H221UvKjfdvSLVMg==}
+  /@swc/helpers@0.5.9:
+    resolution: {integrity: sha512-XI76sLwMJoLjJTOK5RblBZkouOJG3X3hjxLCzLnyN1ifAiKQc6Hck3uvnU4Z/dV/Dyk36Ffj8FLvDLV2oWvKTw==}
     dependencies:
       tslib: 2.6.2
     dev: false
@@ -3298,7 +3282,7 @@ packages:
       postcss: ^8.1.0
     dependencies:
       browserslist: 4.23.0
-      caniuse-lite: 1.0.30001608
+      caniuse-lite: 1.0.30001609
       fraction.js: 4.3.7
       normalize-range: 0.1.2
       picocolors: 1.0.0
@@ -3365,8 +3349,8 @@ packages:
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
     hasBin: true
     dependencies:
-      caniuse-lite: 1.0.30001608
-      electron-to-chromium: 1.4.733
+      caniuse-lite: 1.0.30001609
+      electron-to-chromium: 1.4.736
       node-releases: 2.0.14
       update-browserslist-db: 1.0.13(browserslist@4.23.0)
     dev: true
@@ -3398,8 +3382,8 @@ packages:
     resolution: {integrity: sha512-QOSvevhslijgYwRx6Rv7zKdMF8lbRmx+uQGx2+vDc+KI/eBnsy9kit5aj23AgGu3pa4t9AgwbnXWqS+iOY+2aA==}
     engines: {node: '>= 6'}
 
-  /caniuse-lite@1.0.30001608:
-    resolution: {integrity: sha512-cjUJTQkk9fQlJR2s4HMuPMvTiRggl0rAVMtthQuyOlDWuqHXqN8azLq+pi8B2TjwKJ32diHjUqRIKeFX4z1FoA==}
+  /caniuse-lite@1.0.30001609:
+    resolution: {integrity: sha512-JFPQs34lHKx1B5t1EpQpWH4c+29zIyn/haGsbpfq3suuV9v56enjFt23zqijxGTMwy1p/4H2tjnQMY+p1WoAyA==}
 
   /chalk@3.0.0:
     resolution: {integrity: sha512-4D3B6Wf41KOYRFdszmDqMCGq5VV/uMAB273JILmO+3jAlh8X4qDtdtgCR3fxtbLEMzSx22QdhnDcJvu2u1fVwg==}
@@ -3663,8 +3647,8 @@ packages:
   /eastasianwidth@0.2.0:
     resolution: {integrity: sha512-I88TYZWc9XiYHRQ4/3c5rjjfgkjhLyW2luGIheGERbNQ6OY7yTybanSpDXZa8y7VUP9YmDcYa+eyq4ca7iLqWA==}
 
-  /electron-to-chromium@1.4.733:
-    resolution: {integrity: sha512-gUI9nhI2iBGF0OaYYLKOaOtliFMl+Bt1rY7VmEjwxOxqoYLub/D9xmduPEhbw2imE6gYkJKhIE5it+KE2ulVxQ==}
+  /electron-to-chromium@1.4.736:
+    resolution: {integrity: sha512-Rer6wc3ynLelKNM4lOCg7/zPQj8tPOCB2hzD32PX9wd3hgRRi9MxEbmkFCokzcEhRVMiOVLjnL9ig9cefJ+6+Q==}
     dev: true
 
   /emoji-regex@8.0.0:
@@ -3805,8 +3789,8 @@ packages:
     resolution: {integrity: sha512-TtpcNJ3XAzx3Gq8sWRzJaVajRs0uVxA2YAkdb1jm2YkPz4G6egUFAyA3n5vtEIZefPk5Wa4UXbKuS5fKkJWdgA==}
     engines: {node: '>=10'}
 
-  /eslint-config-next@14.2.0(eslint@8.57.0)(typescript@5.4.5):
-    resolution: {integrity: sha512-N0eQkn/wz557mIpW4JQWGEv4wGU8zvJ7emLHMS15uC18jjaU4kx6leR4U9QYT/eNghUZT7N9lBlfd8E4N0cp1w==}
+  /eslint-config-next@14.2.1(eslint@8.57.0)(typescript@5.4.5):
+    resolution: {integrity: sha512-BgD0kPCWMlqoItRf3xe9fG0MqwObKfVch+f2ccwDpZiCJA8ghkz2wrASH+bI6nLZzGcOJOpMm1v1Q1euhfpt4Q==}
     peerDependencies:
       eslint: ^7.23.0 || ^8.0.0
       typescript: '>=3.3.1'
@@ -3814,7 +3798,7 @@ packages:
       typescript:
         optional: true
     dependencies:
-      '@next/eslint-plugin-next': 14.2.0
+      '@next/eslint-plugin-next': 14.2.1
       '@rushstack/eslint-patch': 1.10.2
       '@typescript-eslint/parser': 7.2.0(eslint@8.57.0)(typescript@5.4.5)
       eslint: 8.57.0
@@ -4983,8 +4967,8 @@ packages:
     resolution: {integrity: sha512-OWND8ei3VtNC9h7V60qff3SVobHr996CTwgxubgyQYEpg290h9J0buyECNNJexkFm5sOajh5G116RYA1c8ZMSw==}
     dev: true
 
-  /next@14.2.0(react-dom@18.2.0)(react@18.2.0):
-    resolution: {integrity: sha512-2T41HqJdKPqheR27ll7MFZ3gtTYvGew7cUc0PwPSyK9Ao5vvwpf9bYfP4V5YBGLckHF2kEGvrLte5BqLSv0s8g==}
+  /next@14.2.1(react-dom@18.2.0)(react@18.2.0):
+    resolution: {integrity: sha512-SF3TJnKdH43PMkCcErLPv+x/DY1YCklslk3ZmwaVoyUfDgHKexuKlf9sEfBQ69w+ue8jQ3msLb+hSj1T19hGag==}
     engines: {node: '>=18.17.0'}
     hasBin: true
     peerDependencies:
@@ -5001,25 +4985,25 @@ packages:
       sass:
         optional: true
     dependencies:
-      '@next/env': 14.2.0
+      '@next/env': 14.2.1
       '@swc/helpers': 0.5.5
       busboy: 1.6.0
-      caniuse-lite: 1.0.30001608
+      caniuse-lite: 1.0.30001609
       graceful-fs: 4.2.11
       postcss: 8.4.31
       react: 18.2.0
       react-dom: 18.2.0(react@18.2.0)
       styled-jsx: 5.1.1(react@18.2.0)
     optionalDependencies:
-      '@next/swc-darwin-arm64': 14.2.0
-      '@next/swc-darwin-x64': 14.2.0
-      '@next/swc-linux-arm64-gnu': 14.2.0
-      '@next/swc-linux-arm64-musl': 14.2.0
-      '@next/swc-linux-x64-gnu': 14.2.0
-      '@next/swc-linux-x64-musl': 14.2.0
-      '@next/swc-win32-arm64-msvc': 14.2.0
-      '@next/swc-win32-ia32-msvc': 14.2.0
-      '@next/swc-win32-x64-msvc': 14.2.0
+      '@next/swc-darwin-arm64': 14.2.1
+      '@next/swc-darwin-x64': 14.2.1
+      '@next/swc-linux-arm64-gnu': 14.2.1
+      '@next/swc-linux-arm64-musl': 14.2.1
+      '@next/swc-linux-x64-gnu': 14.2.1
+      '@next/swc-linux-x64-musl': 14.2.1
+      '@next/swc-win32-arm64-msvc': 14.2.1
+      '@next/swc-win32-ia32-msvc': 14.2.1
+      '@next/swc-win32-x64-msvc': 14.2.1
     transitivePeerDependencies:
       - '@babel/core'
       - babel-plugin-macros

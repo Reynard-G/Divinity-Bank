@@ -1,8 +1,9 @@
-import { Icon } from '@iconify/react';
 import { Link } from '@nextui-org/link';
 import { Spacer } from '@nextui-org/spacer';
 
 import FooterBrand from '@/components/Brand/FooterBrand';
+import DiscordIcon from '@/components/Icon/DiscordIcon';
+import MinecraftIcon from '@/components/Icon/MinecraftIcon';
 import Page from '@/constants/Page';
 
 export default function DefaultFooter() {
@@ -34,7 +35,7 @@ export default function DefaultFooter() {
             href='discord.gg'
             className='text-default-400'
           >
-            <Icon icon='ic:baseline-discord' fontSize='1.25rem' />
+            <DiscordIcon color='currentColor' width={20} height={20} />
           </Link>
           <Link
             aria-label='Minecraft'
@@ -42,7 +43,7 @@ export default function DefaultFooter() {
             href='cityrp.org'
             className='text-default-400'
           >
-            <Icon icon='mdi:minecraft' fontSize='1.25rem' />
+            <MinecraftIcon color='currentColor' width={20} height={20} />
           </Link>
         </div>
 

@@ -1,6 +1,8 @@
 import { useEffect, useState } from 'react';
 
-import { Icon } from '@iconify/react';
+import MeteoCleardayIcon from '@/components/Icon/MeteoCleardayIcon';
+import MeteoMoonsetIcon from '@/components/Icon/MeteoMoonsetIcon';
+import MeteoSunriseIcon from '@/components/Icon/MeteoSunriseIcon';
 
 export default function DashboardGreeting() {
   const [greeting, setGreeting] = useState(null);
@@ -11,13 +13,13 @@ export default function DashboardGreeting() {
 
     if (currentHour >= 5 && currentHour < 12) {
       setGreeting('Good Morning!');
-      setGreetingIcon('meteocons:sunrise-fill');
+      setGreetingIcon(<MeteoSunriseIcon width={36} height={36} />);
     } else if (currentHour >= 12 && currentHour < 18) {
       setGreeting('Good Afternoon!');
-      setGreetingIcon('meteocons:clear-day-fill');
+      setGreetingIcon(<MeteoCleardayIcon width={36} height={36} />);
     } else {
       setGreeting('Good Night!');
-      setGreetingIcon('meteocons:moonrise-fill');
+      setGreetingIcon(<MeteoMoonsetIcon width={36} height={36} />);
     }
   }, []);
 
@@ -26,7 +28,7 @@ export default function DashboardGreeting() {
       <h2 className='text-sm font-medium text-default-700 md:text-base lg:text-xl'>
         {greeting}
       </h2>
-      <Icon icon={greetingIcon} fontSize='2rem' />
+      {greetingIcon}
     </div>
   );
 }
