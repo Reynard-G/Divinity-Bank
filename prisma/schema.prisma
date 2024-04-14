@@ -3,70 +3,74 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_DATABASE_URL")
 }
 
-model PaymentTypes {
-  name         String         @unique(map: "name") @db.VarChar(16)
-  Transactions Transactions[]
-}
-
-model TransactionStatuses {
-  name         String         @unique(map: "name") @db.VarChar(16)
-  Transactions Transactions[]
-}
-
-model TransactionTypes {
-  name         String         @unique(map: "name") @db.VarChar(16)
-  Transactions Transactions[]
-}
-
-model Transactions {
-  id                  Int                 @id @default(autoincrement()) @db.UnsignedInt
-  user_id             Int                 @db.UnsignedInt
-  created_by_user_id  Int                 @db.UnsignedInt
-  amount              Decimal             @db.Decimal(32, 2)
-  fee                 Decimal             @default(0.00) @db.Decimal(32, 2)
-  transaction_type    String              @db.VarChar(16)
-  payment_type        String              @db.VarChar(16)
-  attachment          Bytes?              @db.MediumBlob
-  note                String?             @db.VarChar(256)
-  status              String              @db.VarChar(16)
-  created_at          DateTime            @default(now()) @db.Timestamp(0)
-  updated_at          DateTime            @default(now()) @db.Timestamp(0)
-  PaymentTypes        PaymentTypes        @relation(fields: [payment_type], references: [name], onUpdate: Restrict, map: "FK_PaymentType")
-  TransactionStatuses TransactionStatuses @relation(fields: [status], references: [name], onUpdate: Restrict, map: "FK_TransactionStatuses")
-  TransactionTypes    TransactionTypes    @relation(fields: [transaction_type], references: [name], onUpdate: Restrict, map: "FK_TransactionType")
-  created_by_user     Users               @relation("created_by_user", fields: [created_by_user_id], references: [id], onUpdate: Restrict, map: "FK_Transactions_CreatedUserId")
-  user_user           Users               @relation("user_user", fields: [user_id], references: [id], onUpdate: Restrict, map: "FK_Transactions_UserId")
-
-  @@index([created_by_user_id], map: "FK_Transactions_CreatedUserId")
-  @@index([payment_type], map: "FK_Transactions_PaymentType")
-  @@index([status], map: "FK_Transactions_Status")
-  @@index([transaction_type], map: "FK_Transactions_TransactionType")
-  @@index([user_id], map: "FK_Transactions_UserId")
-}
-
-model Users {
-  id                      Int            @id @default(autoincrement()) @db.UnsignedInt
-  account_type            String         @db.VarChar(16)
-  minecraft_uuid          String?        @unique(map: "AK_Users_MinecraftUUID") @db.VarChar(36)
-  minecraft_username      String?        @unique(map: "AK_Users_MinecraftUsername") @db.VarChar(24)
-  discord_username        String?        @unique(map: "AK_Users_DiscordUsername") @db.VarChar(32)
-  password                String         @db.Char(60)
-  created_at              DateTime       @default(now()) @db.Timestamp(0)
-  updated_at              DateTime       @default(now()) @db.Timestamp(0)
-  created_by_transactions Transactions[] @relation("created_by_user")
-  user_transactions       Transactions[] @relation("user_user")
-  AccountTypes            AccountTypes   @relation(fields: [account_type], references: [name], onUpdate: Restrict, map: "FK_Users_AccountType")
-
-  @@index([account_type], map: "FK_Users_AccountType")
-}
-
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model AccountTypes {
-  name            String  @unique(map: "name") @db.VarChar(16)
+  name            String  @id
   interest_rate   Decimal @db.Decimal(4, 3)
   transaction_fee Decimal @db.Decimal(4, 3)
   Users           Users[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model PaymentTypes {
+  name         String         @id
+  Transactions Transactions[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Roles {
+  name String @id
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model TransactionStatuses {
+  name         String         @id
+  Transactions Transactions[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model TransactionTypes {
+  name         String         @id
+  Transactions Transactions[]
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Transactions {
+  id                  Int                 @id @default(autoincrement())
+  user_id             Int
+  created_by_user_id  Int
+  amount              Decimal             @db.Decimal(32, 2)
+  fee                 Decimal             @default(0.00) @db.Decimal(32, 2)
+  transaction_type    String
+  payment_type        String
+  attachment          String?
+  note                String?
+  status              String
+  created_at          DateTime            @default(now()) @db.Timestamp(6)
+  updated_at          DateTime            @default(now()) @db.Timestamp(6)
+  created_by_user     Users               @relation("created_by_user", fields: [created_by_user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_Transactions_CreatedUserId")
+  PaymentTypes        PaymentTypes        @relation(fields: [payment_type], references: [name], onDelete: NoAction, onUpdate: NoAction, map: "FK_Transactions_PaymentType")
+  TransactionStatuses TransactionStatuses @relation(fields: [status], references: [name], onDelete: NoAction, onUpdate: NoAction, map: "FK_Transactions_Status")
+  TransactionTypes    TransactionTypes    @relation(fields: [transaction_type], references: [name], onDelete: NoAction, onUpdate: NoAction, map: "FK_Transactions_TransactionType")
+  user_user           Users               @relation("user_user", fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction, map: "FK_Transactions_UserId")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model Users {
+  id                      Int            @id @default(autoincrement())
+  account_type            String
+  minecraft_uuid          String?
+  minecraft_username      String?
+  discord_username        String?
+  password                String
+  created_at              DateTime       @default(now()) @db.Timestamp(6)
+  updated_at              DateTime       @default(now()) @db.Timestamp(6)
+  created_by_transactions Transactions[] @relation("created_by_user")
+  user_transactions       Transactions[] @relation("user_user")
+  AccountTypes            AccountTypes   @relation(fields: [account_type], references: [name], onDelete: NoAction, onUpdate: NoAction, map: "FK_Users_AccountType")
 }

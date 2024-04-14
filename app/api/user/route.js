@@ -4,6 +4,8 @@ import prisma from '@/lib/db';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 import minecraftProfileFromUUID from '@/utils/minecraftProfileFromUUID';
 
+export const runtime = 'edge';
+
 export async function GET() {
   const cookie = cookies().get('authorization')?.value;
 

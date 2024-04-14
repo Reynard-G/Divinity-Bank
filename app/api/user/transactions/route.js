@@ -3,6 +3,8 @@ import { cookies } from 'next/headers';
 import prisma from '@/lib/db';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
+export const runtime = 'edge';
+
 export async function GET() {
   const cookie = cookies().get('authorization')?.value;
 
