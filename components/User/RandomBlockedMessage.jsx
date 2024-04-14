@@ -43,7 +43,7 @@ export default function RandomBlockedMessage() {
 
   return (
     <>
-      <h1 className='break-words text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl'>
+      <h1 className='break-words text-3xl font-bold sm:text-4xl md:text-5xl'>
         {randomMessage?.title}
       </h1>
       <p className='break-words text-gray-500 dark:text-gray-400 sm:text-lg md:text-xl'>
