@@ -33,6 +33,10 @@ export async function GET() {
         orderBy: {
           created_at: 'desc',
         },
+        cacheStrategy: {
+          ttl: 15,
+          swr: 30,
+        },
       })) ?? [];
 
     // Convert UTC Datetime to Unix Timestamp

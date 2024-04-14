@@ -29,6 +29,10 @@ export async function GET() {
           },
         },
       },
+      cacheStrategy: {
+        ttl: 15,
+        swr: 30,
+      },
     });
 
     if (!user) return new Response('User not found', { status: 404 });

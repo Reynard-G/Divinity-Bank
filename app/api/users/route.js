@@ -11,6 +11,10 @@ export async function GET() {
         minecraft_uuid: true,
         minecraft_username: true,
       },
+      cacheStrategy: {
+        ttl: 15,
+        swr: 30,
+      },
     });
 
     return new Response(JSON.stringify(users), { status: 200 });
