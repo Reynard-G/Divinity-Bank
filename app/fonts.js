@@ -1,4 +1,4 @@
-import { Chakra_Petch, Space_Grotesk } from 'next/font/google';
+import { Anta, Chakra_Petch, Space_Grotesk } from 'next/font/google';
 
 export const spaceGrotesk = Space_Grotesk({
   subsets: ['latin'],
@@ -9,4 +9,9 @@ export const chakraPetch = Chakra_Petch({
   subsets: ['latin'],
   weight: ['300', '400', '500', '600', '700'],
   display: 'swap',
+});
+
+export const anta = Anta({
+  subsets: ['latin'],
+  weight: ['400'],
 });
