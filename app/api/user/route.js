@@ -2,8 +2,8 @@ import { cookies } from 'next/headers';
 
 import { eq, sql } from 'drizzle-orm';
 
+import { accountTypes, users } from '@/drizzle/schema';
 import { db } from '@/lib/db';
-import { accountTypes, users } from '@/schema';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
 export const preferredRegion = ['sfo1'];

@@ -4,8 +4,8 @@ import { eq, sql } from 'drizzle-orm';
 
 import TransactionStatus from '@/constants/TransactionStatus';
 import TransactionType from '@/constants/TransactionType';
+import { transactions } from '@/drizzle/schema';
 import { db } from '@/lib/db';
-import { transactions } from '@/schema';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
 export const preferredRegion = ['sfo1'];

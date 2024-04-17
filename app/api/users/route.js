@@ -1,5 +1,5 @@
+import { users } from '@/drizzle/schema';
 import { db } from '@/lib/db';
-import { users } from '@/schema';
 
 export const preferredRegion = ['sfo1'];
 export const dynamic = 'force-dynamic';

@@ -3,8 +3,8 @@ import { cookies } from 'next/headers';
 import { desc, eq, sql } from 'drizzle-orm';
 import { alias } from 'drizzle-orm/pg-core';
 
+import { transactions, users } from '@/drizzle/schema';
 import { db } from '@/lib/db';
-import { transactions, users } from '@/schema';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
 export const preferredRegion = ['sfo1'];

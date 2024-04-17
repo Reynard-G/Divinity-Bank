@@ -2,8 +2,8 @@ import { cookies } from 'next/headers';
 
 import { eq } from 'drizzle-orm';
 
+import { users } from '@/drizzle/schema';
 import { db } from '@/lib/db';
-import { users } from '@/schema';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 import minecraftProfileFromUUID from '@/utils/minecraftProfileFromUUID';
 
