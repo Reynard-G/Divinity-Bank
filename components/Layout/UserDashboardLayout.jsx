@@ -51,7 +51,9 @@ export default function DashboardLayout({ children }) {
         <MobileUserSidebar isOpen={isOpen} onOpenChange={onOpenChange} />
 
         {isLoading ? (
-          <LoadingComponentSpinner />
+          <div className='h-svh w-full'>
+            <LoadingComponentSpinner />
+          </div>
         ) : (
           <div className='w-full flex-1 flex-col p-4'>
             <header className='flex animate-[fadeIn_300ms_ease-in-out] items-center justify-between gap-3 rounded-medium border-small border-divider px-4 py-3'>
