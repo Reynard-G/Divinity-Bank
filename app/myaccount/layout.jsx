@@ -1,5 +1,5 @@
 import Providers from '@/app/myaccount/providers';
-import DashboardLayout from '@/components/Layout/UserDashboardLayout';
+import UserDashboardLayout from '@/components/Layout/UserDashboardLayout';
 
 export const metadata = {
   title: 'Divinity: My Account',
@@ -9,7 +9,7 @@ export const metadata = {
 export default function MyAccountLayout({ children }) {
   return (
     <Providers>
-      <DashboardLayout>{children}</DashboardLayout>
+      <UserDashboardLayout>{children}</UserDashboardLayout>
     </Providers>
   );
 }
