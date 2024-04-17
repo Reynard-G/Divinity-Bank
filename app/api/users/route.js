@@ -1,25 +1,25 @@
-import prisma from '@/lib/db';
+import { db } from '@/lib/db';
+import { users } from '@/schema';
 
-export const runtime = 'edge';
+export const preferredRegion = ['sfo1'];
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   try {
-    const users = await prisma.users.findMany({
-      select: {
-        id: true,
-        discord_username: true,
-        minecraft_uuid: true,
-        minecraft_username: true,
-      },
-      cacheStrategy: {
-        ttl: 15,
-        swr: 30,
-      },
-    });
+    const allUsers = await db
+      .select({
+        id: users.id,
+        discord_username: users.discordUsername,
+        minecraft_uuid: users.minecraftUuid,
+        minecraft_username: users.minecraftUsername,
+      })
+      .from(users);
 
-    return new Response(JSON.stringify(users), { status: 200 });
+    return new Response(JSON.stringify(allUsers), { status: 200 });
   } catch (error) {
     console.error(error);
-    return new Response('Unauthorized', { status: 401 });
+    return new Response(JSON.stringify({ message: 'Unauthorized' }), {
+      status: 401,
+    });
   }
 }

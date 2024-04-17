@@ -1,9 +1,14 @@
 import { cookies } from 'next/headers';
 
-import prisma from '@/lib/db';
+import { desc, eq, sql } from 'drizzle-orm';
+import { alias } from 'drizzle-orm/pg-core';
+
+import { db } from '@/lib/db';
+import { transactions, users } from '@/schema';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
-export const runtime = 'edge';
+export const preferredRegion = ['sfo1'];
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const cookie = cookies().get('authorization')?.value;
@@ -11,55 +16,42 @@ export async function GET() {
   try {
     const id = (await getPayloadFromJWT(cookie))?.id;
 
-    const transactions =
-      (await prisma.transactions.findMany({
-        where: {
-          user_id: id,
-        },
-        include: {
-          user_user: {
-            select: {
-              minecraft_username: true,
-              minecraft_uuid: true,
-            },
-          },
-          created_by_user: {
-            select: {
-              minecraft_username: true,
-              minecraft_uuid: true,
-            },
-          },
-        },
-        orderBy: {
-          created_at: 'desc',
-        },
-        cacheStrategy: {
-          ttl: 15,
-          swr: 30,
-        },
-      })) ?? [];
+    const user = alias(users, 'user');
+    const createdByUser = alias(users, 'createdByUser');
 
-    // Convert UTC Datetime to Unix Timestamp
-    const formattedTransactions = transactions.map((transaction) => {
-      const { user_user, created_by_user, ...rest } = transaction;
-      return {
-        ...rest,
-        minecraft_username: user_user?.minecraft_username,
-        minecraft_uuid: user_user?.minecraft_uuid,
-        created_minecraft_username: created_by_user?.minecraft_username,
-        created_minecraft_uuid: created_by_user?.minecraft_uuid,
-        created_at: Math.floor(
-          new Date(transaction.created_at).getTime() / 1000,
-        ),
-        updated_at: Math.floor(
-          new Date(transaction.updated_at).getTime() / 1000,
-        ),
-      };
-    });
+    const userTransactions = await db
+      .select({
+        id: transactions.id,
+        user_id: transactions.userId,
+        created_user_id: transactions.createdByUserId,
+        minecraft_username: user.minecraftUsername,
+        minecraft_uuid: user.minecraftUuid,
+        created_minecraft_username: createdByUser.minecraftUsername,
+        created_minecraft_uuid: createdByUser.minecraftUuid,
+        amount: transactions.amount,
+        fee: transactions.fee,
+        transaction_type: transactions.transactionType,
+        payment_type: transactions.paymentType,
+        attachment: transactions.attachment,
+        note: transactions.note,
+        status: transactions.status,
+        created_at: sql`EXTRACT(EPOCH FROM ${transactions.createdAt})`,
+        updated_at: sql`EXTRACT(EPOCH FROM ${transactions.updatedAt})`,
+      })
+      .from(transactions)
+      .leftJoin(user, eq(transactions.userId, user.id))
+      .leftJoin(
+        createdByUser,
+        eq(transactions.createdByUserId, createdByUser.id),
+      )
+      .where(eq(transactions.userId, id))
+      .orderBy(desc(transactions.createdAt));
 
-    return new Response(JSON.stringify(formattedTransactions), { status: 200 });
+    return new Response(JSON.stringify(userTransactions), { status: 200 });
   } catch (error) {
     console.error(error);
-    return new Response('Unauthorized', { status: 401 });
+    return new Response(JSON.stringify({ message: 'Unauthorized' }), {
+      status: 401,
+    });
   }
 }

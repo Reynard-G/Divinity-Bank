@@ -26,10 +26,16 @@ import fetcher from '@/utils/fetcher';
 export default function TransferModal({ isOpen, onOpenChange, ...props }) {
   const router = useRouter();
   const { userId } = useUserContext();
+  const [users, setUsers] = useState([]);
   const [recipientUserId, setRecipientUserId] = useState(null);
   const [amount, setAmount] = useState('');
   const [isTransferLoading, setIsTransferLoading] = useState(false);
-  const { data: users } = useSWR(API.USERS, fetcher);
+  useSWR(API.USERS, fetcher, {
+    onSuccess: (data) => {
+      // Remove the current user from the list of users
+      setUsers(data.filter((user) => user.id !== userId));
+    },
+  });
 
   return (
     <Modal isOpen={isOpen} onOpenChange={onOpenChange} {...props}>
@@ -39,7 +45,7 @@ export default function TransferModal({ isOpen, onOpenChange, ...props }) {
             <ModalHeader>Transfer</ModalHeader>
             <ModalBody>
               <Autocomplete
-                defaultItems={users.filter((user) => user.id !== userId)}
+                defaultItems={users}
                 label='Player'
                 variant='bordered'
                 placeholder='Search for a player'

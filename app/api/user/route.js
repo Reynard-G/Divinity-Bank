@@ -1,10 +1,13 @@
 import { cookies } from 'next/headers';
 
-import prisma from '@/lib/db';
-import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
-import minecraftProfileFromUUID from '@/utils/minecraftProfileFromUUID';
+import { eq, sql } from 'drizzle-orm';
 
-export const runtime = 'edge';
+import { db } from '@/lib/db';
+import { accountTypes, users } from '@/schema';
+import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
+
+export const preferredRegion = ['sfo1'];
+export const dynamic = 'force-dynamic';
 
 export async function GET() {
   const cookie = cookies().get('authorization')?.value;
@@ -12,59 +15,37 @@ export async function GET() {
   try {
     const id = (await getPayloadFromJWT(cookie))?.id;
 
-    const user = await prisma.users.findFirst({
-      where: { id },
-      select: {
-        id: true,
-        discord_username: true,
-        minecraft_uuid: true,
-        minecraft_username: true,
-        created_at: true,
-        updated_at: true,
-        AccountTypes: {
-          select: {
-            name: true,
-            interest_rate: true,
-            transaction_fee: true,
-          },
-        },
-      },
-      cacheStrategy: {
-        ttl: 15,
-        swr: 30,
-      },
-    });
+    const user = (
+      await db
+        .select({
+          id: users.id,
+          discord_username: users.discordUsername,
+          minecraft_uuid: users.minecraftUuid,
+          minecraft_username: users.minecraftUsername,
+          created_at: sql`EXTRACT(EPOCH FROM ${users.createdAt})`,
+          updated_at: sql`EXTRACT(EPOCH FROM ${users.updatedAt})`,
+          account_type: accountTypes.name,
+          interest_rate: accountTypes.interestRate,
+          transaction_fee: accountTypes.transactionFee,
+        })
+        .from(users)
+        .leftJoin(accountTypes, eq(users.accountType, accountTypes.name))
+        .where(eq(users.id, id))
+    )[0];
 
-    if (!user) return new Response('User not found', { status: 404 });
-
-    // Convert UTC Datetime to Unix Timestamp
-    const formattedUser = {
-      ...user,
-      account_type: user.AccountTypes.name,
-      interest_rate: user.AccountTypes.interest_rate,
-      transaction_fee: user.AccountTypes.transaction_fee,
-      created_at: Math.floor(new Date(user.created_at).getTime() / 1000),
-      updated_at: Math.floor(new Date(user.updated_at).getTime() / 1000),
-    };
-    delete formattedUser.AccountTypes;
-
-    // Check if minecraft_username has changed
-    // If it has, update the database
-    const minecraftProfile = await minecraftProfileFromUUID(
-      user.minecraft_uuid,
-    );
-    if (minecraftProfile?.name !== user.minecraft_username) {
-      await prisma.users.update({
-        where: { id },
-        data: { minecraft_username: minecraftProfile?.name },
+    if (!user)
+      return new Response(JSON.stringify({ message: 'User not found' }), {
+        status: 404,
       });
 
-      formattedUser.minecraft_username = minecraftProfile?.name;
-    }
+    // Call `updateMinecraftUsername` to check if the minecraft_username has changed
+    // Forward the request to the `updateMinecraftUsername` route
 
-    return new Response(JSON.stringify(formattedUser), { status: 200 });
+    return new Response(JSON.stringify(user), { status: 200 });
   } catch (error) {
     console.error(error);
-    return new Response('Unauthorized', { status: 401 });
+    return new Response(JSON.stringify({ message: 'Unauthorized' }), {
+      status: 401,
+    });
   }
 }
