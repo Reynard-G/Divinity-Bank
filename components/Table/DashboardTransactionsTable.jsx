@@ -37,7 +37,7 @@ export default function DashboardTransactionsTable() {
   const { isLoading } = useSWR(API.USER_TRANSACTIONS, fetcher, {
     fallbackData: [],
     onSuccess: (data) => {
-      const slicedData = data.slice(0, 5);
+      const slicedData = data.slice(0, 10);
       setTransactions(reformatTransactionByDate(slicedData));
     },
   });
