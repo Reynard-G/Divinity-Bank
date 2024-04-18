@@ -6,10 +6,11 @@ import { accountTypes, users } from '@/drizzle/schema';
 import { db } from '@/lib/db';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
+export const runtime = 'edge';
 export const preferredRegion = ['sfo1'];
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function GET(request) {
   const cookie = cookies().get('authorization')?.value;
 
   try {
@@ -37,6 +38,14 @@ export async function GET() {
       return new Response(JSON.stringify({ message: 'User not found' }), {
         status: 404,
       });
+
+    console.log(request.headers.get('cf-connecting-ip'))
+    /*await db
+      .update(users)
+      .set({
+        lastIpAccessed: request.headers.get('cf-connecting-ip'),
+      })
+      .where(eq(users.id, id));*/
 
     // Call `updateMinecraftUsername` to check if the minecraft_username has changed
     // Forward the request to the `updateMinecraftUsername` route

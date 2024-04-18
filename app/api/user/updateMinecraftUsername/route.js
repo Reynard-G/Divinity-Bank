@@ -7,6 +7,7 @@ import { db } from '@/lib/db';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 import minecraftProfileFromUUID from '@/utils/minecraftProfileFromUUID';
 
+export const runtime = 'edge';
 export const preferredRegion = ['sfo1'];
 export const dynamic = 'force-dynamic';
 

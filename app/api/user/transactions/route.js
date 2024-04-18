@@ -7,6 +7,7 @@ import { transactions, users } from '@/drizzle/schema';
 import { db } from '@/lib/db';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
+export const runtime = 'edge';
 export const preferredRegion = ['sfo1'];
 export const dynamic = 'force-dynamic';
 

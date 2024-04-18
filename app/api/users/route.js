@@ -1,6 +1,7 @@
 import { users } from '@/drizzle/schema';
 import { db } from '@/lib/db';
 
+export const runtime = 'edge';
 export const preferredRegion = ['sfo1'];
 export const dynamic = 'force-dynamic';
 
