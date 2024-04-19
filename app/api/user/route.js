@@ -39,13 +39,15 @@ export async function GET(request) {
         status: 404,
       });
 
-    console.log(request.headers.get('cf-connecting-ip'))
-    /*await db
+    const ip = process.env.NODE_ENV === 'development'
+      ? request.ip ?? '127.0.0.1'
+      : request.headers.get('cf-connecting-ip');
+    await db
       .update(users)
       .set({
-        lastIpAccessed: request.headers.get('cf-connecting-ip'),
+        lastIpAccessed: ip,
       })
-      .where(eq(users.id, id));*/
+      .where(eq(users.id, id));
 
     // Call `updateMinecraftUsername` to check if the minecraft_username has changed
     // Forward the request to the `updateMinecraftUsername` route
