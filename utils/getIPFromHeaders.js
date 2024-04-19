@@ -1,12 +1,18 @@
 import { headers } from 'next/headers';
 
 export default function getIPFromHeaders() {
-  const fallbackIP = '127.0.0.1';
-  const forwardedFor = headers().get('x-forwarded-for');
-
-  if (forwardedFor) {
-    return forwardedFor.split(', ')[0] ?? fallbackIP;
+  if (headers().has('cf-connecting-ip')) {
+    return headers().get('cf-connecting-ip');
   }
 
-  return headers().get('x-real-ip') ?? fallbackIP;
+  if (headers().has('x-real-ip')) {
+    return headers().get('x-real-ip');
+  }
+
+  if (headers().has('x-forwarded-for')) {
+    return headers().get('x-forwarded-for').split(', ')[0];
+  }
+
+  // If no IP is found, return localhost
+  return '127.0.0.1';
 }

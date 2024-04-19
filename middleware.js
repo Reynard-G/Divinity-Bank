@@ -5,6 +5,7 @@ import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 
 import Page from '@/constants/Page';
+import getIPFromHeaders from '@/utils/getIPFromHeaders';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
 const ratelimit = new Ratelimit({
@@ -14,7 +15,7 @@ const ratelimit = new Ratelimit({
 });
 
 export async function middleware(request) {
-  const ip = request.ip ?? '127.0.0.1';
+  const ip = getIPFromHeaders();
   const { remaining } = await ratelimit.limit(ip);
 
   // If rate limit is reached, redirect to /blocked page
