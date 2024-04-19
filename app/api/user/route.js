@@ -38,10 +38,7 @@ export async function GET(request) {
         status: 404,
       });
 
-    const ip =
-      process.env.NODE_ENV === 'development'
-        ? request.ip ?? '127.0.0.1'
-        : request.headers.get('cf-connecting-ip');
+    const ip = request.ip ?? '127.0.0.1';
     await db
       .update(users)
       .set({
