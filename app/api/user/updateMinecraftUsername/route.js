@@ -10,7 +10,7 @@ import minecraftProfileFromUUID from '@/utils/minecraftProfileFromUUID';
 export const preferredRegion = ['sfo1'];
 export const dynamic = 'force-dynamic';
 
-export async function GET() {
+export async function POST() {
   const cookie = cookies().get('authorization')?.value;
 
   try {
