@@ -15,6 +15,10 @@ export async function GET() {
 
   try {
     const id = (await getPayloadFromJWT(cookie))?.id;
+    if (!id)
+      return new Response(JSON.stringify({ message: 'Unauthorized' }), {
+        status: 401,
+      });
 
     const user = alias(users, 'user');
     const createdByUser = alias(users, 'createdByUser');
@@ -50,8 +54,8 @@ export async function GET() {
     return new Response(JSON.stringify(userTransactions), { status: 200 });
   } catch (error) {
     console.error(error);
-    return new Response(JSON.stringify({ message: 'Unauthorized' }), {
-      status: 401,
+    return new Response(JSON.stringify({ message: 'Internal Server Error' }), {
+      status: 500,
     });
   }
 }

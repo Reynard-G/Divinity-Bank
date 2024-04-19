@@ -16,6 +16,10 @@ export async function GET() {
 
   try {
     const id = (await getPayloadFromJWT(cookie))?.id;
+    if (!id)
+      return new Response(JSON.stringify({ message: 'Unauthorized' }), {
+        status: 401,
+      });
 
     const userBalance = (
       await db
@@ -39,8 +43,8 @@ export async function GET() {
     return new Response(JSON.stringify(userBalance), { status: 200 });
   } catch (error) {
     console.error(error);
-    return new Response(JSON.stringify({ message: 'Unauthorized' }), {
-      status: 401,
+    return new Response(JSON.stringify({ message: 'Internal Server Error' }), {
+      status: 500,
     });
   }
 }
