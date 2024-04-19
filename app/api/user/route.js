@@ -6,7 +6,6 @@ import { accountTypes, users } from '@/drizzle/schema';
 import { db } from '@/lib/db';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
-export const runtime = 'edge';
 export const preferredRegion = ['sfo1'];
 export const dynamic = 'force-dynamic';
 
@@ -39,9 +38,10 @@ export async function GET(request) {
         status: 404,
       });
 
-    const ip = process.env.NODE_ENV === 'development'
-      ? request.ip ?? '127.0.0.1'
-      : request.headers.get('cf-connecting-ip');
+    const ip =
+      process.env.NODE_ENV === 'development'
+        ? request.ip ?? '127.0.0.1'
+        : request.headers.get('cf-connecting-ip');
     await db
       .update(users)
       .set({

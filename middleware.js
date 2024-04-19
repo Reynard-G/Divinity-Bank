@@ -14,9 +14,10 @@ const ratelimit = new Ratelimit({
 });
 
 export async function middleware(request) {
-  const ip = process.env.NODE_ENV === 'development'
-    ? request.ip ?? '127.0.0.1'
-    : request.headers.get('cf-connecting-ip');
+  const ip =
+    process.env.NODE_ENV === 'development'
+      ? request.ip ?? '127.0.0.1'
+      : request.headers.get('cf-connecting-ip');
   const { remaining } = await ratelimit.limit(ip);
 
   // If rate limit is reached, redirect to /blocked page
