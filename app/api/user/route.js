@@ -4,12 +4,13 @@ import { eq, sql } from 'drizzle-orm';
 
 import { accountTypes, users } from '@/drizzle/schema';
 import { db } from '@/lib/db';
+import getIPFromHeaders from '@/utils/getIPFromHeaders';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
 export const preferredRegion = ['sfo1'];
 export const dynamic = 'force-dynamic';
 
-export async function GET(request) {
+export async function GET() {
   const cookie = cookies().get('authorization')?.value;
 
   try {
@@ -38,7 +39,7 @@ export async function GET(request) {
         status: 404,
       });
 
-    const ip = request.ip ?? '127.0.0.1';
+    const ip = getIPFromHeaders();
     await db
       .update(users)
       .set({
