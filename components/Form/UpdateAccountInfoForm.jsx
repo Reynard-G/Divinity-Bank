@@ -4,7 +4,7 @@ import { useState } from 'react';
 
 import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
-import { RefreshCcw } from 'lucide-react';
+import { RefreshCw } from 'lucide-react';
 
 import { useUserContext } from '@/contexts';
 import { updateAccountInfo } from '@/lib/actions/form.actions';
@@ -58,7 +58,7 @@ export default function UpdateAccountInfoForm() {
             });
           }}
         >
-          <RefreshCcw
+          <RefreshCw
             className={cn(isSyncingMinecraftUsername && 'animate-spin')}
           />
         </Button>
