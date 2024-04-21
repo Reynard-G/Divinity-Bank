@@ -1,6 +1,7 @@
 import { useRouter } from 'next/navigation';
 
 import { Avatar } from '@nextui-org/avatar';
+import { Button } from '@nextui-org/button';
 import {
   Dropdown,
   DropdownItem,
@@ -19,9 +20,10 @@ export default function AvatarSettings({ minecraftUsername, minecraftUUID }) {
     <Dropdown>
       <DropdownTrigger>
         <Avatar
-          as='button'
-          showFallback
-          isBordered
+          as={Button}
+          isIconOnly={true}
+          showFallback={true}
+          isBordered={true}
           radius='lg'
           name={minecraftUsername}
           src={crafatarURL(minecraftUUID, 40)}
