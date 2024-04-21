@@ -2,8 +2,6 @@ import { cookies } from 'next/headers';
 
 import { eq, sql } from 'drizzle-orm';
 
-import API from '@/constants/API';
-import Page from '@/constants/Page';
 import { accountTypes, users } from '@/drizzle/schema';
 import { db } from '@/lib/db';
 import getIPFromHeaders from '@/utils/getIPFromHeaders';
@@ -51,12 +49,6 @@ export async function GET() {
         lastIpAccessed: ip,
       })
       .where(eq(users.id, id));
-
-    // Call `updateMinecraftUsername` to check if the minecraft_username has changed
-    // Don't wait for the response, just return the user
-    fetch(Page.BASE_URL + API.USER_UPDATE_MINECRAFT_USERNAME, {
-      method: 'POST',
-    });
 
     return new Response(JSON.stringify(user), { status: 200 });
   } catch (error) {

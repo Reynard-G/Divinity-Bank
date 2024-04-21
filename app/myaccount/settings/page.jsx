@@ -33,6 +33,7 @@ export default function Settings() {
           </div>
 
           <div className='flex flex-col lg:w-2/3'>
+            {/* Show the account information form if on a personal account */}
             <PersonalAccountTypeView>
               <div className='mt-2 flex w-full flex-col gap-4'>
                 <h2 className='text-xl font-bold'>Account Information</h2>
