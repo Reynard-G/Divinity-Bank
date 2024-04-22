@@ -4,16 +4,13 @@ import { useState } from 'react';
 
 import { Button } from '@nextui-org/button';
 
-import { useUserContext } from '@/contexts';
-
 const timeFrameButtons = [
   { name: 'Last 7 days', value: 7 },
   { name: 'Last 30 days', value: 30 },
   { name: 'All-time', value: Infinity },
 ];
 
-export default function DashboardHeader() {
-  const { accountType } = useUserContext();
+export default function DashboardHeader({ accountType }) {
   const [selectedTimeFrame, setSelectedTimeFrame] = useState(
     timeFrameButtons[0].value,
   );
