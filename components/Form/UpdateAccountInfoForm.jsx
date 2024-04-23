@@ -6,19 +6,23 @@ import { Button } from '@nextui-org/button';
 import { Input } from '@nextui-org/input';
 import { RefreshCw } from 'lucide-react';
 
-import { useUserContext } from '@/contexts';
-import { updateAccountInfo } from '@/lib/actions/form.actions';
-import { syncMinecraftUsername } from '@/lib/actions/user.actions';
+import {
+  syncMinecraftUsername,
+  updateAccountInfo,
+} from '@/lib/actions/user.actions';
 import cn from '@/utils/cn';
 import isValidDiscordUsername from '@/utils/isValidDiscordUsername';
 
-export default function UpdateAccountInfoForm() {
-  const {
-    minecraftUsername,
-    discordUsername,
-    setMinecraftUsername,
-    setDiscordUsername,
-  } = useUserContext();
+export default function UpdateAccountInfoForm({
+  currentMinecraftUsername,
+  currentDiscordUsername,
+}) {
+  const [minecraftUsername, setMinecraftUsername] = useState(
+    currentMinecraftUsername,
+  );
+  const [discordUsername, setDiscordUsername] = useState(
+    currentDiscordUsername,
+  );
   const [isAccountUpdating, setIsAccountUpdating] = useState(false);
   const [isSyncingMinecraftUsername, setIsSyncingMinecraftUsername] =
     useState(false);

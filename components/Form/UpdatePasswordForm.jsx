@@ -8,7 +8,7 @@ import { Input } from '@nextui-org/input';
 import { Link } from '@nextui-org/link';
 
 import Page from '@/constants/Page';
-import { updatePassword } from '@/lib/actions/form.actions';
+import { updateKnownPassword } from '@/lib/actions/user.actions';
 
 export default function UpdatePasswordForm() {
   const router = useRouter();
@@ -21,7 +21,7 @@ export default function UpdatePasswordForm() {
   return (
     <form
       action={async (formData) => {
-        await updatePassword(formData).then((success) => {
+        await updateKnownPassword(formData).then((success) => {
           if (success) {
             router.replace(Page.LOGIN);
           } else {

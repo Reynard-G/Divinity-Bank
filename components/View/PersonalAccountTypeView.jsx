@@ -1,10 +1,28 @@
-'use client';
+import { cookies } from 'next/headers';
+
+import { eq } from 'drizzle-orm';
 
 import AccountType from '@/constants/AccountType';
-import { useUserContext } from '@/contexts';
+import { users } from '@/drizzle/schema';
+import { db } from '@/lib/db';
+import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
-export default function PersonalAccountTypeView({ children }) {
-  const { accountType } = useUserContext();
+async function getAccountType() {
+  const cookie = cookies().get('authorization')?.value;
+  const id = (await getPayloadFromJWT(cookie))?.id;
+
+  return (
+    await db
+      .select({
+        account_type: users.accountType,
+      })
+      .from(users)
+      .where(eq(users.id, id))
+  )[0]?.account_type;
+}
+
+export default async function PersonalAccountTypeView({ children }) {
+  const accountType = await getAccountType();
 
   return <>{accountType === AccountType.PERSONAL && children}</>;
 }
