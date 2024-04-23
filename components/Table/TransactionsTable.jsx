@@ -13,21 +13,18 @@ import {
   TableHeader,
   TableRow,
 } from '@nextui-org/table';
-import useSWR from 'swr';
 
 import PaymentTypeFilterButton from '@/components/Button/PaymentTypeFilterButton';
 import StatusFilterButton from '@/components/Button/StatusFilterButton';
 import TransactionTypeFilterButton from '@/components/Button/TransactionTypeFilterButton';
-import API from '@/constants/API';
 import PaymentType from '@/constants/PaymentType';
 import TransactionStatus from '@/constants/TransactionStatus';
 import TransactionStatusColor from '@/constants/TransactionStatusColor';
 import TransactionType from '@/constants/TransactionType';
-import fetcher from '@/utils/fetcher';
 import formatCurrency from '@/utils/formatCurrency';
 import formatUnix from '@/utils/formatUnix';
 
-export default function TransactionsTable() {
+export default function TransactionsTable({ transactions }) {
   const [transactionTypeFilter, setTransactionTypeFilter] = useState(
     Array.from(Object.values(TransactionType)),
   );
@@ -38,13 +35,6 @@ export default function TransactionsTable() {
     Array.from(Object.values(TransactionStatus)),
   );
   const [page, setPage] = useState(1);
-  const { data: transactions, isLoading } = useSWR(
-    API.USER_TRANSACTIONS,
-    fetcher,
-    {
-      fallbackData: [],
-    },
-  );
 
   const filteredTransactions = useMemo(() => {
     return transactions.filter((transaction) => {
@@ -188,8 +178,7 @@ export default function TransactionsTable() {
       </TableHeader>
       <TableBody
         items={items}
-        isLoading={isLoading}
-        emptyContent={isLoading || 'No transactions found.'}
+        emptyContent={'No transactions found.'}
         loadingContent={<Spinner />}
       >
         {(transaction) => (
