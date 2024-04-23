@@ -6,6 +6,7 @@ import Providers from '@/app/myaccount/providers';
 import UserDashboardLayout from '@/components/Layout/UserDashboardLayout';
 import { accountTypes, users } from '@/drizzle/schema';
 import { db } from '@/lib/db';
+import getIPFromHeaders from '@/utils/getIPFromHeaders';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
 export const metadata = {
@@ -16,6 +17,14 @@ export const metadata = {
 async function getUserMinecraftDetails() {
   const cookie = cookies().get('authorization')?.value;
   const id = (await getPayloadFromJWT(cookie))?.id;
+
+  const ip = getIPFromHeaders();
+  await db
+    .update(users)
+    .set({
+      lastIpAccessed: ip,
+    })
+    .where(eq(users.id, id));
 
   return (
     await db
