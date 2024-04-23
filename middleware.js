@@ -8,18 +8,23 @@ import Page from '@/constants/Page';
 import getIPFromHeaders from '@/utils/getIPFromHeaders';
 import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
+const ratelimitCache = new Map();
+
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
   // 10 requests from the same IP in 5 seconds
   limiter: Ratelimit.slidingWindow(10, '5 s'),
+  ephemeralCache: ratelimitCache,
+  timeout: 1000, // 1 second
+  analytics: true,
 });
 
 export async function middleware(request) {
   const ip = getIPFromHeaders();
-  const { remaining } = await ratelimit.limit(ip);
+  const { success, pending } = await ratelimit.limit(ip);
+  await pending; // Wait for analytics submission to finish
 
-  // If rate limit is reached, redirect to /blocked page
-  if (remaining <= 0) {
+  if (!success) {
     return NextResponse.redirect(new URL(Page.BLOCKED, request.url));
   }
 
