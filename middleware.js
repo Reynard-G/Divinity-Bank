@@ -10,8 +10,8 @@ import getPayloadFromJWT from '@/utils/getPayloadFromJWT';
 
 const ratelimit = new Ratelimit({
   redis: Redis.fromEnv(),
-  // 25 requests from the same IP in 5 seconds
-  limiter: Ratelimit.slidingWindow(25, '5 s'),
+  // 10 requests from the same IP in 5 seconds
+  limiter: Ratelimit.slidingWindow(10, '5 s'),
 });
 
 export async function middleware(request) {
