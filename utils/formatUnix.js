@@ -3,13 +3,11 @@ export default function formatUnix(unix, long = false) {
   const date = new Date(unix * 1000);
   const options = {
     year: 'numeric',
-    month: 'short',
+    month: 'long',
     day: 'numeric',
   };
 
-  if (long) {
-    options.month = 'long';
-  }
-
-  return date.toLocaleDateString('en-US', options);
+  return long
+    ? date.toLocaleTimeString('en-US', options)
+    : date.toLocaleDateString('en-US', options);
 }

@@ -191,9 +191,7 @@ export default function TransactionsTable({ transactions }) {
               {transaction.payment_type}
             </TableCell>
             <TableCell>
-              {transaction.transaction_type === TransactionType.CREDIT
-                ? `+${formatCurrency(transaction.amount)}`
-                : `-${formatCurrency(transaction.amount)}`}
+              {formatCurrency(transaction.amount, transaction.transaction_type)}
             </TableCell>
             <TableCell className='hidden xl:table-cell'>
               {transaction.note}

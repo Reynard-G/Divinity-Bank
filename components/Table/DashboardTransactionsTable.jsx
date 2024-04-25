@@ -108,7 +108,10 @@ export default async function DashboardTransactionsTable() {
                     <div className='flex-auto'>
                       <div className='flex items-center gap-x-3'>
                         <div className='text-sm font-medium leading-6 text-neutral-200'>
-                          {formatCurrency(transaction.amount)}
+                          {formatCurrency(
+                            transaction.amount,
+                            transaction.transaction_type,
+                          )}
                         </div>
                         <Chip
                           color={TransactionStatusColor[transaction.status]}
@@ -119,7 +122,7 @@ export default async function DashboardTransactionsTable() {
                           {transaction.status}
                         </Chip>
                       </div>
-                      {Number(transaction.fee) > 0 && (
+                      {Number(transaction.fee) > 0.0 && (
                         <div className='mt-1 text-xs leading-5 text-neutral-500'>
                           {formatCurrency(transaction.fee)} fee
                         </div>
