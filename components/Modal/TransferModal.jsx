@@ -18,23 +18,18 @@ import { DollarSign } from 'lucide-react';
 import useSWR from 'swr';
 
 import API from '@/constants/API';
-import { useUserContext } from '@/contexts';
 import { transfer } from '@/lib/actions/transaction.actions';
 import crafatarURL from '@/utils/crafatarURL';
 import fetcher from '@/utils/fetcher';
 
 export default function TransferModal({ isOpen, onOpenChange, ...props }) {
   const router = useRouter();
-  const { userId } = useUserContext();
   const [users, setUsers] = useState([]);
   const [recipientUserId, setRecipientUserId] = useState(null);
   const [amount, setAmount] = useState('');
   const [isTransferLoading, setIsTransferLoading] = useState(false);
-  useSWR(API.USERS, fetcher, {
-    onSuccess: (data) => {
-      // Remove the current user from the list of users
-      setUsers(data.filter((user) => user.id !== userId));
-    },
+  useSWR(API.USERS + '?excludeSelf=true', fetcher, {
+    onSuccess: (data) => setUsers(data),
   });
 
   return (
