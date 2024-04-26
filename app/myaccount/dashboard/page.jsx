@@ -90,7 +90,7 @@ export default async function Dashboard() {
             <h2 className='text-base font-semibold leading-6 text-gray-200 lg:mx-0 lg:max-w-none'>
               Recent Activity
             </h2>
-            <div className='order-last flex w-full gap-x-4 text-sm leading-6 sm:order-none sm:w-auto sm:border-l sm:border-white/15 sm:pl-6 sm:leading-7'>
+            <div className='order-last flex w-full flex-wrap gap-x-4 gap-y-2 text-sm leading-6 sm:order-none sm:w-auto sm:border-l sm:border-white/15 sm:pl-6 sm:leading-7'>
               <DepositModalButton
                 color='primary'
                 size='sm'
