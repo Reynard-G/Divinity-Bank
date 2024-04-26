@@ -3,6 +3,7 @@ import { NextResponse } from 'next/server';
 
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
+import { get } from '@vercel/edge-config';
 
 import Page from '@/constants/Page';
 import getIPFromHeaders from '@/utils/getIPFromHeaders';
@@ -20,6 +21,11 @@ const ratelimit = new Ratelimit({
 });
 
 export async function middleware(request) {
+  const isInMaintenanceMode = await get('isInMaintenanceMode');
+  if (isInMaintenanceMode) {
+    return NextResponse.redirect(new URL(Page.MAINTENANCE, request.url));
+  }
+
   const ip = getIPFromHeaders();
   const { success, pending } = await ratelimit.limit(ip);
   await pending; // Wait for analytics submission to finish

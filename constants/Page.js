@@ -4,6 +4,7 @@ export default {
   ABOUT: '/about',
   FAQ: '/faq',
   BLOCKED: '/blocked',
+  MAINTENANCE: '/maintenance',
   LOGIN: '/login',
   REGISTER: '/register',
   FORGOT_PASSWORD: '/forgot-password',
