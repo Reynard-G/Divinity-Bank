@@ -2,7 +2,6 @@ import { cookies } from 'next/headers';
 
 import { eq } from 'drizzle-orm';
 
-import Providers from '@/app/myaccount/providers';
 import UserDashboardLayout from '@/components/Layout/UserDashboardLayout';
 import { accountTypes, users } from '@/drizzle/schema';
 import { db } from '@/lib/db';
@@ -42,10 +41,8 @@ export default async function MyAccountLayout({ children }) {
   const minecraftUser = await getUserMinecraftDetails();
 
   return (
-    <Providers>
-      <UserDashboardLayout minecraftUser={minecraftUser}>
-        {children}
-      </UserDashboardLayout>
-    </Providers>
+    <UserDashboardLayout minecraftUser={minecraftUser}>
+      {children}
+    </UserDashboardLayout>
   );
 }
