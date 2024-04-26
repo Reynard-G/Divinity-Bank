@@ -97,7 +97,7 @@ export default async function Transaction({ params }) {
       <div className='flex flex-col'>
         <h1 className='text-3xl font-bold'>Transaction</h1>
         <p className='text-sm text-default-500'>
-          View details about your transaction history
+          View details of a transaction
         </p>
       </div>
 
