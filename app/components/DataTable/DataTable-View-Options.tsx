@@ -47,12 +47,12 @@ export function DataTableViewOptions<TData>({
           .map((column) => {
             return (
               <DropdownMenuCheckboxItem
-                key={column.id}
-                className="capitalize"
-                checked={column.getIsVisible()}
-                onCheckedChange={(value) => column.toggleVisibility(!!value)}
+              key={column.id}
+              className="capitalize"
+              checked={column.getIsVisible()}
+              onCheckedChange={(value) => column.toggleVisibility(!!value)}
               >
-                <span className="truncate">{column.id}</span>
+              <span className="truncate">{column.id.replace(/([A-Z])/g, ' $1').trim()}</span>
               </DropdownMenuCheckboxItem>
             );
           })}
