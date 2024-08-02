@@ -1,0 +1,112 @@
+import {
+  IconArrowUp,
+  IconArrowDown,
+  IconCaretUpDown,
+  IconEyeOff,
+} from "@tabler/icons-react";
+import { type Column } from "@tanstack/react-table";
+
+import { cn } from "~/lib/utils/cn";
+import { Button } from "~/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
+
+interface DataTableColumnHeaderProps<TData, TValue>
+  extends React.HTMLAttributes<HTMLDivElement> {
+  column: Column<TData, TValue>;
+  title: string;
+}
+
+export function DataTableColumnHeader<TData, TValue>({
+  column,
+  title,
+  className,
+}: DataTableColumnHeaderProps<TData, TValue>) {
+  if (!column.getCanSort() && !column.getCanHide()) {
+    return <div className={cn(className)}>{title}</div>;
+  }
+
+  return (
+    <div className={cn("flex items-center space-x-2", className)}>
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            aria-label={
+              column.getIsSorted() === "desc"
+                ? "Sorted descending. Click to sort ascending."
+                : column.getIsSorted() === "asc"
+                  ? "Sorted ascending. Click to sort descending."
+                  : "Not sorted. Click to sort ascending."
+            }
+            variant="ghost"
+            size="sm"
+            className="-ml-3 data-[state=open]:bg-accent"
+          >
+            <span>{title}</span>
+            {column.getCanSort() && column.getIsSorted() === "desc" ? (
+              <IconArrowDown size={16} className="ml-2" aria-hidden="true" />
+            ) : column.getIsSorted() === "asc" ? (
+              <IconArrowUp size={16} className="ml-2" aria-hidden="true" />
+            ) : (
+              <IconCaretUpDown
+                size={16}
+                stroke={1.5}
+                className="ml-2"
+                aria-hidden="true"
+              />
+            )}
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start">
+          {column.getCanSort() && (
+            <>
+              <DropdownMenuItem
+                aria-label="Sort ascending"
+                onClick={() => column.toggleSorting(false)}
+              >
+                <IconArrowUp
+                  size={16}
+                  className="mr-2 text-muted-foreground/70"
+                  aria-hidden="true"
+                />
+                Asc
+              </DropdownMenuItem>
+              <DropdownMenuItem
+                aria-label="Sort descending"
+                onClick={() => column.toggleSorting(true)}
+              >
+                <IconArrowDown
+                  size={16}
+                  className="mr-2 text-muted-foreground/70"
+                  aria-hidden="true"
+                />
+                Desc
+              </DropdownMenuItem>
+            </>
+          )}
+          {column.getCanSort() && column.getCanHide() && (
+            <DropdownMenuSeparator />
+          )}
+          {column.getCanHide() && (
+            <DropdownMenuItem
+              aria-label="Hide column"
+              onClick={() => column.toggleVisibility(false)}
+            >
+              <IconEyeOff
+                size={16}
+                className="mr-2 text-muted-foreground/70"
+                aria-hidden="true"
+              />
+              Hide
+            </DropdownMenuItem>
+          )}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </div>
+  );
+}
