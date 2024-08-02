@@ -5,7 +5,7 @@ export default function Servers() {
     <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
       <ServerSelectionCard
         serverName="DemocracyCraft"
-        serverBannerImage="https://www.democracycraft.net/images/feature-banner.webp"
+        serverBannerImage="https://imgs.divinity.milklegend.xyz/democracycraft-banner.webp"
         serverBalance="1234.56"
         transactionsAmount={12}
         lastTransactionDate={
@@ -15,7 +15,7 @@ export default function Servers() {
 
       <ServerSelectionCard
         serverName="CityRP"
-        serverBannerImage="https://i.imgur.com/KuZRt9n.png"
+        serverBannerImage="https://imgs.divinity.milklegend.xyz/cityrp-banner.webp"
         serverBalance="1234.56"
         transactionsAmount={12}
         lastTransactionDate={new Date(Date.now() - 1 * 24 * 60 * 60 * 1000)} // 1 day ago
