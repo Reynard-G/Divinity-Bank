@@ -36,7 +36,7 @@ export default function ServerSelectionCard({
             <img
               src={serverBannerImage}
               alt="Server background"
-              className="h-full w-full object-cover object-center brightness-50 grayscale"
+              className="h-full w-full object-cover object-center brightness-50 grayscale duration-500 animate-in fade-in"
             />
           </div>
         </div>
