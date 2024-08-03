@@ -1,10 +1,10 @@
-# fly.toml app configuration file generated for divinity-banking on 2024-08-02T15:08:46-05:00
+# fly.toml app configuration file generated for divinity-bank on 2024-08-03T01:11:58-05:00
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'divinity-banking'
-primary_region = 'sjc'
+app = 'divinity-bank'
+primary_region = 'dfw'
 
 [build]
 
