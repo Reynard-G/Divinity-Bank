@@ -45,6 +45,7 @@
     "zod": "^3.23.8"
   },
   "devDependencies": {
+    "@flydotio/dockerfile": "^0.5.8",
     "@remix-run/dev": "^2.10.3",
     "@types/react": "^18.2.20",
     "@types/react-dom": "^18.2.7",
@@ -68,6 +69,6 @@
     "vite-tsconfig-paths": "^4.2.1"
   },
   "engines": {
-    "node": ">=18.0.0"
+    "node": ">=20.0.0"
   }
 }
