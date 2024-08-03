@@ -1,4 +1,4 @@
-import { db } from "~/lib/db/index";
+import { db } from "~/lib/db/db.server";
 import {
   transactions,
   type Transaction,
@@ -12,7 +12,6 @@ import { filterColumn } from "~/lib/utils/filterColumns";
 import { GetTransactionsSchema } from "~/lib/validations";
 
 export async function getTransactions(input: GetTransactionsSchema) {
-  console.time("getTransactions");
   const { page, per_page, sort, note, paymentType, status, operator } = input;
 
   try {
@@ -80,7 +79,6 @@ export async function getTransactions(input: GetTransactionsSchema) {
     });
 
     const pageCount = Math.ceil(total / per_page);
-    console.timeEnd("getTransactions");
     return { data, pageCount };
   } catch (err) {
     console.error("Error fetching transactions:", err);

@@ -7,7 +7,7 @@ import {
   getAllTransactions,
   getPaymentTypes,
   getTransactionStatuses,
-} from "~/lib/queries";
+} from "~/lib/queries.server";
 import { TransactionsTable } from "~/components/DataTable/TransactionsTable";
 
 export const loader: LoaderFunction = async ({ request }) => {
