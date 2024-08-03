@@ -25,7 +25,7 @@ export default function ServerSelectionCard({
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <Card className="group relative cursor-pointer overflow-hidden rounded-lg border border-[#3d3d43] bg-background !p-0 transition-all hover:shadow-lg">
+    <Card className="group relative h-36 cursor-pointer overflow-hidden rounded-lg border border-[#3d3d43] bg-background !p-0 transition-all hover:shadow-lg">
       <Link
         to="/app/dashboard"
         className="absolute inset-0 z-10"
@@ -59,7 +59,7 @@ export default function ServerSelectionCard({
         </div>
       </div>
 
-      <div className="p-4">
+      <div className="p-3">
         <div className="grid gap-4">
           <div className="flex items-center justify-between">
             <span className="text-sm font-normal text-[#ededed]">
