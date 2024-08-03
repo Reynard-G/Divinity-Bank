@@ -1,9 +1,11 @@
+import { useState } from "react";
 import { Link } from "@remix-run/react";
 import { IconServer } from "@tabler/icons-react";
 
 import { Card } from "~/components/ui/card";
 import { getRelativeTimeString } from "~/lib/utils/getRelativeTimeString";
 import { formatCurrency } from "~/lib/utils/formatCurrency";
+import { cn } from "~/lib/utils/cn";
 
 interface ServerSelectionCardProps {
   serverName: string;
@@ -20,6 +22,8 @@ export default function ServerSelectionCard({
   transactionsAmount,
   lastTransactionDate,
 }: ServerSelectionCardProps) {
+  const [imageLoaded, setImageLoaded] = useState(false);
+
   return (
     <Card className="group relative cursor-pointer overflow-hidden rounded-lg border border-[#3d3d43] bg-background !p-0 transition-all hover:shadow-lg">
       <Link
@@ -36,7 +40,11 @@ export default function ServerSelectionCard({
             <img
               src={serverBannerImage}
               alt="Server background"
-              className="h-full w-full object-cover object-center brightness-50 grayscale duration-500 animate-in fade-in"
+              className={cn(
+                "h-full w-full object-cover object-center brightness-50 grayscale",
+                imageLoaded && "duration-500 animate-in fade-in",
+              )}
+              onLoad={() => setImageLoaded(true)}
             />
           </div>
         </div>

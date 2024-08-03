@@ -10,6 +10,20 @@ import {
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
+export const servers = pgTable("Servers", {
+  id: serial("id").primaryKey().notNull(),
+  name: text("name").notNull(),
+  bannerLink: text("banner_link").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .default(sql`(now() AT TIME ZONE 'utc'::text)`),
+  updatedAt: timestamp("updated_at", { withTimezone: true })
+    .notNull()
+    .default(sql`(now() AT TIME ZONE 'utc'::text)`),
+});
+export type Server = typeof servers.$inferSelect;
+export type NewServer = typeof servers.$inferInsert;
+
 export const paymentTypes = pgTable("PaymentTypes", {
   name: text("name").primaryKey().notNull(),
 });

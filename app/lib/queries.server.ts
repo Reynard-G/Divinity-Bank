@@ -1,5 +1,6 @@
 import { db } from "~/lib/db/db.server";
 import {
+  servers,
   transactions,
   type Transaction,
   paymentTypes,
@@ -10,6 +11,10 @@ import { and, asc, count, desc, or, type SQL } from "drizzle-orm";
 
 import { filterColumn } from "~/lib/utils/filterColumns";
 import { GetTransactionsSchema } from "~/lib/validations";
+
+export async function getServers() {
+  return db.select().from(servers).execute();
+}
 
 export async function getTransactions(input: GetTransactionsSchema) {
   const { page, per_page, sort, note, paymentType, status, operator } = input;
