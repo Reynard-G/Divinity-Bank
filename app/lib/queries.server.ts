@@ -74,7 +74,6 @@ export async function getTransactions(input: GetTransactionsSchema) {
         })
         .from(transactions)
         .where(where)
-        .execute()
         .then((res) => res[0]?.count ?? 0);
 
       return {
@@ -93,7 +92,7 @@ export async function getTransactions(input: GetTransactionsSchema) {
 
 export async function getAllTransactions() {
   try {
-    const data = await db.select().from(transactions).execute();
+    const data = await db.select().from(transactions);
 
     return data;
   } catch (err) {
@@ -103,9 +102,9 @@ export async function getAllTransactions() {
 }
 
 export async function getPaymentTypes() {
-  return db.select().from(paymentTypes).execute();
+  return await db.select().from(paymentTypes);
 }
 
 export async function getTransactionStatuses() {
-  return db.select().from(transactionStatuses).execute();
+  return await db.select().from(transactionStatuses);
 }

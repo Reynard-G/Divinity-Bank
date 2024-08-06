@@ -1,4 +1,4 @@
-import { defer, useLoaderData } from "@remix-run/react";
+import { Await, defer, useLoaderData } from "@remix-run/react";
 import { type LoaderFunction } from "@remix-run/node";
 
 import { searchParamsSchema } from "~/lib/validations";
@@ -9,24 +9,30 @@ import {
   getTransactionStatuses,
 } from "~/lib/queries.server";
 import { TransactionsTable } from "~/components/DataTable/TransactionsTable";
+import { Suspense } from "react";
+import { SpokeSpinner } from "~/components/ui/spinner";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const search = searchParamsSchema.parse(Object.fromEntries(url.searchParams));
 
+  const transactionsData = getTransactions(search);
+  const types = getPaymentTypes();
+  const statuses = getTransactionStatuses();
   const allTransactions = getAllTransactions();
-  const [{ data, pageCount }, types, statuses] = await Promise.all([
-    getTransactions(search),
-    getPaymentTypes(),
-    getTransactionStatuses(),
+
+  const transactions = Promise.all([
+    transactionsData,
+    types,
+    statuses,
+    allTransactions,
   ]);
 
-  return defer({ data, types, statuses, pageCount, allTransactions });
+  return defer({ transactions });
 };
 
 export default function Transactions() {
-  const { data, types, statuses, pageCount, allTransactions } =
-    useLoaderData<typeof loader>();
+  const { transactions } = useLoaderData<typeof loader>();
 
   return (
     <div className="mx-auto flex w-full max-w-7xl grow flex-col">
@@ -40,13 +46,25 @@ export default function Transactions() {
       </div>
 
       <section className="container grid items-center gap-2 pb-8">
-        <TransactionsTable
-          data={data}
-          types={types}
-          statuses={statuses}
-          pageCount={pageCount}
-          allTransactions={allTransactions}
-        />
+        <Suspense
+          fallback={
+            <div className="flex h-64 items-center justify-center">
+              <SpokeSpinner color="white" />
+            </div>
+          }
+        >
+          <Await resolve={transactions}>
+            {([transactions, types, statuses, allTransactions]) => (
+              <TransactionsTable
+                data={transactions.data}
+                types={types}
+                statuses={statuses}
+                pageCount={transactions.pageCount}
+                allTransactions={allTransactions}
+              />
+            )}
+          </Await>
+        </Suspense>
       </section>
     </div>
   );
