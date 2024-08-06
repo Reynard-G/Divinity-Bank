@@ -18,6 +18,7 @@
     "typegen": "wrangler types"
   },
   "dependencies": {
+    "@node-rs/bcrypt": "^1.10.4",
     "@radix-ui/react-avatar": "^1.1.0",
     "@radix-ui/react-dialog": "^1.1.1",
     "@radix-ui/react-dropdown-menu": "^2.1.1",
@@ -40,6 +41,8 @@
     "postgres": "^3.4.4",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "remix-auth": "^3.7.0",
+    "remix-auth-form": "^1.5.0",
     "tailwind-merge": "^2.4.0",
     "tailwindcss-animate": "^1.0.7",
     "zod": "^3.23.8"

@@ -1,5 +1,5 @@
 import { Link, Outlet, NavLink, useNavigate } from "@remix-run/react";
-import { type LoaderFunction, redirect } from "@remix-run/node";
+import { type LoaderFunctionArgs, redirect } from "@remix-run/node";
 import {
   IconHome,
   IconServer,
@@ -27,13 +27,19 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { cn } from "~/lib/utils/cn";
+import { authenticator } from "~/lib/services/auth.server";
 
-export const loader: LoaderFunction = async ({ request }) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
+  const user = await authenticator.isAuthenticated(request, {
+    failureRedirect: "/login",
+  });
+
   const url = new URL(request.url);
   if (url.pathname === "/app") {
     return redirect("/app/dashboard");
   }
-  return null;
+
+  return { user };
 };
 
 const NavigationItems = [
@@ -148,7 +154,9 @@ export default function App() {
                           Settings
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>Logout</DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate("/logout")}>
+                          Logout
+                        </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </div>
