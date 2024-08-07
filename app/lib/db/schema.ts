@@ -11,15 +11,13 @@ import {
 import { sql } from "drizzle-orm";
 
 export const servers = pgTable("Servers", {
-  id: integer("id")
-    .primaryKey()
-    .generatedByDefaultAsIdentity({
-      name: "Servers_id_seq",
-      startWith: 1,
-      increment: 1,
-      minValue: 1,
-      maxValue: 2147483647,
-    }),
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity({
+    name: "Servers_id_seq",
+    startWith: 1,
+    increment: 1,
+    minValue: 1,
+    maxValue: 2147483647,
+  }),
   name: text("name").notNull(),
   bannerLink: text("banner_link").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
@@ -64,102 +62,125 @@ export const roles = pgTable("Roles", {
 export type Role = typeof roles.$inferSelect;
 export type NewRole = typeof roles.$inferInsert;
 
-export const users = pgTable("Users", {
-  id: integer("id")
-    .primaryKey()
-    .generatedByDefaultAsIdentity({
+export const users = pgTable(
+  "Users",
+  {
+    id: integer("id").primaryKey().generatedByDefaultAsIdentity({
       name: "Users_id_seq",
       startWith: 1,
       increment: 1,
       minValue: 1,
       maxValue: 2147483647,
     }),
-  accountType: text("account_type")
-    .notNull()
-    .references(() => accountTypes.name, {
-      onDelete: "restrict",
-      onUpdate: "cascade",
-    }),
-  minecraftUuid: uuid("minecraft_uuid").notNull(),
-  minecraftUsername: text("minecraft_username").notNull(),
-  discordUsername: text("discord_username").notNull(),
-  hashedPassword: text("hashed_password").notNull(),
-  role: text("role")
-    .notNull()
-    .references(() => roles.name, {
-      onDelete: "restrict",
-      onUpdate: "cascade",
-    }),
-  createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
-    .default(sql`(now() AT TIME ZONE 'utc'::text)`)
-    .notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
-    .default(sql`(now() AT TIME ZONE 'utc'::text)`)
-    .notNull(),
-},
-(table) => {
-	return {
-		usersMinecraftUuidKey: unique("Users_minecraft_uuid_key").on(table.minecraftUuid),
-		usersMinecraftUsernameKey: unique("Users_minecraft_username_key").on(table.minecraftUsername),
-		usersDiscordUsernameKey: unique("Users_discord_username_key").on(table.discordUsername),
-	}
-});
+    accountType: text("account_type")
+      .notNull()
+      .references(() => accountTypes.name, {
+        onDelete: "restrict",
+        onUpdate: "cascade",
+      }),
+    minecraftUuid: uuid("minecraft_uuid").notNull(),
+    minecraftUsername: text("minecraft_username").notNull(),
+    discordUsername: text("discord_username").notNull(),
+    hashedPassword: text("hashed_password").notNull(),
+    role: text("role")
+      .notNull()
+      .references(() => roles.name, {
+        onDelete: "restrict",
+        onUpdate: "cascade",
+      }),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+      .default(sql`(now() AT TIME ZONE 'utc'::text)`)
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
+      .default(sql`(now() AT TIME ZONE 'utc'::text)`)
+      .notNull(),
+  },
+  (table) => {
+    return {
+      usersMinecraftUuidKey: unique("Users_minecraft_uuid_key").on(
+        table.minecraftUuid,
+      ),
+      usersMinecraftUsernameKey: unique("Users_minecraft_username_key").on(
+        table.minecraftUsername,
+      ),
+      usersDiscordUsernameKey: unique("Users_discord_username_key").on(
+        table.discordUsername,
+      ),
+    };
+  },
+);
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 
-export const transactions = pgTable("Transactions", {
-  id: integer("id")
-    .primaryKey()
-    .generatedByDefaultAsIdentity({
+export const transactions = pgTable(
+  "Transactions",
+  {
+    id: integer("id").primaryKey().generatedByDefaultAsIdentity({
       name: "Transactions_id_seq",
       startWith: 1,
       increment: 1,
       minValue: 1,
       maxValue: 2147483647,
     }),
-  userId: integer("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "restrict", onUpdate: "cascade" }),
-  createdByUserId: integer("created_by_user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "restrict", onUpdate: "cascade" }),
-  amount: numeric("amount", { precision: 34, scale: 2 }).notNull(),
-  fee: numeric("fee", { precision: 34, scale: 2 }).notNull().default("0.00"),
-  transactionType: text("transaction_type")
-    .notNull()
-    .references(() => transactionTypes.name, {
-      onDelete: "restrict",
-      onUpdate: "cascade",
-    }),
-  paymentType: text("payment_type")
-    .notNull()
-    .references(() => paymentTypes.name, {
-      onDelete: "restrict",
-      onUpdate: "cascade",
-    }),
-  attachment: text("attachment").notNull(),
-  note: text("note").notNull().default("''::text"),
-  status: text("status")
-    .notNull()
-    .references(() => transactionStatuses.name, {
-      onDelete: "restrict",
-      onUpdate: "cascade",
-    }),
-  createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
-    .default(sql`(now() AT TIME ZONE 'utc'::text)`)
-    .notNull(),
-  updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
-    .default(sql`(now() AT TIME ZONE 'utc'::text)`)
-    .notNull(),
-},
-(table) => {
-	return {
-		createdByUserIdIdx: index("Transactions_created_by_user_id_idx").using("btree", table.createdByUserId),
-		paymentTypeIdx: index("Transactions_payment_type_idx").using("btree", table.paymentType),
-		statusIdx: index("Transactions_status_idx").using("btree", table.status),
-		transactionTypeIdx: index("Transactions_transaction_type_idx").using("btree", table.transactionType),
-		userIdIdx: index("Transactions_user_id_idx").using("btree", table.userId),
-	}
-});
+    userId: integer("user_id")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "restrict",
+        onUpdate: "cascade",
+      }),
+    createdByUserId: integer("created_by_user_id")
+      .notNull()
+      .references(() => users.id, {
+        onDelete: "restrict",
+        onUpdate: "cascade",
+      }),
+    amount: numeric("amount", { precision: 34, scale: 2 }).notNull(),
+    fee: numeric("fee", { precision: 34, scale: 2 }).notNull().default("0.00"),
+    transactionType: text("transaction_type")
+      .notNull()
+      .references(() => transactionTypes.name, {
+        onDelete: "restrict",
+        onUpdate: "cascade",
+      }),
+    paymentType: text("payment_type")
+      .notNull()
+      .references(() => paymentTypes.name, {
+        onDelete: "restrict",
+        onUpdate: "cascade",
+      }),
+    attachment: text("attachment").notNull(),
+    note: text("note").notNull().default("''::text"),
+    status: text("status")
+      .notNull()
+      .references(() => transactionStatuses.name, {
+        onDelete: "restrict",
+        onUpdate: "cascade",
+      }),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+      .default(sql`(now() AT TIME ZONE 'utc'::text)`)
+      .notNull(),
+    updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
+      .default(sql`(now() AT TIME ZONE 'utc'::text)`)
+      .notNull(),
+  },
+  (table) => {
+    return {
+      createdByUserIdIdx: index("Transactions_created_by_user_id_idx").using(
+        "btree",
+        table.createdByUserId,
+      ),
+      paymentTypeIdx: index("Transactions_payment_type_idx").using(
+        "btree",
+        table.paymentType,
+      ),
+      statusIdx: index("Transactions_status_idx").using("btree", table.status),
+      transactionTypeIdx: index("Transactions_transaction_type_idx").using(
+        "btree",
+        table.transactionType,
+      ),
+      userIdIdx: index("Transactions_user_id_idx").using("btree", table.userId),
+    };
+  },
+);
 export type Transaction = typeof transactions.$inferSelect;
 export type NewTransaction = typeof transactions.$inferInsert;

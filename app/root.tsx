@@ -8,6 +8,7 @@ import {
 import type { LinksFunction } from "@remix-run/node";
 
 import stylesheet from "~/tailwind.css?url";
+import { Toaster } from "~/components/ui/sonner";
 
 export const links: LinksFunction = () => [
   { rel: "stylesheet", href: stylesheet },
@@ -26,6 +27,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
       <body className="dark font-neue_haas_grotesk tracking-wide antialiased">
         {children}
 
+        <Toaster />
         <ScrollRestoration />
         <Scripts />
       </body>
