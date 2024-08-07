@@ -21,6 +21,8 @@ export default function SidebarItem({ label, icon, path }: MenuItemProps) {
   return (
     <div className="relative">
       <NavLink
+        to={path}
+        prefetch="intent"
         className={({ isActive }) =>
           cn(
             "flex items-center rounded-lg p-2 text-sm font-semibold leading-5 text-[#a0a0a0] no-underline transition-colors duration-100",
@@ -29,7 +31,6 @@ export default function SidebarItem({ label, icon, path }: MenuItemProps) {
               : "hover:bg-[#232323] hover:text-[#ededed]",
           )
         }
-        to={path}
       >
         <div className="flex items-center gap-2">
           <div className="relative">{icon}</div>
