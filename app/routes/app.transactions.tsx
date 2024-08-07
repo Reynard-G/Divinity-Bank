@@ -16,23 +16,16 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const search = searchParamsSchema.parse(Object.fromEntries(url.searchParams));
 
-  const transactionsData = getTransactions(search);
+  const transactions = getTransactions(search);
   const types = getPaymentTypes();
   const statuses = getTransactionStatuses();
   const allTransactions = getAllTransactions();
 
-  const transactions = Promise.all([
-    transactionsData,
-    types,
-    statuses,
-    allTransactions,
-  ]);
-
-  return defer({ transactions });
+  return defer({ transactions, types, statuses, allTransactions });
 };
 
 export default function Transactions() {
-  const { transactions } = useLoaderData<typeof loader>();
+  const { transactions, types, statuses } = useLoaderData<typeof loader>();
 
   return (
     <div className="mx-auto flex w-full max-w-7xl grow flex-col">
@@ -53,14 +46,22 @@ export default function Transactions() {
             </div>
           }
         >
-          <Await resolve={transactions}>
-            {([transactions, types, statuses, allTransactions]) => (
+          <Await
+            resolve={Promise.all([transactions, types, statuses])}
+            errorElement={
+              <div className="flex h-64 items-center justify-center">
+                <p className="text-red-500">
+                  Error loading transactions, please try again later.
+                </p>
+              </div>
+            }
+          >
+            {([transactions, types, statuses]) => (
               <TransactionsTable
                 data={transactions.data}
                 types={types}
                 statuses={statuses}
                 pageCount={transactions.pageCount}
-                allTransactions={allTransactions}
               />
             )}
           </Await>

@@ -23,7 +23,6 @@ interface TransactionsTableProps {
   types: PaymentType[];
   statuses: TransactionStatus[];
   pageCount: number;
-  allTransactions: Transaction[];
 }
 
 export function TransactionsTable({
@@ -31,7 +30,6 @@ export function TransactionsTable({
   types,
   statuses,
   pageCount,
-  allTransactions,
 }: TransactionsTableProps) {
   const [searchParams] = useSearchParams();
 
@@ -81,7 +79,7 @@ export function TransactionsTable({
   return (
     <DataTable table={table}>
       <DataTableToolbar table={table} filterFields={filterFields}>
-        <TransactionsTableToolbarActions allTransactions={allTransactions} />
+        <TransactionsTableToolbarActions />
       </DataTableToolbar>
     </DataTable>
   );
