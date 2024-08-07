@@ -5,6 +5,8 @@ import {
   timestamp,
   numeric,
   uuid,
+  unique,
+  index,
 } from "drizzle-orm/pg-core";
 import { sql } from "drizzle-orm";
 
@@ -94,6 +96,13 @@ export const users = pgTable("Users", {
   updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
     .default(sql`(now() AT TIME ZONE 'utc'::text)`)
     .notNull(),
+},
+(table) => {
+	return {
+		usersMinecraftUuidKey: unique("Users_minecraft_uuid_key").on(table.minecraftUuid),
+		usersMinecraftUsernameKey: unique("Users_minecraft_username_key").on(table.minecraftUsername),
+		usersDiscordUsernameKey: unique("Users_discord_username_key").on(table.discordUsername),
+	}
 });
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
@@ -142,6 +151,15 @@ export const transactions = pgTable("Transactions", {
   updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
     .default(sql`(now() AT TIME ZONE 'utc'::text)`)
     .notNull(),
+},
+(table) => {
+	return {
+		createdByUserIdIdx: index("Transactions_created_by_user_id_idx").using("btree", table.createdByUserId),
+		paymentTypeIdx: index("Transactions_payment_type_idx").using("btree", table.paymentType),
+		statusIdx: index("Transactions_status_idx").using("btree", table.status),
+		transactionTypeIdx: index("Transactions_transaction_type_idx").using("btree", table.transactionType),
+		userIdIdx: index("Transactions_user_id_idx").using("btree", table.userId),
+	}
 });
 export type Transaction = typeof transactions.$inferSelect;
 export type NewTransaction = typeof transactions.$inferInsert;
