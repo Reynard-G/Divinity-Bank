@@ -79,7 +79,7 @@ export default function Login() {
           </Form>
 
           <p className="text-center text-sm text-muted-foreground delay-500 duration-500 animate-in fade-in slide-in-from-bottom-3 fill-mode-both">
-            Need to create an account?{" "}
+            Need to create an account?&nbsp;
             <Link
               to="/register"
               className="text-primary transition-opacity duration-200 hover:opacity-80"

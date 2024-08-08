@@ -107,7 +107,7 @@ export default function ExportTransactionsDialog({
 
             <div className="relative grid grid-cols-1 gap-1">
               <p className="text-left text-sm text-muted-foreground">
-                Custom File Name{" "}
+                Custom File Name&nbsp;
                 <small className="text-muted-foreground">(optional)</small>
               </p>
               <Input
