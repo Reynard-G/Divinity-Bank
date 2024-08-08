@@ -49,7 +49,7 @@ export default function Transactions() {
           <Await
             resolve={Promise.all([transactions, types, statuses])}
             errorElement={
-              <div className="flex h-64 items-center justify-center">
+              <div className="flex h-48 items-center justify-center">
                 <p className="text-red-500">
                   Error loading transactions, please try again later.
                 </p>

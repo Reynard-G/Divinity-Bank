@@ -19,7 +19,16 @@ export default function Servers() {
     <>
       <Suspense fallback={<ServerSelectionCardSkeletonList />}>
         <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-          <Await resolve={servers}>
+          <Await
+            resolve={servers}
+            errorElement={
+              <div className="flex h-16 items-center justify-center">
+                <p className="text-red-500">
+                  Error loading servers, please try again later.
+                </p>
+              </div>
+            }
+          >
             {(servers: Server[]) =>
               servers.map((server) => (
                 <ServerSelectionCard
