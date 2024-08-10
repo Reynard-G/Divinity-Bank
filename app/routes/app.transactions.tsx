@@ -7,6 +7,7 @@ import {
   getAllTransactions,
   getPaymentTypes,
   getTransactionStatuses,
+  getNonSensitiveUserInfo,
 } from "~/lib/queries.server";
 import { TransactionsTable } from "~/components/DataTable/TransactionsTable";
 import { Suspense } from "react";
@@ -19,9 +20,10 @@ export const loader: LoaderFunction = async ({ request }) => {
   const transactions = getTransactions(search);
   const types = getPaymentTypes();
   const statuses = getTransactionStatuses();
+  const allUsers = getNonSensitiveUserInfo();
   const allTransactions = getAllTransactions();
 
-  return defer({ transactions, types, statuses, allTransactions });
+  return defer({ transactions, types, statuses, allUsers, allTransactions });
 };
 
 export default function Transactions() {

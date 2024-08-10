@@ -1,6 +1,7 @@
 import { db } from "~/lib/db/db.server";
 import {
   servers,
+  users,
   transactions,
   type Transaction,
   paymentTypes,
@@ -12,10 +13,37 @@ import { and, asc, count, desc, or, type SQL } from "drizzle-orm";
 import { filterColumn } from "~/lib/utils/filterColumns";
 import { GetTransactionsSchema } from "~/lib/validations";
 
+/**
+ * Get all servers.
+ */
 export async function getServers() {
-  return db.select().from(servers).execute();
+  return db.select().from(servers);
 }
 
+/**
+ * Get non-sensitive information about all users. This is useful for
+ * displaying user information in a non-sensitive way to the public.
+ */
+export async function getNonSensitiveUserInfo() {
+  return db
+    .select({
+      id: users.id,
+      account_type: users.accountType,
+      minecraft_uuid: users.minecraftUuid,
+      minecraft_username: users.minecraftUsername,
+      discord_username: users.discordUsername,
+      role: users.role,
+      createdAt: users.createdAt,
+      updatedAt: users.updatedAt,
+    })
+    .from(users);
+}
+
+/**
+ * Get transactions based on the input provided. This function is used to
+ * fetch transactions for the transactions table using the search parameters
+ * provided by the user.
+ */
 export async function getTransactions(input: GetTransactionsSchema) {
   const { page, per_page, sort, note, paymentType, status, operator } = input;
 
@@ -90,6 +118,9 @@ export async function getTransactions(input: GetTransactionsSchema) {
   }
 }
 
+/**
+ * Get all transactions.
+ */
 export async function getAllTransactions() {
   try {
     const data = await db.select().from(transactions);
@@ -101,10 +132,16 @@ export async function getAllTransactions() {
   }
 }
 
+/**
+ * Get payment types.
+ */
 export async function getPaymentTypes() {
   return await db.select().from(paymentTypes);
 }
 
+/**
+ * Get transaction statuses.
+ */
 export async function getTransactionStatuses() {
   return await db.select().from(transactionStatuses);
 }
