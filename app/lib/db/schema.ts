@@ -148,8 +148,8 @@ export const transactions = pgTable(
         onDelete: "restrict",
         onUpdate: "cascade",
       }),
-    attachment: text("attachment").notNull(),
-    note: text("note").notNull().default("''::text"),
+    attachment: text("attachment").default(sql`null`),
+    note: text("note").default(sql`null`),
     status: text("status")
       .notNull()
       .references(() => transactionStatuses.name, {
