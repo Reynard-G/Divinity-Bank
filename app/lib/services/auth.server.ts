@@ -8,7 +8,9 @@ import { eq } from "drizzle-orm";
 
 export type AuthUser = {
   id: number;
+  uuid: string;
   username: string;
+  role: string;
 };
 
 export const authenticator = new Authenticator<AuthUser>(sessionStorage, {
@@ -21,14 +23,23 @@ authenticator.use(
     const password = form.get("password") as string;
 
     const user = (
-      await db.select().from(users).where(eq(users.minecraftUsername, username))
+      await db
+        .select({
+          id: users.id,
+          minecraft_uuid: users.minecraftUuid,
+          minecraft_username: users.minecraftUsername,
+          hashed_password: users.hashedPassword,
+          role: users.role,
+        })
+        .from(users)
+        .where(eq(users.minecraftUsername, username))
     )?.[0];
 
     if (!user) {
       throw new AuthorizationError("Invalid username or password");
     }
 
-    const isValidPassword = await compare(password, user.hashedPassword);
+    const isValidPassword = await compare(password, user.hashed_password);
 
     if (!isValidPassword) {
       throw new AuthorizationError("Invalid username or password");
@@ -36,24 +47,10 @@ authenticator.use(
 
     return {
       id: user.id,
-      uuid: user.minecraftUuid,
-      username: user.minecraftUsername,
+      uuid: user.minecraft_uuid,
+      username: user.minecraft_username,
       role: user.role,
-    };
+    } satisfies AuthUser;
   }),
   "user-pass",
 );
-
-/*export async function createUser(
-  username: string,
-  password: string,
-): Promise<AuthUser> {
-  const hashedPassword = await hash(password, 12);
-
-  const [newUser] = await db.insert(users).values({
-    minecraftUsername: username,
-    password: hashedPassword,
-  });
-
-  return newUser;
-}*/
