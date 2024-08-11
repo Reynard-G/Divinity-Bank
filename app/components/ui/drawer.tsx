@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Drawer as DrawerPrimitive } from "vaul";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 
 import { cn } from "~/lib/utils/cn";
 
@@ -44,8 +45,13 @@ const DrawerContent = React.forwardRef<
         "fixed inset-x-0 bottom-0 z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background",
         className,
       )}
+      aria-describedby={undefined}
       {...props}
     >
+      <VisuallyHidden.Root>
+        <DrawerPrimitive.Title>Drawer</DrawerPrimitive.Title>
+      </VisuallyHidden.Root>
+
       <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
       {children}
     </DrawerPrimitive.Content>

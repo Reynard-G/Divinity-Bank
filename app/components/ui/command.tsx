@@ -1,10 +1,11 @@
 import * as React from "react";
 import { type DialogProps } from "@radix-ui/react-dialog";
+import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import { Command as CommandPrimitive } from "cmdk";
 import { IconSearch } from "@tabler/icons-react";
 
 import { cn } from "~/lib/utils/cn";
-import { Dialog, DialogContent } from "~/components/ui/dialog";
+import { Dialog, DialogTitle, DialogContent } from "~/components/ui/dialog";
 
 const Command = React.forwardRef<
   React.ElementRef<typeof CommandPrimitive>,
@@ -26,7 +27,14 @@ interface CommandDialogProps extends DialogProps {}
 const CommandDialog = ({ children, ...props }: CommandDialogProps) => {
   return (
     <Dialog {...props}>
-      <DialogContent className="overflow-hidden p-0">
+      <DialogContent
+        className="overflow-hidden p-0"
+        aria-describedby={undefined}
+      >
+        <VisuallyHidden.Root>
+          <DialogTitle>Command</DialogTitle>
+        </VisuallyHidden.Root>
+
         <Command className="[&_[cmdk-group-heading]]:px-2 [&_[cmdk-group-heading]]:font-medium [&_[cmdk-group-heading]]:text-muted-foreground [&_[cmdk-group]:not([hidden])_~[cmdk-group]]:pt-0 [&_[cmdk-group]]:px-2 [&_[cmdk-input-wrapper]_svg]:size-5 [&_[cmdk-input]]:h-12 [&_[cmdk-item]]:px-2 [&_[cmdk-item]]:py-3 [&_[cmdk-item]_svg]:size-5">
           {children}
         </Command>
