@@ -26,6 +26,7 @@ import {
   PopoverTrigger,
 } from "~/components/ui/popover";
 import { Skeleton } from "~/components/ui/skeleton";
+import { SpokeSpinner } from "~/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useMediaQuery } from "~/hooks/use-media-query";
 import { action, loader } from "~/routes/app.transactions";
@@ -333,6 +334,7 @@ export default function CreateTransactionsDialog() {
                   className="w-full"
                   disabled={isSubmitting}
                 >
+                  {isSubmitting && <SpokeSpinner size="sm" className="mr-1" />}
                   Submit
                 </Button>
               </div>
