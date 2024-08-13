@@ -5,7 +5,6 @@ import {
   useActionData,
   useLoaderData,
   useNavigation,
-  useOutletContext,
 } from "@remix-run/react";
 import { IconPlus, IconPlusMinus, IconSelector } from "@tabler/icons-react";
 import { Suspense, useEffect, useState } from "react";
@@ -29,14 +28,12 @@ import {
 import { Skeleton } from "~/components/ui/skeleton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useMediaQuery } from "~/hooks/use-media-query";
-import { AuthUser } from "~/lib/services/auth.server";
 import { action, loader } from "~/routes/app.transactions";
 import { NonSensitiveUser } from "~/types/User";
 
 export default function CreateTransactionsDialog() {
   const { allUsers } = useLoaderData<typeof loader>();
   const actionData = useActionData<typeof action>();
-  const user = useOutletContext<AuthUser>();
   const navigation = useNavigation();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -149,8 +146,6 @@ export default function CreateTransactionsDialog() {
           >
             <div className="mb-2 grid gap-2 px-12 text-center">
               <h1 className="mb-2 text-lg font-semibold">New Transaction</h1>
-
-              <Input type="hidden" name="userId" value={user.id} />
 
               <Tabs
                 defaultValue="deposit"

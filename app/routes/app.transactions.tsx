@@ -19,6 +19,7 @@ import {
   getTransactionStatuses,
   withdraw,
 } from "~/lib/queries.server";
+import { authenticator } from "~/lib/services/auth.server";
 import { uploadHandler } from "~/lib/services/s3.server";
 import { getErrorMessage } from "~/lib/utils/getErrorMessage";
 import { searchParamsSchema } from "~/lib/validations";
@@ -44,9 +45,14 @@ export async function action({ request }: ActionFunctionArgs) {
     uploadHandler,
   );
 
+  const userId = (
+    await authenticator.isAuthenticated(request, {
+      failureRedirect: "/login",
+    })
+  ).id;
+
   return namedAction(formData, {
     async deposit() {
-      const userId = Number(formData.get("userId"));
       const amount = formData.get("amount")?.toString();
       const proofOfDeposit = formData.get("proofOfDeposit")?.toString();
 
@@ -81,7 +87,6 @@ export async function action({ request }: ActionFunctionArgs) {
       }
     },
     async withdraw() {
-      const userId = Number(formData.get("userId"));
       const amount = formData.get("amount")?.toString();
 
       if (!amount) {
@@ -112,7 +117,6 @@ export async function action({ request }: ActionFunctionArgs) {
       }
     },
     async transfer() {
-      const userId = formData.get("userId")?.toString();
       const amount = formData.get("amount");
       const recipient = formData.get("recipient");
       // Handle transfer logic
