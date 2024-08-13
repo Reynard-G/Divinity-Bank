@@ -146,7 +146,6 @@ export default function CreateTransactionsDialog() {
             method="post"
             action={`?/${selectedTab}`}
             encType="multipart/form-data"
-            reloadDocument
           >
             <div className="mb-2 grid gap-2 px-12 text-center">
               <h1 className="mb-2 text-lg font-semibold">New Transaction</h1>
