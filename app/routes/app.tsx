@@ -1,39 +1,39 @@
-import {
-  Link,
-  Outlet,
-  NavLink,
-  useNavigate,
-  useLoaderData,
-} from "@remix-run/react";
+import { AvatarImage } from "@radix-ui/react-avatar";
 import { type LoaderFunctionArgs, redirect } from "@remix-run/node";
 import {
+  Link,
+  NavLink,
+  Outlet,
+  useLoaderData,
+  useNavigate,
+} from "@remix-run/react";
+import {
   IconHome,
+  IconMenu,
   IconServer,
   IconTransfer,
-  IconMenu,
 } from "@tabler/icons-react";
 
+import SidebarItem from "~/components/Sidebar/SidebarItem";
+import SidebarSection from "~/components/Sidebar/SidebarSection";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "~/components/ui/dropdown-menu";
 import {
   Sheet,
   SheetClose,
   SheetContent,
   SheetTrigger,
 } from "~/components/ui/sheet";
-import SidebarItem from "~/components/Sidebar/SidebarItem";
-import SidebarSection from "~/components/Sidebar/SidebarSection";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-  DropdownMenuItem,
-} from "~/components/ui/dropdown-menu";
-import { AvatarImage } from "@radix-ui/react-avatar";
-import { cn } from "~/lib/utils/cn";
 import { authenticator, AuthUser } from "~/lib/services/auth.server";
+import { cn } from "~/lib/utils/cn";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await authenticator.isAuthenticated(request, {

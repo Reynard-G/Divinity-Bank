@@ -1,10 +1,11 @@
+import { compare } from "@node-rs/bcrypt";
+import { eq } from "drizzle-orm";
 import { Authenticator, AuthorizationError } from "remix-auth";
 import { FormStrategy } from "remix-auth-form";
-import { compare /*, hash*/ } from "@node-rs/bcrypt";
-import { sessionStorage } from "~/lib/services/session.server";
+
 import { db } from "~/lib/db/db.server";
 import { users } from "~/lib/db/schema";
-import { eq } from "drizzle-orm";
+import { sessionStorage } from "~/lib/services/session.server";
 
 export type AuthUser = {
   id: number;

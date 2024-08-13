@@ -1,8 +1,8 @@
 import {
-  IconChevronLeft,
-  IconChevronRight,
   IconArrowBadgeLeft,
   IconArrowBadgeRight,
+  IconChevronLeft,
+  IconChevronRight,
 } from "@tabler/icons-react";
 import { type Table } from "@tanstack/react-table";
 

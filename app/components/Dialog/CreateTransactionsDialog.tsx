@@ -1,17 +1,17 @@
-import { Suspense, useState, useEffect } from "react";
-import { IconPlus, IconPlusMinus, IconSelector } from "@tabler/icons-react";
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import {
-  useNavigation,
-  useLoaderData,
-  Form,
   Await,
-  useOutletContext,
+  Form,
   useActionData,
+  useLoaderData,
+  useNavigation,
+  useOutletContext,
 } from "@remix-run/react";
+import { IconPlus, IconPlusMinus, IconSelector } from "@tabler/icons-react";
+import { Suspense, useEffect, useState } from "react";
+import { toast } from "sonner";
 
-import { NonSensitiveUser } from "~/types/User";
-import { Input } from "~/components/ui/input";
+import MinecraftUsernameList from "~/components/MinecraftUsernameList";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -19,19 +19,19 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "~/components/ui/dialog";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
+import { Drawer, DrawerContent, DrawerTrigger } from "~/components/ui/drawer";
+import { Input } from "~/components/ui/input";
 import {
   Popover,
   PopoverContent,
   PopoverTrigger,
 } from "~/components/ui/popover";
-import { Drawer, DrawerContent, DrawerTrigger } from "~/components/ui/drawer";
 import { Skeleton } from "~/components/ui/skeleton";
-import { toast } from "sonner";
-import { action, loader } from "~/routes/app.transactions";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useMediaQuery } from "~/hooks/use-media-query";
-import MinecraftUsernameList from "~/components/MinecraftUsernameList";
 import { AuthUser } from "~/lib/services/auth.server";
+import { action, loader } from "~/routes/app.transactions";
+import { NonSensitiveUser } from "~/types/User";
 
 export default function CreateTransactionsDialog() {
   const { allUsers } = useLoaderData<typeof loader>();

@@ -1,12 +1,11 @@
 import {
-  IconArrowUp,
   IconArrowDown,
+  IconArrowUp,
   IconCaretUpDown,
   IconEyeOff,
 } from "@tabler/icons-react";
 import { type Column } from "@tanstack/react-table";
 
-import { cn } from "~/lib/utils/cn";
 import { Button } from "~/components/ui/button";
 import {
   DropdownMenu,
@@ -15,6 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
+import { cn } from "~/lib/utils/cn";
 
 interface DataTableColumnHeaderProps<TData, TValue>
   extends React.HTMLAttributes<HTMLDivElement> {

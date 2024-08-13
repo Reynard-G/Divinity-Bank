@@ -1,9 +1,9 @@
+import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
 import {
   unstable_composeUploadHandlers,
   unstable_createMemoryUploadHandler,
 } from "@remix-run/node";
 import { v4 as uuidv4 } from "uuid";
-import { S3Client, PutObjectCommand } from "@aws-sdk/client-s3";
 
 const S3 = new S3Client({
   region: "auto",

@@ -1,9 +1,8 @@
-import { type Transaction } from "~/lib/db/schema";
 import { type ColumnDef } from "@tanstack/react-table";
 
-import { formatDate } from "~/lib/utils/formatDate";
 import { DataTableColumnHeader } from "~/components/DataTable/DataTable-Column-Header";
-
+import { type Transaction } from "~/lib/db/schema";
+import { formatDate } from "~/lib/utils/formatDate";
 import {
   getPaymentTypeIcon,
   getTransactionStatusIcon,

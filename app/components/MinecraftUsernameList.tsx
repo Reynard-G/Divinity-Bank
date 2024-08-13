@@ -1,7 +1,5 @@
 import { IconCheck } from "@tabler/icons-react";
 
-import { NonSensitiveUser } from "~/types/User";
-import { cn } from "~/lib/utils/cn";
 import {
   Command,
   CommandEmpty,
@@ -10,6 +8,8 @@ import {
   CommandItem,
   CommandList,
 } from "~/components/ui/command";
+import { cn } from "~/lib/utils/cn";
+import { NonSensitiveUser } from "~/types/User";
 
 interface UsersListProps {
   users: NonSensitiveUser[];

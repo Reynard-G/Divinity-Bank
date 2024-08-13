@@ -1,23 +1,22 @@
-import * as React from "react";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
-import {
-  type Transaction,
-  type PaymentType,
-  type TransactionStatus,
-} from "~/lib/db/schema";
-import type { DataTableFilterField } from "~/types/DataTable";
+import * as React from "react";
 
-import { useDataTable } from "~/hooks/use-datatable";
 import { DataTable } from "~/components/DataTable/DataTable";
 import { DataTableToolbar } from "~/components/DataTable/DataTable-Toolbar";
-
+import { getColumns } from "~/components/DataTable/TransactionsTable-columns";
+import { TransactionsTableToolbarActions } from "~/components/DataTable/TransactionsTable-Toolbar-Actions";
+import { useDataTable } from "~/hooks/use-datatable";
+import {
+  type PaymentType,
+  type Transaction,
+  type TransactionStatus,
+} from "~/lib/db/schema";
 import {
   getPaymentTypeIcon,
   getTransactionStatusIcon,
 } from "~/lib/utils/iconMappings";
-import { getColumns } from "~/components/DataTable/TransactionsTable-columns";
-import { TransactionsTableToolbarActions } from "~/components/DataTable/TransactionsTable-Toolbar-Actions";
 import { loader } from "~/routes/app.transactions";
+import type { DataTableFilterField } from "~/types/DataTable";
 
 interface TransactionsTableProps {
   data: Transaction[];

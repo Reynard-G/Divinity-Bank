@@ -1,24 +1,24 @@
-import * as React from "react";
-import { useNavigate, useLocation } from "@remix-run/react";
-import type { DataTableFilterField } from "~/types/DataTable";
+import { useLocation, useNavigate } from "@remix-run/react";
 import {
+  type ColumnDef,
+  type ColumnFiltersState,
   getCoreRowModel,
   getFacetedRowModel,
   getFacetedUniqueValues,
   getFilteredRowModel,
   getPaginationRowModel,
   getSortedRowModel,
-  useReactTable,
-  type ColumnDef,
-  type ColumnFiltersState,
   type PaginationState,
   type SortingState,
   type TableState,
+  useReactTable,
   type VisibilityState,
 } from "@tanstack/react-table";
+import * as React from "react";
 import { z } from "zod";
 
 import { useDebounce } from "~/hooks/use-debounce";
+import type { DataTableFilterField } from "~/types/DataTable";
 
 interface UseDataTableProps<TData, TValue> {
   data: TData[];

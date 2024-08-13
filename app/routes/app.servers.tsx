@@ -1,11 +1,11 @@
-import { Suspense } from "react";
 import { type LoaderFunction } from "@remix-run/node";
 import { Await, defer, useLoaderData } from "@remix-run/react";
+import { Suspense } from "react";
 
 import ServerSelectionCard from "~/components/ServerSelectionCard";
-import { getServers } from "~/lib/queries.server";
-import { type Server } from "~/lib/db/schema";
 import ServerSelectionCardSkeletonList from "~/components/Skeleton/ServerSelectionCardSkeletonList";
+import { type Server } from "~/lib/db/schema";
+import { getServers } from "~/lib/queries.server";
 
 export const loader: LoaderFunction = async () => {
   const servers = getServers();

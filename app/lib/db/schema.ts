@@ -1,14 +1,14 @@
+import { sql } from "drizzle-orm";
 import {
-  pgTable,
+  index,
   integer,
+  numeric,
+  pgTable,
   text,
   timestamp,
-  numeric,
-  uuid,
   unique,
-  index,
+  uuid,
 } from "drizzle-orm/pg-core";
-import { sql } from "drizzle-orm";
 
 export const servers = pgTable("Servers", {
   id: integer("id").primaryKey().generatedByDefaultAsIdentity({

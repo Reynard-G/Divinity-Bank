@@ -1,10 +1,11 @@
 import {
+  type ActionFunctionArgs,
   json,
   type LoaderFunctionArgs,
-  type ActionFunctionArgs,
   type MetaFunction,
 } from "@remix-run/node";
 import { Form, Link, useActionData } from "@remix-run/react";
+
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { authenticator } from "~/lib/services/auth.server";

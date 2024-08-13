@@ -1,27 +1,27 @@
-import { Await, defer, useLoaderData } from "@remix-run/react";
 import {
-  type LoaderFunction,
   type ActionFunctionArgs,
   json,
+  type LoaderFunction,
   unstable_parseMultipartFormData,
 } from "@remix-run/node";
+import { Await, defer, useLoaderData } from "@remix-run/react";
+import { Suspense } from "react";
 import { namedAction } from "remix-utils/named-action";
 
-import { searchParamsSchema } from "~/lib/validations";
+import { TransactionsTable } from "~/components/DataTable/TransactionsTable";
+import { SpokeSpinner } from "~/components/ui/spinner";
 import {
-  getTransactions,
-  getAllTransactions,
-  getPaymentTypes,
-  getTransactionStatuses,
-  getNonSensitiveUserInfo,
   deposit,
+  getAllTransactions,
+  getNonSensitiveUserInfo,
+  getPaymentTypes,
+  getTransactions,
+  getTransactionStatuses,
   withdraw,
 } from "~/lib/queries.server";
-import { TransactionsTable } from "~/components/DataTable/TransactionsTable";
-import { Suspense } from "react";
-import { SpokeSpinner } from "~/components/ui/spinner";
 import { uploadHandler } from "~/lib/services/s3.server";
 import { getErrorMessage } from "~/lib/utils/getErrorMessage";
+import { searchParamsSchema } from "~/lib/validations";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);

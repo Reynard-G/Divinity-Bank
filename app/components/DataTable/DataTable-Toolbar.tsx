@@ -1,13 +1,13 @@
-import * as React from "react";
-import type { DataTableFilterField } from "~/types/DataTable";
 import { IconX } from "@tabler/icons-react";
 import type { Table } from "@tanstack/react-table";
+import * as React from "react";
 
-import { cn } from "~/lib/utils/cn";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
 import { DataTableFacetedFilter } from "~/components/DataTable/DataTable-Column-Faceted-Filter";
 import { DataTableViewOptions } from "~/components/DataTable/DataTable-View-Options";
+import { Button } from "~/components/ui/button";
+import { Input } from "~/components/ui/input";
+import { cn } from "~/lib/utils/cn";
+import type { DataTableFilterField } from "~/types/DataTable";
 
 interface DataTableToolbarProps<TData>
   extends React.HTMLAttributes<HTMLDivElement> {

@@ -1,11 +1,11 @@
-import { useState } from "react";
 import { Link } from "@remix-run/react";
 import { IconServer } from "@tabler/icons-react";
+import { useState } from "react";
 
 import { Card } from "~/components/ui/card";
-import { getRelativeTimeString } from "~/lib/utils/getRelativeTimeString";
-import { formatCurrency } from "~/lib/utils/formatCurrency";
 import { cn } from "~/lib/utils/cn";
+import { formatCurrency } from "~/lib/utils/formatCurrency";
+import { getRelativeTimeString } from "~/lib/utils/getRelativeTimeString";
 
 interface ServerSelectionCardProps {
   serverName: string;

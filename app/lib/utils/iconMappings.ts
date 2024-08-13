@@ -2,11 +2,11 @@ import {
   IconAlarm,
   IconCircleCheck,
   IconCircleX,
+  IconCoin,
   IconInfoCircle,
+  IconTransfer,
   IconTrendingDown,
   IconTrendingUp,
-  IconTransfer,
-  IconCoin,
 } from "@tabler/icons-react";
 
 export function getPaymentTypeIcon(type: string) {

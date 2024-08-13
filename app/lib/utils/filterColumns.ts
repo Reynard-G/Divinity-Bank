@@ -1,4 +1,7 @@
 import {
+  type Column,
+  type ColumnBaseConfig,
+  type ColumnDataType,
   eq,
   ilike,
   inArray,
@@ -6,9 +9,6 @@ import {
   isNull,
   not,
   notLike,
-  type Column,
-  type ColumnBaseConfig,
-  type ColumnDataType,
 } from "drizzle-orm";
 
 const DataTableConfig = {

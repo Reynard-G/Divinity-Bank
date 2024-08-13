@@ -1,12 +1,13 @@
 import { relations } from "drizzle-orm/relations";
+
 import {
   accountTypes,
-  users,
+  paymentTypes,
   roles,
   transactions,
-  paymentTypes,
   transactionStatuses,
   transactionTypes,
+  users,
 } from "./schema";
 
 export const usersRelations = relations(users, ({ one, many }) => ({
