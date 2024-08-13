@@ -1,5 +1,5 @@
 import * as React from "react";
-import { useSearchParams } from "@remix-run/react";
+import { useLoaderData, useSearchParams } from "@remix-run/react";
 import {
   type Transaction,
   type PaymentType,
@@ -17,20 +17,15 @@ import {
 } from "~/lib/utils/iconMappings";
 import { getColumns } from "~/components/DataTable/TransactionsTable-columns";
 import { TransactionsTableToolbarActions } from "~/components/DataTable/TransactionsTable-Toolbar-Actions";
+import { loader } from "~/routes/app.transactions";
 
 interface TransactionsTableProps {
   data: Transaction[];
-  types: PaymentType[];
-  statuses: TransactionStatus[];
   pageCount: number;
 }
 
-export function TransactionsTable({
-  data,
-  types,
-  statuses,
-  pageCount,
-}: TransactionsTableProps) {
+export function TransactionsTable({ data, pageCount }: TransactionsTableProps) {
+  const { types, statuses } = useLoaderData<typeof loader>();
   const [searchParams] = useSearchParams();
 
   // Memoize the columns so they don't re-render on every render

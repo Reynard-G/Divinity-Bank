@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { Await, useLoaderData } from "@remix-run/react";
 
 import ExportTransactionsDialog from "~/components/Dialog/ExportTransactionsDialog";
-import CreateTransactionsDialog from "~/components/Dialog/CreateTransactionDialog";
+import CreateTransactionsDialog from "~/components/Dialog/CreateTransactionsDialog";
 import { loader } from "~/routes/app.transactions";
 import { Skeleton } from "../ui/skeleton";
 

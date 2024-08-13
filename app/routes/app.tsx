@@ -1,4 +1,10 @@
-import { Link, Outlet, NavLink, useNavigate } from "@remix-run/react";
+import {
+  Link,
+  Outlet,
+  NavLink,
+  useNavigate,
+  useLoaderData,
+} from "@remix-run/react";
 import { type LoaderFunctionArgs, redirect } from "@remix-run/node";
 import {
   IconHome,
@@ -27,7 +33,7 @@ import {
 } from "~/components/ui/dropdown-menu";
 import { AvatarImage } from "@radix-ui/react-avatar";
 import { cn } from "~/lib/utils/cn";
-import { authenticator } from "~/lib/services/auth.server";
+import { authenticator, AuthUser } from "~/lib/services/auth.server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await authenticator.isAuthenticated(request, {
@@ -71,6 +77,7 @@ const NavigationItems = [
 ];
 
 export default function App() {
+  const { user } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
   return (
@@ -140,7 +147,9 @@ export default function App() {
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Avatar className="rounded shadow-[0px_0px_0px_1px_#161616] transition-shadow duration-200 hover:shadow-[0px_0px_0px_3px_#383838]">
-                          <AvatarImage src="https://crafatar.com/avatars/01e47070-8bfa-4666-b405-e9da208d626d?size=32&overlay" />
+                          <AvatarImage
+                            src={`https://crafatar.com/avatars/${user.uuid}?size=32&overlay`}
+                          />
                           <AvatarFallback>N/A</AvatarFallback>
                         </Avatar>
                       </DropdownMenuTrigger>
@@ -216,7 +225,7 @@ export default function App() {
                 </nav>
 
                 <main className="relative flex grow flex-col p-6">
-                  <Outlet />
+                  <Outlet context={user satisfies AuthUser} />
                 </main>
               </div>
             </div>

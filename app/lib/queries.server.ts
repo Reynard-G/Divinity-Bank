@@ -8,10 +8,14 @@ import {
   transactionStatuses,
 } from "~/lib/db/schema";
 import { type DrizzleWhere } from "~/types/DataTable";
-import { and, asc, count, desc, or, type SQL } from "drizzle-orm";
+import { and, asc, count, desc, or, eq, sql, type SQL } from "drizzle-orm";
 
 import { filterColumn } from "~/lib/utils/filterColumns";
 import { GetTransactionsSchema } from "~/lib/validations";
+import TransactionTypes from "~/constants/TransactionTypes";
+import TransactionStatuses from "~/constants/TransactionStatuses";
+import PaymentTypes from "~/constants/PaymentTypes";
+import { formatCurrency } from "./utils/formatCurrency";
 
 /**
  * Get all servers.
@@ -114,7 +118,7 @@ export async function getTransactions(input: GetTransactionsSchema) {
     return { data, pageCount };
   } catch (err) {
     console.error("Error fetching transactions:", err);
-    return { data: [], pageCount: 0 };
+    throw new Error("Error fetching transactions");
   }
 }
 
@@ -128,7 +132,7 @@ export async function getAllTransactions() {
     return data;
   } catch (err) {
     console.error("Error fetching all transactions:", err);
-    return [];
+    throw new Error("Error fetching all transactions");
   }
 }
 
@@ -144,4 +148,120 @@ export async function getPaymentTypes() {
  */
 export async function getTransactionStatuses() {
   return await db.select().from(transactionStatuses);
+}
+
+export async function getBalance(userId: number) {
+  return await db.transaction(async (tx) => {
+    const user = await tx
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .then((res) => res[0]);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const creditBalance = await tx
+      .select({ amount: sql<string>`SUM(amount)` })
+      .from(transactions)
+      .where(
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.transactionType, TransactionTypes.CREDIT),
+          eq(transactions.status, TransactionStatuses.SUCCESS),
+        ),
+      )
+      .then((res) => res[0]?.amount ?? 0);
+
+    const debitBalance = await tx
+      .select({ amount: sql<string>`SUM(amount)` })
+      .from(transactions)
+      .where(
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.transactionType, TransactionTypes.DEBIT),
+          or(
+            eq(transactions.status, TransactionStatuses.SUCCESS),
+            eq(transactions.status, TransactionStatuses.PENDING),
+          ),
+        ),
+      )
+      .then((res) => res[0]?.amount ?? 0);
+
+    return Number(creditBalance) - Number(debitBalance);
+  });
+}
+
+/**
+ * Deposit money into a user's account.
+ */
+export async function deposit(
+  userId: number,
+  amount: number,
+  proofOfDeposit: string,
+) {
+  return await db.transaction(async (tx) => {
+    const user = await tx
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .then((res) => res[0]);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const newBalance = (await getBalance(userId)) + Number(amount);
+
+    await tx.insert(transactions).values({
+      userId,
+      createdByUserId: userId,
+      amount: amount.toString(),
+      fee: "0",
+      transactionType: TransactionTypes.CREDIT,
+      paymentType: PaymentTypes.DEPOSIT,
+      attachment: proofOfDeposit,
+      note: `Deposit of ${formatCurrency(amount)}`,
+      status: TransactionStatuses.PENDING,
+    });
+
+    return newBalance;
+  });
+}
+
+/**
+ * Withdraw money from a user's account.
+ */
+export async function withdraw(userId: number, amount: number) {
+  return await db.transaction(async (tx) => {
+    const user = await tx
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .then((res) => res[0]);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const balance = await getBalance(userId);
+
+    if (balance < Number(amount)) {
+      throw new Error("Insufficient funds");
+    }
+
+    await tx.insert(transactions).values({
+      userId,
+      createdByUserId: userId,
+      amount: amount.toString(),
+      fee: "0",
+      transactionType: TransactionTypes.DEBIT,
+      paymentType: PaymentTypes.WITHDRAW,
+      note: `Withdrawal of ${formatCurrency(amount)}`,
+      status: TransactionStatuses.PENDING,
+    });
+
+    return balance - Number(amount);
+  });
 }

@@ -1,5 +1,11 @@
 import { Await, defer, useLoaderData } from "@remix-run/react";
-import { type LoaderFunction } from "@remix-run/node";
+import {
+  type LoaderFunction,
+  type ActionFunctionArgs,
+  json,
+  unstable_parseMultipartFormData,
+} from "@remix-run/node";
+import { namedAction } from "remix-utils/named-action";
 
 import { searchParamsSchema } from "~/lib/validations";
 import {
@@ -8,26 +14,116 @@ import {
   getPaymentTypes,
   getTransactionStatuses,
   getNonSensitiveUserInfo,
+  deposit,
+  withdraw,
 } from "~/lib/queries.server";
 import { TransactionsTable } from "~/components/DataTable/TransactionsTable";
 import { Suspense } from "react";
 import { SpokeSpinner } from "~/components/ui/spinner";
+import { uploadHandler } from "~/lib/services/s3.server";
+import { getErrorMessage } from "~/lib/utils/getErrorMessage";
 
 export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const search = searchParamsSchema.parse(Object.fromEntries(url.searchParams));
 
   const transactions = getTransactions(search);
-  const types = getPaymentTypes();
-  const statuses = getTransactionStatuses();
   const allUsers = getNonSensitiveUserInfo();
   const allTransactions = getAllTransactions();
+  const [types, statuses] = await Promise.all([
+    getPaymentTypes(),
+    getTransactionStatuses(),
+  ]);
 
   return defer({ transactions, types, statuses, allUsers, allTransactions });
 };
 
+export async function action({ request }: ActionFunctionArgs) {
+  const formData = await unstable_parseMultipartFormData(
+    request,
+    uploadHandler,
+  );
+
+  return namedAction(formData, {
+    async deposit() {
+      const userId = Number(formData.get("userId"));
+      const amount = formData.get("amount")?.toString();
+      const proofOfDeposit = formData.get("proofOfDeposit")?.toString();
+
+      if (!amount || !proofOfDeposit) {
+        return json(
+          {
+            success: false,
+            message: "Amount and proof of deposit are required",
+          },
+          { status: 400 },
+        );
+      }
+
+      if (typeof amount === "string" && isNaN(Number(amount))) {
+        return json(
+          { success: false, message: "Invalid amount" },
+          { status: 400 },
+        );
+      }
+
+      try {
+        await deposit(userId, Number(amount), proofOfDeposit);
+        return json({ success: true, message: "Deposit successful" });
+      } catch (error) {
+        return json(
+          {
+            success: false,
+            message: "Deposit failed: " + getErrorMessage(error),
+          },
+          { status: 500 },
+        );
+      }
+    },
+    async withdraw() {
+      const userId = Number(formData.get("userId"));
+      const amount = formData.get("amount")?.toString();
+
+      if (!amount) {
+        return json(
+          { success: false, message: "Amount is required" },
+          { status: 400 },
+        );
+      }
+
+      if (typeof amount === "string" && isNaN(Number(amount))) {
+        return json(
+          { success: false, message: "Invalid amount" },
+          { status: 400 },
+        );
+      }
+
+      try {
+        await withdraw(userId, Number(amount));
+        return json({ success: true, message: "Withdrawal successful" });
+      } catch (error) {
+        return json(
+          {
+            success: false,
+            message: "Withdrawal failed: " + getErrorMessage(error),
+          },
+          { status: 500 },
+        );
+      }
+    },
+    async transfer() {
+      const userId = formData.get("userId")?.toString();
+      const amount = formData.get("amount");
+      const recipient = formData.get("recipient");
+      // Handle transfer logic
+      console.log("Transfer", { amount, recipient });
+      return json({ success: true, message: "Transfer successful" });
+    },
+  });
+}
+
 export default function Transactions() {
-  const { transactions, types, statuses } = useLoaderData<typeof loader>();
+  const { transactions } = useLoaderData<typeof loader>();
 
   return (
     <div className="mx-auto flex w-full max-w-7xl grow flex-col">
@@ -49,7 +145,7 @@ export default function Transactions() {
           }
         >
           <Await
-            resolve={Promise.all([transactions, types, statuses])}
+            resolve={transactions}
             errorElement={
               <div className="flex h-48 items-center justify-center">
                 <p className="text-red-500">
@@ -58,11 +154,9 @@ export default function Transactions() {
               </div>
             }
           >
-            {([transactions, types, statuses]) => (
+            {(transactions) => (
               <TransactionsTable
                 data={transactions.data}
-                types={types}
-                statuses={statuses}
                 pageCount={transactions.pageCount}
               />
             )}
