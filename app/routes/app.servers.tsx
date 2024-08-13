@@ -18,19 +18,19 @@ export default function Servers() {
   return (
     <>
       <Suspense fallback={<ServerSelectionCardSkeletonList />}>
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-          <Await
-            resolve={servers}
-            errorElement={
-              <div className="flex h-16 items-center justify-center">
-                <p className="text-red-500">
-                  Error loading servers, please try again later.
-                </p>
-              </div>
-            }
-          >
-            {(servers: Server[]) =>
-              servers.map((server) => (
+        <Await
+          resolve={servers}
+          errorElement={
+            <div className="flex h-32 items-center justify-center">
+              <p className="text-red-500">
+                Error loading servers, please try again later.
+              </p>
+            </div>
+          }
+        >
+          {(servers: Server[]) => (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {servers.map((server) => (
                 <ServerSelectionCard
                   key={server.id}
                   serverName={server.name}
@@ -41,10 +41,10 @@ export default function Servers() {
                     new Date(Date.now() - 2 * 60 * 60 * 1000 - 23 * 60 * 1000)
                   } // 2 hours and 23 minutes ago
                 />
-              ))
-            }
-          </Await>
-        </div>
+              ))}
+            </div>
+          )}
+        </Await>
       </Suspense>
     </>
   );
