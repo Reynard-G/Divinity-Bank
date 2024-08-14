@@ -85,11 +85,8 @@ export default function CreateTransactionsDialog() {
   };
 
   const handleUserSelect = (user: NonSensitiveUser) => {
-    setSelectedTransferUser(
-      user.minecraft_username === selectedTransferUser?.minecraft_username
-        ? null
-        : user,
-    );
+    // Toggle selected user
+    setSelectedTransferUser(user.id === selectedTransferUser?.id ? null : user);
     setIsUsersPopoverOpen(false);
   };
 
@@ -308,7 +305,7 @@ export default function CreateTransactionsDialog() {
                       <Input
                         type="hidden"
                         name="recipient"
-                        value={selectedTransferUser?.minecraft_username || ""}
+                        value={selectedTransferUser?.id || ""}
                         required
                       />
                     </div>

@@ -17,6 +17,7 @@ import {
   getPaymentTypes,
   getTransactions,
   getTransactionStatuses,
+  transfer,
   withdraw,
 } from "~/lib/queries.server";
 import { authenticator } from "~/lib/services/auth.server";
@@ -117,11 +118,38 @@ export async function action({ request }: ActionFunctionArgs) {
       }
     },
     async transfer() {
-      const amount = formData.get("amount");
-      const recipient = formData.get("recipient");
-      // Handle transfer logic
-      console.log("Transfer", { amount, recipient });
-      return json({ success: true, message: "Transfer successful" });
+      const amount = formData.get("amount")?.toString();
+      const recipient = formData.get("recipient")?.toString();
+
+      if (!amount || !recipient) {
+        return json(
+          {
+            success: false,
+            message: "Amount and recipient are required",
+          },
+          { status: 400 },
+        );
+      }
+
+      if (typeof amount === "string" && isNaN(Number(amount))) {
+        return json(
+          { success: false, message: "Invalid amount" },
+          { status: 400 },
+        );
+      }
+
+      try {
+        await transfer(userId, Number(recipient), Number(amount));
+        return json({ success: true, message: "Transfer successful" });
+      } catch (error) {
+        return json(
+          {
+            success: false,
+            message: "Transfer failed: " + getErrorMessage(error),
+          },
+          { status: 500 },
+        );
+      }
     },
   });
 }

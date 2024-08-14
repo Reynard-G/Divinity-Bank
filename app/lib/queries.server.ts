@@ -196,6 +196,11 @@ export async function getBalance(userId: number) {
 
 /**
  * Deposit money into a user's account.
+ *
+ * @param userId The ID of the user depositing the money.
+ * @param amount The amount to deposit.
+ * @param proofOfDeposit A proof of deposit.
+ * @returns The new balance of the user.
  */
 export async function deposit(
   userId: number,
@@ -233,6 +238,10 @@ export async function deposit(
 
 /**
  * Withdraw money from a user's account.
+ *
+ * @param userId The ID of the user withdrawing the money.
+ * @param amount The amount to withdraw.
+ * @returns The new balance of the user.
  */
 export async function withdraw(userId: number, amount: number) {
   return await db.transaction(async (tx) => {
@@ -261,6 +270,72 @@ export async function withdraw(userId: number, amount: number) {
       paymentType: PaymentTypes.WITHDRAW,
       note: `Withdrawal of ${formatCurrency(amount)}`,
       status: TransactionStatuses.PENDING,
+    });
+
+    return balance - Number(amount);
+  });
+}
+
+/**
+ * Transfer money from one user to another.
+ *
+ * @param userId The ID of the user sending the money.
+ * @param recipientId The ID of the user receiving the money.
+ * @param amount The amount to transfer.
+ * @returns The new balance of the user sending the money.
+ */
+export async function transfer(
+  userId: number,
+  recipientId: number,
+  amount: number,
+) {
+  return await db.transaction(async (tx) => {
+    const user = await tx
+      .select()
+      .from(users)
+      .where(eq(users.id, userId))
+      .then((res) => res[0]);
+
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    const recipient = await tx
+      .select()
+      .from(users)
+      .where(eq(users.id, recipientId))
+      .then((res) => res[0]);
+
+    if (!recipient) {
+      throw new Error("Recipient not found");
+    }
+
+    const balance = await getBalance(userId);
+
+    if (balance < Number(amount)) {
+      throw new Error("Insufficient funds");
+    }
+
+    await tx.insert(transactions).values({
+      userId,
+      createdByUserId: userId,
+      amount: amount.toString(),
+      fee: "0",
+      transactionType: TransactionTypes.DEBIT,
+      paymentType: PaymentTypes.TRANSFER,
+      note: `Transfer of ${formatCurrency(amount)} to ${recipient.id} (${recipient.minecraftUsername})`,
+      status: TransactionStatuses.SUCCESS,
+    });
+
+    await tx.insert(transactions).values({
+      userId: recipientId,
+      createdByUserId: userId,
+      amount: amount.toString(),
+      fee: "0",
+      transactionType: TransactionTypes.CREDIT,
+      paymentType: PaymentTypes.TRANSFER,
+      note: `Transfer of ${formatCurrency(amount)} from ${user.id} (${user.minecraftUsername})`,
+      status: TransactionStatuses.SUCCESS,
     });
 
     return balance - Number(amount);
