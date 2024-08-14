@@ -1,5 +1,6 @@
 import { IconCheck } from "@tabler/icons-react";
 
+import { Avatar, AvatarImage } from "~/components/ui/avatar";
 import {
   Command,
   CommandEmpty,
@@ -44,6 +45,12 @@ export default function UsersList({
                     : "opacity-0",
                 )}
               />
+              <Avatar className="mr-2 h-6 w-6 rounded-sm">
+                <AvatarImage
+                  src={`https://crafatar.com/avatars/${user.minecraft_uuid}?size=24&overlay`}
+                  alt={user.minecraft_username}
+                />
+              </Avatar>
               {user.minecraft_username}
             </CommandItem>
           ))}
