@@ -32,7 +32,7 @@ import {
   SheetContent,
   SheetTrigger,
 } from "~/components/ui/sheet";
-import { authenticator, AuthUser } from "~/lib/services/auth.server";
+import { authenticator } from "~/lib/services/auth.server";
 import { cn } from "~/lib/utils/cn";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -225,7 +225,7 @@ export default function App() {
                 </nav>
 
                 <main className="relative flex grow flex-col p-6">
-                  <Outlet context={user satisfies AuthUser} />
+                  <Outlet />
                 </main>
               </div>
             </div>
