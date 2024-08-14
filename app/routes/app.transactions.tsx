@@ -138,6 +138,13 @@ export async function action({ request }: ActionFunctionArgs) {
         );
       }
 
+      if (recipient.toString() === userId.toString()) {
+        return json(
+          { success: false, message: "Unable to transfer to yourself" },
+          { status: 400 },
+        );
+      }
+
       try {
         await transfer(userId, Number(recipient), Number(amount));
         return json({ success: true, message: "Transfer successful" });
