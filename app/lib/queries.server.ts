@@ -48,8 +48,15 @@ export async function getNonSensitiveUserInfo() {
  * Get transactions based on the input provided. This function is used to
  * fetch transactions for the transactions table using the search parameters
  * provided by the user.
+ *
+ * @param userId The ID of the user fetching the transactions.
+ * @param input The input parameters for fetching transactions.
+ * @returns The transactions and the total number of pages.
  */
-export async function getTransactions(input: GetTransactionsSchema) {
+export async function getTransactions(
+  userId: number,
+  input: GetTransactionsSchema,
+) {
   const { page, per_page, sort, note, paymentType, status, operator } = input;
 
   try {
@@ -92,7 +99,7 @@ export async function getTransactions(input: GetTransactionsSchema) {
         .from(transactions)
         .limit(per_page)
         .offset(offset)
-        .where(where)
+        .where(and(eq(transactions.userId, userId), where))
         .orderBy(
           column && column in transactions
             ? order === "asc"

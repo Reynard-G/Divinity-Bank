@@ -29,7 +29,13 @@ export const loader: LoaderFunction = async ({ request }) => {
   const url = new URL(request.url);
   const search = searchParamsSchema.parse(Object.fromEntries(url.searchParams));
 
-  const transactions = getTransactions(search);
+  const userId = (
+    await authenticator.isAuthenticated(request, {
+      failureRedirect: "/login",
+    })
+  ).id;
+
+  const transactions = getTransactions(userId, search);
   const allUsers = getNonSensitiveUserInfo();
   const allTransactions = getAllTransactions();
   const [types, statuses] = await Promise.all([
