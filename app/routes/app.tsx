@@ -13,6 +13,7 @@ import {
   IconServer,
   IconTransfer,
 } from "@tabler/icons-react";
+import { useState } from "react";
 
 import SidebarItem from "~/components/Sidebar/SidebarItem";
 import SidebarSection from "~/components/Sidebar/SidebarSection";
@@ -34,6 +35,7 @@ import {
 } from "~/components/ui/sheet";
 import { authenticator } from "~/lib/services/auth.server";
 import { cn } from "~/lib/utils/cn";
+import { Server } from "~/types/Server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await authenticator.isAuthenticated(request, {
@@ -48,37 +50,40 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return { user };
 };
 
-const NavigationItems = [
-  {
-    section: "Main",
-    items: [
-      {
-        label: "Home",
-        path: "/app/dashboard",
-        icon: <IconHome size={24} aria-hidden="true" />,
-      },
-      {
-        label: "Servers",
-        path: "/app/servers",
-        icon: <IconServer size={24} aria-hidden="true" />,
-      },
-    ],
-  },
-  {
-    section: "Actions",
-    items: [
-      {
-        label: "Transactions",
-        path: "/app/transactions",
-        icon: <IconTransfer size={24} aria-hidden="true" />,
-      },
-    ],
-  },
-];
-
 export default function App() {
   const { user } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
+  const [selectedServer, setSelectedServer] =
+    useState<Server["selectedServer"]>(null);
+
+  const NavigationItems = [
+    {
+      section: "Main",
+      items: [
+        {
+          label: "Home",
+          path: "/app/dashboard",
+          icon: <IconHome size={24} aria-hidden="true" />,
+        },
+        {
+          label: "Servers",
+          badgeContent: selectedServer?.shortName || selectedServer?.name,
+          path: "/app/servers",
+          icon: <IconServer size={24} aria-hidden="true" />,
+        },
+      ],
+    },
+    {
+      section: "Actions",
+      items: [
+        {
+          label: "Transactions",
+          path: "/app/transactions",
+          icon: <IconTransfer size={24} aria-hidden="true" />,
+        },
+      ],
+    },
+  ];
 
   return (
     <>
@@ -109,6 +114,7 @@ export default function App() {
                         <SidebarItem
                           key={item.label}
                           label={item.label}
+                          badgeContent={item?.badgeContent}
                           path={item.path}
                           icon={item.icon}
                         />
@@ -225,7 +231,11 @@ export default function App() {
                 </nav>
 
                 <main className="relative flex grow flex-col p-6">
-                  <Outlet />
+                  <Outlet
+                    context={
+                      { selectedServer, setSelectedServer } satisfies Server
+                    }
+                  />
                 </main>
               </div>
             </div>

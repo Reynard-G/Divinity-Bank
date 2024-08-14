@@ -19,6 +19,7 @@ export const servers = pgTable("Servers", {
     maxValue: 2147483647,
   }),
   name: text("name").notNull(),
+  shortName: text("short_name"),
   bannerLink: text("banner_link").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
     .default(sql`(now() AT TIME ZONE 'utc'::text)`)
@@ -148,8 +149,8 @@ export const transactions = pgTable(
         onDelete: "restrict",
         onUpdate: "cascade",
       }),
-    attachment: text("attachment").default(sql`null`),
-    note: text("note").default(sql`null`),
+    attachment: text("attachment"),
+    note: text("note"),
     status: text("status")
       .notNull()
       .references(() => transactionStatuses.name, {

@@ -1,11 +1,17 @@
 import { type LoaderFunction } from "@remix-run/node";
-import { Await, defer, useLoaderData } from "@remix-run/react";
+import {
+  Await,
+  defer,
+  useLoaderData,
+  useOutletContext,
+} from "@remix-run/react";
 import { Suspense } from "react";
 
 import ServerSelectionCard from "~/components/ServerSelectionCard";
 import ServerSelectionCardSkeletonList from "~/components/Skeleton/ServerSelectionCardSkeletonList";
 import { type Server } from "~/lib/db/schema";
 import { getServers } from "~/lib/queries.server";
+import { type Server as SelectedServer } from "~/types/Server";
 
 export const loader: LoaderFunction = async () => {
   const servers = getServers();
@@ -14,6 +20,8 @@ export const loader: LoaderFunction = async () => {
 
 export default function Servers() {
   const { servers } = useLoaderData<typeof loader>();
+  const { selectedServer, setSelectedServer } =
+    useOutletContext<SelectedServer>();
 
   return (
     <>
@@ -33,6 +41,7 @@ export default function Servers() {
               {servers.map((server) => (
                 <ServerSelectionCard
                   key={server.id}
+                  selectedServer={selectedServer?.id === server.id}
                   serverName={server.name}
                   serverBannerImage={server.bannerLink}
                   serverBalance="1234.56"
@@ -40,6 +49,7 @@ export default function Servers() {
                   lastTransactionDate={
                     new Date(Date.now() - 2 * 60 * 60 * 1000 - 23 * 60 * 1000)
                   } // 2 hours and 23 minutes ago
+                  onClick={() => setSelectedServer(server)}
                 />
               ))}
             </div>

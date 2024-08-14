@@ -22,7 +22,7 @@ import { formatCurrency } from "./utils/formatCurrency";
  * Get all servers.
  */
 export async function getServers() {
-  return db.select().from(servers);
+  return db.select().from(servers).orderBy(asc(servers.id));
 }
 
 /**
@@ -41,7 +41,8 @@ export async function getNonSensitiveUserInfo() {
       createdAt: users.createdAt,
       updatedAt: users.updatedAt,
     })
-    .from(users);
+    .from(users)
+    .orderBy(asc(users.id));
 }
 
 /**
@@ -135,7 +136,10 @@ export async function getTransactions(
  */
 export async function getAllTransactions() {
   try {
-    const data = await db.select().from(transactions);
+    const data = await db
+      .select()
+      .from(transactions)
+      .orderBy(asc(transactions.id));
 
     return data;
   } catch (err) {

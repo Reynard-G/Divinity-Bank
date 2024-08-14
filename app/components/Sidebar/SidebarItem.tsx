@@ -1,6 +1,7 @@
 import { NavLink } from "@remix-run/react";
 import { ReactNode } from "react";
 
+import { Badge } from "~/components/ui/badge";
 import { cn } from "~/lib/utils/cn";
 
 interface SubmenuEntryProps {
@@ -11,6 +12,7 @@ interface SubmenuEntryProps {
 
 interface MenuItemProps {
   label: string;
+  badgeContent?: string;
   icon: ReactNode;
   path: string;
   activePath?: string;
@@ -18,7 +20,12 @@ interface MenuItemProps {
   entries?: SubmenuEntryProps[];
 }
 
-export default function SidebarItem({ label, icon, path }: MenuItemProps) {
+export default function SidebarItem({
+  label,
+  badgeContent,
+  icon,
+  path,
+}: MenuItemProps) {
   return (
     <div className="relative">
       <NavLink
@@ -33,9 +40,14 @@ export default function SidebarItem({ label, icon, path }: MenuItemProps) {
           )
         }
       >
-        <div className="flex items-center gap-2">
+        <div className="flex grow items-center gap-2">
           <div className="relative">{icon}</div>
-          {label}
+          <span className="grow">{label}</span>
+          {badgeContent && (
+            <Badge variant="outline" className="rounded-sm px-2">
+              {badgeContent}
+            </Badge>
+          )}
         </div>
       </NavLink>
     </div>

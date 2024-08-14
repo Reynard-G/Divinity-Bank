@@ -8,24 +8,31 @@ import { formatCurrency } from "~/lib/utils/formatCurrency";
 import { getRelativeTimeString } from "~/lib/utils/getRelativeTimeString";
 
 interface ServerSelectionCardProps {
+  selectedServer: boolean;
   serverName: string;
   serverBannerImage: string;
   serverBalance: string;
   transactionsAmount: number;
   lastTransactionDate: Date;
+  onClick?: () => void;
 }
 
 export default function ServerSelectionCard({
+  selectedServer,
   serverName,
   serverBannerImage,
   serverBalance,
   transactionsAmount,
   lastTransactionDate,
+  ...props
 }: ServerSelectionCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
-    <Card className="group relative h-36 cursor-pointer overflow-hidden rounded-lg border border-[#3d3d43] bg-background !p-0 transition-all hover:shadow-lg">
+    <Card
+      className="group relative h-36 cursor-pointer overflow-hidden rounded-lg border border-[#3d3d43] bg-background !p-0 transition-all hover:shadow-lg"
+      {...props}
+    >
       <Link
         to="/app/dashboard"
         className="absolute inset-0 z-10"
@@ -42,6 +49,7 @@ export default function ServerSelectionCard({
               alt="Server background"
               className={cn(
                 "h-full w-full object-cover object-center brightness-50 grayscale",
+                selectedServer && "brightness-75 grayscale-0",
                 imageLoaded && "duration-500 animate-in fade-in",
               )}
               onLoad={() => setImageLoaded(true)}
