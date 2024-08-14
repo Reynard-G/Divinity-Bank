@@ -16,7 +16,6 @@ export function TransactionsTableToolbarActions() {
       <CreateTransactionsDialog />
 
       {/* Export Dialog */}
-      {/* Fallback will never load as Await component in app.transactions.tsx takes precedence. This is a precautionary measure. */}
       <Suspense fallback={<Skeleton className="h-8 w-24 rounded-md" />}>
         <Await resolve={allTransactions}>
           {(allTransactions) => (
