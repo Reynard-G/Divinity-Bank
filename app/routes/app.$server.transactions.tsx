@@ -1,7 +1,7 @@
 import {
   type ActionFunctionArgs,
   json,
-  type LoaderFunction,
+  type LoaderFunctionArgs,
   unstable_parseMultipartFormData,
 } from "@remix-run/node";
 import { Await, defer, useLoaderData } from "@remix-run/react";
@@ -25,9 +25,13 @@ import { uploadHandler } from "~/lib/services/s3.server";
 import { getErrorMessage } from "~/lib/utils/getErrorMessage";
 import { searchParamsSchema } from "~/lib/validations";
 
-export const loader: LoaderFunction = async ({ request }) => {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const search = searchParamsSchema.parse(Object.fromEntries(url.searchParams));
+
+  if (params.server === undefined) {
+    throw new Error("Server is required");
+  }
 
   const userId = (
     await authenticator.isAuthenticated(request, {
@@ -35,18 +39,18 @@ export const loader: LoaderFunction = async ({ request }) => {
     })
   ).id;
 
-  const transactions = getTransactions(userId, search);
+  const transactions = getTransactions(userId, params.server, search);
   const allUsers = getNonSensitiveUserInfo();
-  const allTransactions = getAllTransactions();
+  const allTransactions = getAllTransactions(userId, params.server);
   const [types, statuses] = await Promise.all([
     getPaymentTypes(),
     getTransactionStatuses(),
   ]);
 
   return defer({ transactions, types, statuses, allUsers, allTransactions });
-};
+}
 
-export async function action({ request }: ActionFunctionArgs) {
+export async function action({ request, params }: ActionFunctionArgs) {
   const formData = await unstable_parseMultipartFormData(
     request,
     uploadHandler,
@@ -57,6 +61,12 @@ export async function action({ request }: ActionFunctionArgs) {
       failureRedirect: "/login",
     })
   ).id;
+
+  if (params.server === undefined) {
+    throw new Error("Server is required");
+  }
+
+  const server = params.server;
 
   return namedAction(formData, {
     async deposit() {
@@ -80,18 +90,17 @@ export async function action({ request }: ActionFunctionArgs) {
         );
       }
 
-      try {
-        await deposit(userId, Number(amount), proofOfDeposit);
-        return json({ success: true, message: "Deposit successful" });
-      } catch (error) {
-        return json(
-          {
-            success: false,
-            message: "Deposit failed: " + getErrorMessage(error),
-          },
-          { status: 500 },
+      return deposit(userId, Number(amount), proofOfDeposit, server)
+        .then(() => json({ success: true, message: "Deposit successful" }))
+        .catch((error) =>
+          json(
+            {
+              success: false,
+              message: "Deposit failed: " + getErrorMessage(error),
+            },
+            { status: 500 },
+          ),
         );
-      }
     },
     async withdraw() {
       const amount = formData.get("amount")?.toString();
@@ -110,18 +119,17 @@ export async function action({ request }: ActionFunctionArgs) {
         );
       }
 
-      try {
-        await withdraw(userId, Number(amount));
-        return json({ success: true, message: "Withdrawal successful" });
-      } catch (error) {
-        return json(
-          {
-            success: false,
-            message: "Withdrawal failed: " + getErrorMessage(error),
-          },
-          { status: 500 },
+      return withdraw(userId, Number(amount), server)
+        .then(() => json({ success: true, message: "Withdrawal successful" }))
+        .catch((error) =>
+          json(
+            {
+              success: false,
+              message: "Withdrawal failed: " + getErrorMessage(error),
+            },
+            { status: 500 },
+          ),
         );
-      }
     },
     async transfer() {
       const amount = formData.get("amount")?.toString();
@@ -151,18 +159,17 @@ export async function action({ request }: ActionFunctionArgs) {
         );
       }
 
-      try {
-        await transfer(userId, Number(recipient), Number(amount));
-        return json({ success: true, message: "Transfer successful" });
-      } catch (error) {
-        return json(
-          {
-            success: false,
-            message: "Transfer failed: " + getErrorMessage(error),
-          },
-          { status: 500 },
+      return transfer(userId, Number(recipient), Number(amount), server)
+        .then(() => json({ success: true, message: "Transfer successful" }))
+        .catch((error) =>
+          json(
+            {
+              success: false,
+              message: "Transfer failed: " + getErrorMessage(error),
+            },
+            { status: 500 },
+          ),
         );
-      }
     },
   });
 }

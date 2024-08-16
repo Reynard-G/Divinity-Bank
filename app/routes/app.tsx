@@ -55,20 +55,20 @@ import { authenticator } from "~/lib/services/auth.server";
 import { cn } from "~/lib/utils/cn";
 import { type Server as SelectedServer } from "~/types/Server";
 
-export const loader = async ({ request }: LoaderFunctionArgs) => {
+export async function loader({ request }: LoaderFunctionArgs) {
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
   });
 
-  const url = new URL(request.url);
-  if (url.pathname === "/app") {
-    return redirect("/app/dashboard");
-  }
-
   const servers = await getServers();
 
+  const url = new URL(request.url);
+  if (url.pathname === "/app") {
+    return redirect(`/app/${servers[0].shortName}/dashboard`);
+  }
+
   return { user, servers };
-};
+}
 
 export default function App() {
   const { user, servers } = useLoaderData<typeof loader>();

@@ -1,4 +1,3 @@
-import { type LoaderFunction } from "@remix-run/node";
 import {
   Await,
   defer,
@@ -14,10 +13,10 @@ import { type Server } from "~/lib/db/schema";
 import { getServers } from "~/lib/queries.server";
 import { type Server as SelectedServer } from "~/types/Server";
 
-export const loader: LoaderFunction = async () => {
+export async function loader() {
   const servers = getServers();
   return defer({ servers });
-};
+}
 
 export default function Servers() {
   const { servers } = useLoaderData<typeof loader>();

@@ -59,56 +59,82 @@ export async function getNonSensitiveUserInfo(): Promise<NonSensitiveUser[]> {
  * provided by the user.
  *
  * @param userId The ID of the user fetching the transactions.
+ * @param serverShortName The short name of the server.
  * @param input The input parameters for fetching transactions.
  * @returns The transactions and the total number of pages.
  */
 export async function getTransactions(
   userId: number,
+  serverShortName: string,
   input: GetTransactionsSchema,
 ): Promise<{ data: Transaction[]; pageCount: number }> {
   const { page, per_page, sort, note, paymentType, status, operator } = input;
 
-  try {
-    const offset = (page - 1) * per_page;
-    const [column, order] = (sort?.split(".") ?? ["createdAt", "desc"]) as [
-      keyof Transaction | undefined,
-      "asc" | "desc" | undefined,
-    ];
+  const offset = (page - 1) * per_page;
+  const [column, order] = (sort?.split(".") ?? ["createdAt", "desc"]) as [
+    keyof Transaction | undefined,
+    "asc" | "desc" | undefined,
+  ];
 
-    const expressions: (SQL<unknown> | undefined)[] = [
-      note
-        ? filterColumn({
-            column: transactions.note,
-            value: note,
-          })
-        : undefined,
-      paymentType
-        ? filterColumn({
-            column: transactions.paymentType,
-            value: paymentType,
-            isSelectable: true,
-          })
-        : undefined,
-      status
-        ? filterColumn({
-            column: transactions.status,
-            value: status,
-            isSelectable: true,
-          })
-        : undefined,
-    ];
-    const where: DrizzleWhere<Transaction> =
-      !operator || operator === "and"
-        ? and(...expressions)
-        : or(...expressions);
+  const expressions: (SQL<unknown> | undefined)[] = [
+    note
+      ? filterColumn({
+          column: transactions.note,
+          value: note,
+        })
+      : undefined,
+    paymentType
+      ? filterColumn({
+          column: transactions.paymentType,
+          value: paymentType,
+          isSelectable: true,
+        })
+      : undefined,
+    status
+      ? filterColumn({
+          column: transactions.status,
+          value: status,
+          isSelectable: true,
+        })
+      : undefined,
+  ];
+  const where: DrizzleWhere<Transaction> =
+    !operator || operator === "and" ? and(...expressions) : or(...expressions);
 
-    const { data, total } = await db.transaction(async (tx) => {
+  const { data, total } = await db
+    .transaction(async (tx) => {
+      const user = await tx
+        .select()
+        .from(users)
+        .where(eq(users.id, userId))
+        .then((res) => res[0]);
+
+      if (!user) {
+        throw new Error("User not found");
+      }
+
+      const server = await tx
+        .select()
+        .from(servers)
+        .where(eq(servers.shortName, serverShortName))
+        .then((res) => res[0]);
+
+      if (!server) {
+        throw new Error("Server not found");
+      }
+
       const data = await tx
         .select()
         .from(transactions)
         .limit(per_page)
         .offset(offset)
-        .where(and(eq(transactions.userId, userId), where))
+        .where(
+          and(
+            eq(transactions.userId, userId),
+            eq(transactions.serverId, server.id),
+            where,
+          ),
+        )
         .orderBy(
           column && column in transactions
             ? order === "asc"
@@ -129,33 +155,56 @@ export async function getTransactions(
         data,
         total,
       };
+    })
+    .catch((err) => {
+      console.error("Error fetching transactions:", err);
+      throw new Error("Error fetching transactions");
     });
 
-    const pageCount = Math.ceil(total / per_page);
-    return { data, pageCount };
-  } catch (err) {
-    console.error("Error fetching transactions:", err);
-    throw new Error("Error fetching transactions");
-  }
+  const pageCount = Math.ceil(total / per_page);
+  return { data, pageCount };
 }
 
 /**
- * Get all transactions.
+ * Get all transactions of a user.
  *
- * @returns All transactions.
+ * @param userId The ID of the user fetching the transactions.
+ * @param serverShortName The short name of the server.
+ * @returns All transactions of the user.
  */
-export async function getAllTransactions(): Promise<Transaction[]> {
-  try {
-    const data = await db
-      .select()
-      .from(transactions)
-      .orderBy(asc(transactions.id));
+export async function getAllTransactions(
+  userId: number,
+  serverShortName: string,
+): Promise<Transaction[]> {
+  return await db
+    .transaction(async (tx) => {
+      const server = await tx
+        .select()
+        .from(servers)
+        .where(eq(servers.shortName, serverShortName))
+        .then((res) => res[0]);
 
-    return data;
-  } catch (err) {
-    console.error("Error fetching all transactions:", err);
-    throw new Error("Error fetching all transactions");
-  }
+      if (!server) {
+        throw new Error("Server not found");
+      }
+
+      const data = await db
+        .select()
+        .from(transactions)
+        .where(
+          and(
+            eq(transactions.userId, userId),
+            eq(transactions.serverId, server.id),
+          ),
+        )
+        .orderBy(asc(transactions.id));
+
+      return data;
+    })
+    .catch((err) => {
+      console.error("Error fetching all transactions:", err);
+      throw new Error("Error fetching all transactions");
+    });
 }
 
 /**
@@ -180,9 +229,13 @@ export async function getTransactionStatuses(): Promise<TransactionStatus[]> {
  * Get a user's balance.
  *
  * @param userId The ID of the user to get the balance for.
+ * @param serverShortName The short name of the server.
  * @returns The balance of the user.
  */
-export async function getBalance(userId: number): Promise<number> {
+export async function getBalance(
+  userId: number,
+  serverShortName: string,
+): Promise<number> {
   return await db.transaction(async (tx) => {
     const user = await tx
       .select()
@@ -194,12 +247,23 @@ export async function getBalance(userId: number): Promise<number> {
       throw new Error("User not found");
     }
 
+    const server = await tx
+      .select()
+      .from(servers)
+      .where(eq(servers.shortName, serverShortName))
+      .then((res) => res[0]);
+
+    if (!server) {
+      throw new Error("Server not found");
+    }
+
     const creditBalance = await tx
       .select({ amount: sql<string>`SUM(amount)` })
       .from(transactions)
       .where(
         and(
           eq(transactions.userId, userId),
+          eq(transactions.serverId, server.id),
           eq(transactions.transactionType, TransactionTypes.CREDIT),
           eq(transactions.status, TransactionStatuses.SUCCESS),
         ),
@@ -212,6 +276,7 @@ export async function getBalance(userId: number): Promise<number> {
       .where(
         and(
           eq(transactions.userId, userId),
+          eq(transactions.serverId, server.id),
           eq(transactions.transactionType, TransactionTypes.DEBIT),
           or(
             eq(transactions.status, TransactionStatuses.SUCCESS),
@@ -231,12 +296,14 @@ export async function getBalance(userId: number): Promise<number> {
  * @param userId The ID of the user depositing the money.
  * @param amount The amount to deposit.
  * @param proofOfDeposit A proof of deposit.
+ * @param serverShortName The short name of the server.
  * @returns The new balance of the user.
  */
 export async function deposit(
   userId: number,
   amount: number,
   proofOfDeposit: string,
+  serverShortName: string,
 ): Promise<number> {
   return await db.transaction(async (tx) => {
     const user = await tx
@@ -249,9 +316,21 @@ export async function deposit(
       throw new Error("User not found");
     }
 
-    const newBalance = (await getBalance(userId)) + Number(amount);
+    const server = await tx
+      .select()
+      .from(servers)
+      .where(eq(servers.shortName, serverShortName))
+      .then((res) => res[0]);
+
+    if (!server) {
+      throw new Error("Server not found");
+    }
+
+    const newBalance =
+      (await getBalance(userId, serverShortName)) + Number(amount);
 
     await tx.insert(transactions).values({
+      serverId: server.id,
       userId,
       createdByUserId: userId,
       amount: amount.toString(),
@@ -272,11 +351,13 @@ export async function deposit(
  *
  * @param userId The ID of the user withdrawing the money.
  * @param amount The amount to withdraw.
+ * @param serverShortName The short name of the server.
  * @returns The new balance of the user.
  */
 export async function withdraw(
   userId: number,
   amount: number,
+  serverShortName: string,
 ): Promise<number> {
   return await db.transaction(async (tx) => {
     const user = await tx
@@ -289,13 +370,24 @@ export async function withdraw(
       throw new Error("User not found");
     }
 
-    const balance = await getBalance(userId);
+    const server = await tx
+      .select()
+      .from(servers)
+      .where(eq(servers.shortName, serverShortName))
+      .then((res) => res[0]);
+
+    if (!server) {
+      throw new Error("Server not found");
+    }
+
+    const balance = await getBalance(userId, serverShortName);
 
     if (balance < Number(amount)) {
       throw new Error("Insufficient funds");
     }
 
     await tx.insert(transactions).values({
+      serverId: server.id,
       userId,
       createdByUserId: userId,
       amount: amount.toString(),
@@ -316,12 +408,14 @@ export async function withdraw(
  * @param userId The ID of the user sending the money.
  * @param recipientId The ID of the user receiving the money.
  * @param amount The amount to transfer.
+ * @param serverShortName The short name of the server.
  * @returns The new balance of the user sending the money.
  */
 export async function transfer(
   userId: number,
   recipientId: number,
   amount: number,
+  serverShortName: string,
 ): Promise<number> {
   return await db.transaction(async (tx) => {
     const user = await tx
@@ -334,6 +428,16 @@ export async function transfer(
       throw new Error("User not found");
     }
 
+    const server = await tx
+      .select()
+      .from(servers)
+      .where(eq(servers.shortName, serverShortName))
+      .then((res) => res[0]);
+
+    if (!server) {
+      throw new Error("Server not found");
+    }
+
     const recipient = await tx
       .select()
       .from(users)
@@ -344,13 +448,14 @@ export async function transfer(
       throw new Error("Recipient not found");
     }
 
-    const balance = await getBalance(userId);
+    const balance = await getBalance(userId, serverShortName);
 
     if (balance < Number(amount)) {
       throw new Error("Insufficient funds");
     }
 
     await tx.insert(transactions).values({
+      serverId: server.id,
       userId,
       createdByUserId: userId,
       amount: amount.toString(),
@@ -362,6 +467,7 @@ export async function transfer(
     });
 
     await tx.insert(transactions).values({
+      serverId: server.id,
       userId: recipientId,
       createdByUserId: userId,
       amount: amount.toString(),

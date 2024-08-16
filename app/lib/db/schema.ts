@@ -123,6 +123,12 @@ export const transactions = pgTable(
       minValue: 1,
       maxValue: 2147483647,
     }),
+    serverId: integer("server_id")
+      .notNull()
+      .references(() => servers.id, {
+        onDelete: "restrict",
+        onUpdate: "cascade",
+      }),
     userId: integer("user_id")
       .notNull()
       .references(() => users.id, {
