@@ -15,7 +15,7 @@ import {
   getPaymentTypeIcon,
   getTransactionStatusIcon,
 } from "~/lib/utils/iconMappings";
-import { loader } from "~/routes/app.transactions";
+import { type loader } from "~/routes/app.$server.transactions";
 import type { DataTableFilterField } from "~/types/DataTable";
 
 interface TransactionsTableProps {

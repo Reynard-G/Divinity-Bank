@@ -3,7 +3,7 @@ import { Suspense } from "react";
 
 import CreateTransactionsDialog from "~/components/Dialog/CreateTransactionsDialog";
 import ExportTransactionsDialog from "~/components/Dialog/ExportTransactionsDialog";
-import { loader } from "~/routes/app.transactions";
+import { type loader } from "~/routes/app.$server.transactions";
 
 import { Skeleton } from "../ui/skeleton";
 

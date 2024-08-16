@@ -19,7 +19,7 @@ export const servers = pgTable("Servers", {
     maxValue: 2147483647,
   }),
   name: text("name").notNull(),
-  shortName: text("short_name"),
+  shortName: text("short_name").notNull(),
   bannerLink: text("banner_link").notNull(),
   createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
     .default(sql`(now() AT TIME ZONE 'utc'::text)`)

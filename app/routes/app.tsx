@@ -8,6 +8,9 @@ import {
   useNavigate,
 } from "@remix-run/react";
 import {
+  IconCheck,
+  IconChevronDown,
+  IconChevronUp,
   IconHome,
   IconMenu,
   IconServer,
@@ -20,6 +23,14 @@ import SidebarSection from "~/components/Sidebar/SidebarSection";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
 import { Button } from "~/components/ui/button";
 import {
+  Command,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "~/components/ui/command";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
@@ -28,14 +39,21 @@ import {
   DropdownMenuTrigger,
 } from "~/components/ui/dropdown-menu";
 import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "~/components/ui/popover";
+import {
   Sheet,
   SheetClose,
   SheetContent,
   SheetTrigger,
 } from "~/components/ui/sheet";
+import { type Server } from "~/lib/db/schema";
+import { getServers } from "~/lib/queries.server";
 import { authenticator } from "~/lib/services/auth.server";
 import { cn } from "~/lib/utils/cn";
-import { Server } from "~/types/Server";
+import { type Server as SelectedServer } from "~/types/Server";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const user = await authenticator.isAuthenticated(request, {
@@ -47,14 +65,16 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     return redirect("/app/dashboard");
   }
 
-  return { user };
+  const servers = await getServers();
+
+  return { user, servers };
 };
 
 export default function App() {
-  const { user } = useLoaderData<typeof loader>();
+  const { user, servers } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
-  const [selectedServer, setSelectedServer] =
-    useState<Server["selectedServer"]>(null);
+  const [selectedServer, setSelectedServer] = useState<Server>(servers[0]);
+  const [isServerPopoverOpen, setIsServerPopoverOpen] = useState(false);
 
   const NavigationItems = [
     {
@@ -62,13 +82,12 @@ export default function App() {
       items: [
         {
           label: "Home",
-          path: "/app/dashboard",
+          path: `/app/${selectedServer.shortName}/dashboard`,
           icon: <IconHome size={24} aria-hidden="true" />,
         },
         {
           label: "Servers",
-          badgeContent: selectedServer?.shortName || selectedServer?.name,
-          path: "/app/servers",
+          path: `/app/${selectedServer.shortName}/servers`,
           icon: <IconServer size={24} aria-hidden="true" />,
         },
       ],
@@ -78,7 +97,7 @@ export default function App() {
       items: [
         {
           label: "Transactions",
-          path: "/app/transactions",
+          path: `/app/${selectedServer.shortName}/transactions`,
           icon: <IconTransfer size={24} aria-hidden="true" />,
         },
       ],
@@ -106,15 +125,75 @@ export default function App() {
                   </Link>
                 </div>
 
+                <div className="relative px-3 pt-3">
+                  <Popover
+                    open={isServerPopoverOpen}
+                    onOpenChange={setIsServerPopoverOpen}
+                  >
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant="outline"
+                        role="combobox"
+                        aria-expanded={isServerPopoverOpen}
+                        className="w-full justify-between"
+                      >
+                        <div className="flex items-center gap-2">
+                          <IconServer size={20} aria-hidden="true" />
+
+                          {selectedServer.name}
+                        </div>
+
+                        {isServerPopoverOpen ? (
+                          <IconChevronDown size={16} aria-hidden="true" />
+                        ) : (
+                          <IconChevronUp size={16} aria-hidden="true" />
+                        )}
+                      </Button>
+                    </PopoverTrigger>
+
+                    <PopoverContent className="mx-3 w-[221px] p-0">
+                      <Command>
+                        <CommandInput placeholder="Search servers..." />
+                        <CommandList>
+                          <CommandEmpty>No servers found.</CommandEmpty>
+                          <CommandGroup>
+                            {servers.map((server) => (
+                              <CommandItem
+                                key={server.id}
+                                onSelect={() => {
+                                  setSelectedServer(server);
+                                  setIsServerPopoverOpen(false);
+                                  navigate(`/app/${server.shortName}/servers`);
+                                }}
+                              >
+                                <IconCheck
+                                  size={16}
+                                  className={cn(
+                                    "mr-2 h-4 w-4",
+                                    server.id === selectedServer.id
+                                      ? "opacity-100"
+                                      : "opacity-0",
+                                  )}
+                                  aria-hidden="true"
+                                />
+                                {server.name}
+                              </CommandItem>
+                            ))}
+                          </CommandGroup>
+                        </CommandList>
+                      </Command>
+                    </PopoverContent>
+                  </Popover>
+                </div>
+
                 {/* Sidebar Navigation */}
-                <div className="mt-16 flex flex-col overflow-y-scroll py-3 pl-3 pr-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
+                <div className="flex flex-col overflow-y-scroll py-3 pl-3 pr-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
                   {NavigationItems.map((section) => (
                     <SidebarSection key={section.section}>
                       {section.items.map((item) => (
                         <SidebarItem
                           key={item.label}
                           label={item.label}
-                          badgeContent={item?.badgeContent}
                           path={item.path}
                           icon={item.icon}
                         />
@@ -233,7 +312,10 @@ export default function App() {
                 <main className="relative flex grow flex-col p-6">
                   <Outlet
                     context={
-                      { selectedServer, setSelectedServer } satisfies Server
+                      {
+                        selectedServer,
+                        setSelectedServer,
+                      } satisfies SelectedServer
                     }
                   />
                 </main>

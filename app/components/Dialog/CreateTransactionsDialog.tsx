@@ -29,7 +29,7 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { SpokeSpinner } from "~/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useMediaQuery } from "~/hooks/use-media-query";
-import { action, loader } from "~/routes/app.transactions";
+import { type action, type loader } from "~/routes/app.$server.transactions";
 import { NonSensitiveUser } from "~/types/User";
 
 export default function CreateTransactionsDialog() {

@@ -3,6 +3,7 @@ import {
   Await,
   defer,
   useLoaderData,
+  useLocation,
   useOutletContext,
 } from "@remix-run/react";
 import { Suspense } from "react";
@@ -20,8 +21,8 @@ export const loader: LoaderFunction = async () => {
 
 export default function Servers() {
   const { servers } = useLoaderData<typeof loader>();
-  const { selectedServer, setSelectedServer } =
-    useOutletContext<SelectedServer>();
+  const { setSelectedServer } = useOutletContext<SelectedServer>();
+  const location = useLocation();
 
   return (
     <>
@@ -41,8 +42,11 @@ export default function Servers() {
               {servers.map((server) => (
                 <ServerSelectionCard
                   key={server.id}
-                  selectedServer={selectedServer?.id === server.id}
+                  selectedServer={location.pathname
+                    .split("/")
+                    .includes(server.shortName)}
                   serverName={server.name}
+                  serverShortName={server.shortName}
                   serverBannerImage={server.bannerLink}
                   serverBalance="1234.56"
                   transactionsAmount={12}

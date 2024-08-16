@@ -10,6 +10,7 @@ import { getRelativeTimeString } from "~/lib/utils/getRelativeTimeString";
 interface ServerSelectionCardProps {
   selectedServer: boolean;
   serverName: string;
+  serverShortName?: string | null;
   serverBannerImage: string;
   serverBalance: string;
   transactionsAmount: number;
@@ -20,6 +21,7 @@ interface ServerSelectionCardProps {
 export default function ServerSelectionCard({
   selectedServer,
   serverName,
+  serverShortName,
   serverBannerImage,
   serverBalance,
   transactionsAmount,
@@ -34,7 +36,7 @@ export default function ServerSelectionCard({
       {...props}
     >
       <Link
-        to="/app/dashboard"
+        to={`/app/${serverShortName}/dashboard`}
         className="absolute inset-0 z-10"
         prefetch="intent"
       >
