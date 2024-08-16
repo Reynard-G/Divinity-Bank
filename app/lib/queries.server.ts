@@ -45,7 +45,6 @@ export async function getNonSensitiveUserInfo(): Promise<NonSensitiveUser[]> {
       minecraft_uuid: users.minecraftUuid,
       minecraft_username: users.minecraftUsername,
       discord_username: users.discordUsername,
-      role: users.role,
       created_at: users.createdAt,
       updated_at: users.updatedAt,
     })

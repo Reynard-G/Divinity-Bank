@@ -4,7 +4,6 @@ export interface NonSensitiveUser {
   minecraft_uuid: string;
   minecraft_username: string;
   discord_username: string;
-  role: string;
   created_at: string;
   updated_at: string;
 }
