@@ -6,13 +6,7 @@ import { FormStrategy } from "remix-auth-form";
 import { db } from "~/lib/db/db.server";
 import { users } from "~/lib/db/schema";
 import { sessionStorage } from "~/lib/services/session.server";
-
-export type AuthUser = {
-  id: number;
-  uuid: string;
-  username: string;
-  role: string;
-};
+import type { AuthUser } from "~/types/User";
 
 export const authenticator = new Authenticator<AuthUser>(sessionStorage, {
   throwOnError: true,
