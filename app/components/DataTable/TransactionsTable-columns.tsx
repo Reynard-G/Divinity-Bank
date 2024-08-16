@@ -2,6 +2,7 @@ import { type ColumnDef } from "@tanstack/react-table";
 
 import { DataTableColumnHeader } from "~/components/DataTable/DataTable-Column-Header";
 import { type Transaction } from "~/lib/db/schema";
+import { formatCurrency } from "~/lib/utils/formatCurrency";
 import { formatDate } from "~/lib/utils/formatDate";
 import {
   getPaymentTypeIcon,
@@ -31,7 +32,11 @@ export function getColumns(): ColumnDef<Transaction>[] {
         return (
           <div className="flex w-24 items-center">
             <span className="text-muted-foreground">{sign}$</span>
-            <span>{row.getValue("amount")}</span>
+            <span>
+              {formatCurrency(row.getValue("amount"), {
+                minimumFractionDigits: 2,
+              }).replace("$", "")}
+            </span>
           </div>
         );
       },
@@ -45,7 +50,11 @@ export function getColumns(): ColumnDef<Transaction>[] {
         return (
           <div className="flex w-24 items-center">
             <span className="text-muted-foreground">$</span>
-            <span>{row.getValue("fee")}</span>
+            <span>
+              {formatCurrency(row.getValue("fee"), {
+                minimumFractionDigits: 2,
+              }).replace("$", "")}
+            </span>
           </div>
         );
       },
