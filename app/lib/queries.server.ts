@@ -5,31 +5,39 @@ import TransactionStatuses from "~/constants/TransactionStatuses";
 import TransactionTypes from "~/constants/TransactionTypes";
 import { db } from "~/lib/db/db.server";
 import {
+  type PaymentType,
   paymentTypes,
+  type Server,
   servers,
   type Transaction,
   transactions,
+  type TransactionStatus,
   transactionStatuses,
   users,
 } from "~/lib/db/schema";
 import { filterColumn } from "~/lib/utils/filterColumns";
 import { GetTransactionsSchema } from "~/lib/validations";
 import { type DrizzleWhere } from "~/types/DataTable";
+import { NonSensitiveUser } from "~/types/User";
 
 import { formatCurrency } from "./utils/formatCurrency";
 
 /**
  * Get all servers.
+ *
+ * @returns All servers.
  */
-export async function getServers() {
+export async function getServers(): Promise<Server[]> {
   return db.select().from(servers).orderBy(asc(servers.id));
 }
 
 /**
  * Get non-sensitive information about all users. This is useful for
  * displaying user information in a non-sensitive way to the public.
+ *
+ * @returns Non-sensitive information about all users.
  */
-export async function getNonSensitiveUserInfo() {
+export async function getNonSensitiveUserInfo(): Promise<NonSensitiveUser[]> {
   return db
     .select({
       id: users.id,
@@ -38,8 +46,8 @@ export async function getNonSensitiveUserInfo() {
       minecraft_username: users.minecraftUsername,
       discord_username: users.discordUsername,
       role: users.role,
-      createdAt: users.createdAt,
-      updatedAt: users.updatedAt,
+      created_at: users.createdAt,
+      updated_at: users.updatedAt,
     })
     .from(users)
     .orderBy(asc(users.id));
@@ -57,7 +65,7 @@ export async function getNonSensitiveUserInfo() {
 export async function getTransactions(
   userId: number,
   input: GetTransactionsSchema,
-) {
+): Promise<{ data: Transaction[]; pageCount: number }> {
   const { page, per_page, sort, note, paymentType, status, operator } = input;
 
   try {
@@ -133,8 +141,10 @@ export async function getTransactions(
 
 /**
  * Get all transactions.
+ *
+ * @returns All transactions.
  */
-export async function getAllTransactions() {
+export async function getAllTransactions(): Promise<Transaction[]> {
   try {
     const data = await db
       .select()
@@ -150,19 +160,29 @@ export async function getAllTransactions() {
 
 /**
  * Get payment types.
+ *
+ * @returns The payment types.
  */
-export async function getPaymentTypes() {
+export async function getPaymentTypes(): Promise<PaymentType[]> {
   return await db.select().from(paymentTypes);
 }
 
 /**
  * Get transaction statuses.
+ *
+ * @returns The transaction statuses.
  */
-export async function getTransactionStatuses() {
+export async function getTransactionStatuses(): Promise<TransactionStatus[]> {
   return await db.select().from(transactionStatuses);
 }
 
-export async function getBalance(userId: number) {
+/**
+ * Get a user's balance.
+ *
+ * @param userId The ID of the user to get the balance for.
+ * @returns The balance of the user.
+ */
+export async function getBalance(userId: number): Promise<number> {
   return await db.transaction(async (tx) => {
     const user = await tx
       .select()
@@ -217,7 +237,7 @@ export async function deposit(
   userId: number,
   amount: number,
   proofOfDeposit: string,
-) {
+): Promise<number> {
   return await db.transaction(async (tx) => {
     const user = await tx
       .select()
@@ -254,7 +274,10 @@ export async function deposit(
  * @param amount The amount to withdraw.
  * @returns The new balance of the user.
  */
-export async function withdraw(userId: number, amount: number) {
+export async function withdraw(
+  userId: number,
+  amount: number,
+): Promise<number> {
   return await db.transaction(async (tx) => {
     const user = await tx
       .select()
@@ -299,7 +322,7 @@ export async function transfer(
   userId: number,
   recipientId: number,
   amount: number,
-) {
+): Promise<number> {
   return await db.transaction(async (tx) => {
     const user = await tx
       .select()
