@@ -3,9 +3,8 @@ import { Suspense } from "react";
 
 import CreateTransactionsDialog from "~/components/Dialog/CreateTransactionsDialog";
 import ExportTransactionsDialog from "~/components/Dialog/ExportTransactionsDialog";
+import { Skeleton } from "~/components/ui/skeleton";
 import { type loader } from "~/routes/app.$server.transactions";
-
-import { Skeleton } from "../ui/skeleton";
 
 export function TransactionsTableToolbarActions() {
   const { allTransactions } = useLoaderData<typeof loader>();

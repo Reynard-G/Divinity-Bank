@@ -1,7 +1,9 @@
+import { useNavigation } from "@remix-run/react";
 import { flexRender, type Table as TanstackTable } from "@tanstack/react-table";
 import * as React from "react";
 
 import { DataTablePagination } from "~/components/DataTable/DataTable-Pagination";
+import { SpokeSpinner } from "~/components/ui/spinner";
 import {
   Table,
   TableBody,
@@ -26,6 +28,10 @@ export function DataTable<TData>({
   className,
   ...props
 }: DataTableProps<TData>) {
+  const navigation = useNavigation();
+
+  const isLoading = navigation.state === "loading";
+
   return (
     <div
       className={cn("w-full space-y-2.5 overflow-auto", className)}
@@ -53,7 +59,18 @@ export function DataTable<TData>({
             ))}
           </TableHeader>
           <TableBody>
-            {table.getRowModel().rows?.length ? (
+            {isLoading ? (
+              <TableRow>
+                <TableCell
+                  colSpan={table.getAllColumns().length}
+                  className="h-24 text-center"
+                >
+                  <div className="flex h-full items-center justify-center">
+                    <SpokeSpinner color="white" />
+                  </div>
+                </TableCell>
+              </TableRow>
+            ) : table.getRowModel().rows?.length ? (
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
