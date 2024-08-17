@@ -116,7 +116,7 @@ export default function App() {
                 <div>
                   <Link
                     className="mx-4 mb-1 mt-6 flex cursor-pointer flex-row gap-4 bg-none p-0"
-                    to="/app/dashboard"
+                    to="/"
                   >
                     <img src="/logo.svg" alt="Logo" className="w-12" />
                     <h1 className="text-center font-anta text-xl font-bold tracking-wider text-[#ededed]">
