@@ -1,8 +1,8 @@
 import {
-  IconArrowBadgeLeft,
-  IconArrowBadgeRight,
   IconChevronLeft,
   IconChevronRight,
+  IconChevronsLeft,
+  IconChevronsRight,
 } from "@tabler/icons-react";
 import { type Table } from "@tanstack/react-table";
 
@@ -59,7 +59,7 @@ export function DataTablePagination<TData>({
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
           >
-            <IconArrowBadgeLeft size={20} stroke={1} aria-hidden="true" />
+            <IconChevronsLeft size={16} aria-hidden="true" />
           </Button>
           <Button
             aria-label="Go to previous page"
@@ -89,7 +89,7 @@ export function DataTablePagination<TData>({
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
           >
-            <IconArrowBadgeRight size={20} stroke={1} aria-hidden="true" />
+            <IconChevronsRight size={16} aria-hidden="true" />
           </Button>
         </div>
       </div>
