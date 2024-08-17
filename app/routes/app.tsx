@@ -163,7 +163,9 @@ export default function App() {
                                 onSelect={() => {
                                   setSelectedServer(server);
                                   setIsServerPopoverOpen(false);
-                                  navigate(`/app/${server.shortName}/servers`);
+                                  navigate(
+                                    `/app/${server.shortName}/dashboard`,
+                                  );
                                 }}
                               >
                                 <IconCheck
