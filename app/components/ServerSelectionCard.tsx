@@ -3,6 +3,7 @@ import { IconServer } from "@tabler/icons-react";
 import { useState } from "react";
 
 import { Card } from "~/components/ui/card";
+import { Skeleton } from "~/components/ui/skeleton";
 import { cn } from "~/lib/utils/cn";
 import { formatCurrency } from "~/lib/utils/formatCurrency";
 import { getRelativeTimeString } from "~/lib/utils/getRelativeTimeString";
@@ -10,11 +11,11 @@ import { getRelativeTimeString } from "~/lib/utils/getRelativeTimeString";
 interface ServerSelectionCardProps {
   selectedServer: boolean;
   serverName: string;
-  serverShortName?: string | null;
+  serverShortName?: string | undefined;
   serverBannerImage: string;
-  serverBalance: string;
-  transactionsAmount: number;
-  lastTransactionDate: Date;
+  serverBalance: number | undefined;
+  transactionsAmount: number | undefined;
+  lastTransactionDate: Date | undefined;
   onClick?: () => void;
 }
 
@@ -63,9 +64,13 @@ export default function ServerSelectionCard({
           <h3 className="text-lg font-bold">{serverName}</h3>
         </div>
         <div className="relative z-20 flex items-center gap-2">
-          <span className="text-sm font-medium text-[#ededed]">
-            {formatCurrency(parseFloat(serverBalance))}
-          </span>
+          {serverBalance !== undefined ? (
+            <span className="text-sm font-medium text-[#ededed]">
+              {formatCurrency(serverBalance)}
+            </span>
+          ) : (
+            <Skeleton className="h-4 w-20" />
+          )}
         </div>
       </div>
 
@@ -75,17 +80,27 @@ export default function ServerSelectionCard({
             <span className="text-sm font-normal text-[#ededed]">
               Transactions
             </span>
-            <span className="text-sm font-normal text-[#ededed]">
-              {transactionsAmount}
-            </span>
+            {transactionsAmount !== undefined ? (
+              <span className="text-sm font-normal text-[#ededed]">
+                {transactionsAmount}
+              </span>
+            ) : (
+              <Skeleton className="h-4 w-8" />
+            )}
           </div>
           <div className="flex items-center justify-between">
             <span className="text-sm font-normal text-[#ededed]">
               Last Transaction
             </span>
-            <span className="text-sm font-normal text-[#ededed]">
-              {getRelativeTimeString(lastTransactionDate)}
-            </span>
+            {lastTransactionDate !== undefined ? (
+              <span className="text-sm font-normal text-[#ededed]">
+                {lastTransactionDate
+                  ? getRelativeTimeString(new Date(lastTransactionDate))
+                  : "N/A"}
+              </span>
+            ) : (
+              <Skeleton className="h-4 w-16" />
+            )}
           </div>
         </div>
       </div>
