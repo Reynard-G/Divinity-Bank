@@ -55,6 +55,34 @@ import { authenticator } from "~/lib/services/auth.server";
 import { cn } from "~/lib/utils/cn";
 import { type Server as SelectedServer } from "~/types/Server";
 
+const getNavigationItems = (serverShortName: string) => [
+  {
+    section: "Main",
+    items: [
+      {
+        label: "Home",
+        path: `/app/${serverShortName}/dashboard`,
+        icon: <IconHome size={24} aria-hidden="true" />,
+      },
+      {
+        label: "Servers",
+        path: `/app/${serverShortName}/servers`,
+        icon: <IconServer size={24} aria-hidden="true" />,
+      },
+    ],
+  },
+  {
+    section: "Actions",
+    items: [
+      {
+        label: "Transactions",
+        path: `/app/${serverShortName}/transactions`,
+        icon: <IconTransfer size={24} aria-hidden="true" />,
+      },
+    ],
+  },
+];
+
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await authenticator.isAuthenticated(request, {
     failureRedirect: "/login",
@@ -76,33 +104,7 @@ export default function App() {
   const [selectedServer, setSelectedServer] = useState<Server>(servers[0]);
   const [isServerPopoverOpen, setIsServerPopoverOpen] = useState(false);
 
-  const NavigationItems = [
-    {
-      section: "Main",
-      items: [
-        {
-          label: "Home",
-          path: `/app/${selectedServer.shortName}/dashboard`,
-          icon: <IconHome size={24} aria-hidden="true" />,
-        },
-        {
-          label: "Servers",
-          path: `/app/${selectedServer.shortName}/servers`,
-          icon: <IconServer size={24} aria-hidden="true" />,
-        },
-      ],
-    },
-    {
-      section: "Actions",
-      items: [
-        {
-          label: "Transactions",
-          path: `/app/${selectedServer.shortName}/transactions`,
-          icon: <IconTransfer size={24} aria-hidden="true" />,
-        },
-      ],
-    },
-  ];
+  const NavigationItems = getNavigationItems(selectedServer.shortName);
 
   return (
     <>
