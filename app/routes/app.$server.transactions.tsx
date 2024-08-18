@@ -9,6 +9,7 @@ import { Suspense } from "react";
 import { namedAction } from "remix-utils/named-action";
 
 import { TransactionsTable } from "~/components/DataTable/TransactionsTable";
+import { Separator } from "~/components/ui/separator";
 import { SpokeSpinner } from "~/components/ui/spinner";
 import {
   deposit,
@@ -180,15 +181,17 @@ export default function Transactions() {
   return (
     <div className="mx-auto flex w-full max-w-7xl grow flex-col">
       <div className="top-0 z-0">
-        <div
-          title="Transactions"
-          className="relative flex items-start gap-6 pb-4"
-        >
-          <h1 className="flex-auto text-xl font-semibold">Transactions</h1>
+        <div title="Transactions" className="space-y-0.5">
+          <h1 className="flex-auto text-2xl font-semibold">Transactions</h1>
+          <p className="text-sm text-muted-foreground">
+            View and manage your transaction history.
+          </p>
         </div>
       </div>
 
-      <section className="container grid items-center gap-2 pb-8">
+      <Separator className="mb-4 mt-2 lg:mb-6 lg:mt-4" />
+
+      <section className="grid items-center gap-2 pb-8">
         <Suspense
           fallback={
             <div className="flex h-64 items-center justify-center">

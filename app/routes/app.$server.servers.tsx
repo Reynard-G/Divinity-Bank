@@ -10,6 +10,7 @@ import { Suspense } from "react";
 
 import ServerSelectionCard from "~/components/ServerSelectionCard";
 import ServerSelectionCardSkeletonList from "~/components/Skeleton/ServerSelectionCardSkeletonList";
+import { Separator } from "~/components/ui/separator";
 import { type Server } from "~/lib/db/schema";
 import {
   getBalance,
@@ -62,68 +63,81 @@ export default function Servers() {
   const location = useLocation();
 
   return (
-    <Suspense fallback={<ServerSelectionCardSkeletonList />}>
-      <Await
-        resolve={servers}
-        errorElement={
-          <div className="flex h-32 items-center justify-center">
-            <p className="text-red-500">
-              Error loading servers, please try again later.
-            </p>
-          </div>
-        }
-      >
-        {(resolvedServers: Server[]) => (
-          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {resolvedServers.map((server) => (
-              // Render base server card while waiting for user data
-              <Suspense
-                key={server.id}
-                fallback={
-                  <ServerSelectionCard
-                    selectedServer={location.pathname
-                      .split("/")
-                      .includes(server.shortName)}
-                    serverName={server.name}
-                    serverShortName={server.shortName}
-                    serverBannerImage={server.bannerLink}
-                    serverBalance={undefined}
-                    transactionsAmount={undefined}
-                    lastTransactionDate={undefined}
-                    onClick={() => setSelectedServer(server)}
-                  />
-                }
-              >
-                <Await resolve={userData}>
-                  {(resolvedUserData) => {
-                    const serverUserData = resolvedUserData.find(
-                      (data) => data.shortName === server.shortName,
-                    );
-                    return (
-                      <ServerSelectionCard
-                        selectedServer={location.pathname
-                          .split("/")
-                          .includes(server.shortName)}
-                        serverName={server.name}
-                        serverShortName={server.shortName}
-                        serverBannerImage={server.bannerLink}
-                        serverBalance={serverUserData?.balance}
-                        transactionsAmount={serverUserData?.transactionsCount}
-                        lastTransactionDate={
-                          serverUserData?.latestTransactionDate
-                            ? new Date(serverUserData.latestTransactionDate)
-                            : undefined
-                        }
-                        onClick={() => setSelectedServer(server)}
-                      />
-                    );
-                  }}
-                </Await>
-              </Suspense>
-            ))}
-          </div>
-        )}
-      </Await>
-    </Suspense>
+    <div className="mx-auto flex w-full max-w-7xl grow flex-col">
+      <div className="top-0 z-0">
+        <div title="Servers" className="space-y-0.5">
+          <h1 className="flex-auto text-2xl font-semibold">Servers</h1>
+          <p className="text-sm text-muted-foreground">
+            View and select a server to manage your finances.
+          </p>
+        </div>
+      </div>
+
+      <Separator className="mb-4 mt-2 lg:mb-6 lg:mt-4" />
+
+      <Suspense fallback={<ServerSelectionCardSkeletonList />}>
+        <Await
+          resolve={servers}
+          errorElement={
+            <div className="flex h-32 items-center justify-center">
+              <p className="text-red-500">
+                Error loading servers, please try again later.
+              </p>
+            </div>
+          }
+        >
+          {(resolvedServers: Server[]) => (
+            <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-3">
+              {resolvedServers.map((server) => (
+                // Render base server card while waiting for user data
+                <Suspense
+                  key={server.id}
+                  fallback={
+                    <ServerSelectionCard
+                      selectedServer={location.pathname
+                        .split("/")
+                        .includes(server.shortName)}
+                      serverName={server.name}
+                      serverShortName={server.shortName}
+                      serverBannerImage={server.bannerLink}
+                      serverBalance={undefined}
+                      transactionsAmount={undefined}
+                      lastTransactionDate={undefined}
+                      onClick={() => setSelectedServer(server)}
+                    />
+                  }
+                >
+                  <Await resolve={userData}>
+                    {(resolvedUserData) => {
+                      const serverUserData = resolvedUserData.find(
+                        (data) => data.shortName === server.shortName,
+                      );
+                      return (
+                        <ServerSelectionCard
+                          selectedServer={location.pathname
+                            .split("/")
+                            .includes(server.shortName)}
+                          serverName={server.name}
+                          serverShortName={server.shortName}
+                          serverBannerImage={server.bannerLink}
+                          serverBalance={serverUserData?.balance}
+                          transactionsAmount={serverUserData?.transactionsCount}
+                          lastTransactionDate={
+                            serverUserData?.latestTransactionDate
+                              ? new Date(serverUserData.latestTransactionDate)
+                              : undefined
+                          }
+                          onClick={() => setSelectedServer(server)}
+                        />
+                      );
+                    }}
+                  </Await>
+                </Suspense>
+              ))}
+            </div>
+          )}
+        </Await>
+      </Suspense>
+    </div>
   );
 }
