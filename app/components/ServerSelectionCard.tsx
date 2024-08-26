@@ -53,9 +53,14 @@ export default function ServerSelectionCard({
               className={cn(
                 "h-full w-full object-cover object-center brightness-50 grayscale",
                 selectedServer && "brightness-75 grayscale-0",
-                imageLoaded && "duration-500 animate-in fade-in",
+                imageLoaded
+                  ? "opacity-100 duration-500 animate-in fade-in"
+                  : "opacity-0",
               )}
               onLoad={() => setImageLoaded(true)}
+              ref={(img) => {
+                if (img && img.complete) setImageLoaded(true);
+              }}
             />
           </div>
         </div>
