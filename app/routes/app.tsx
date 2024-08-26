@@ -14,6 +14,7 @@ import {
   IconHome,
   IconMenu,
   IconServer,
+  IconSettings,
   IconTransfer,
 } from "@tabler/icons-react";
 import { useState } from "react";
@@ -55,33 +56,45 @@ import { authenticator } from "~/lib/services/auth.server";
 import { cn } from "~/lib/utils/cn";
 import { type Server as SelectedServer } from "~/types/Server";
 
-const getNavigationItems = (serverShortName: string) => [
-  {
-    section: "Main",
+const getNavigationItems = (serverShortName: string) => ({
+  topSections: [
+    {
+      section: "Main",
+      items: [
+        {
+          label: "Home",
+          path: `/app/${serverShortName}/dashboard`,
+          icon: <IconHome size={24} aria-hidden="true" />,
+        },
+        {
+          label: "Servers",
+          path: `/app/${serverShortName}/servers`,
+          icon: <IconServer size={24} aria-hidden="true" />,
+        },
+      ],
+    },
+    {
+      section: "Actions",
+      items: [
+        {
+          label: "Transactions",
+          path: `/app/${serverShortName}/transactions`,
+          icon: <IconTransfer size={24} aria-hidden="true" />,
+        },
+      ],
+    },
+  ],
+  bottomSection: {
+    section: "User",
     items: [
       {
-        label: "Home",
-        path: `/app/${serverShortName}/dashboard`,
-        icon: <IconHome size={24} aria-hidden="true" />,
-      },
-      {
-        label: "Servers",
-        path: `/app/${serverShortName}/servers`,
-        icon: <IconServer size={24} aria-hidden="true" />,
+        label: "Settings",
+        path: "/app/settings",
+        icon: <IconSettings size={24} aria-hidden="true" />,
       },
     ],
   },
-  {
-    section: "Actions",
-    items: [
-      {
-        label: "Transactions",
-        path: `/app/${serverShortName}/transactions`,
-        icon: <IconTransfer size={24} aria-hidden="true" />,
-      },
-    ],
-  },
-];
+});
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const user = await authenticator.isAuthenticated(request, {
@@ -191,10 +204,24 @@ export default function App() {
                 </div>
 
                 {/* Sidebar Navigation */}
-                <div className="flex flex-col overflow-y-scroll py-3 pl-3 pr-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
-                  {NavigationItems.map((section) => (
-                    <SidebarSection key={section.section}>
-                      {section.items.map((item) => (
+                <div className="flex h-full flex-col justify-between overflow-y-auto py-3 pl-3 pr-1 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
+                  <div>
+                    {NavigationItems.topSections.map((section) => (
+                      <SidebarSection key={section.section}>
+                        {section.items.map((item) => (
+                          <SidebarItem
+                            key={item.label}
+                            label={item.label}
+                            path={item.path}
+                            icon={item.icon}
+                          />
+                        ))}
+                      </SidebarSection>
+                    ))}
+                  </div>
+                  <div>
+                    <SidebarSection>
+                      {NavigationItems.bottomSection.items.map((item) => (
                         <SidebarItem
                           key={item.label}
                           label={item.label}
@@ -203,7 +230,7 @@ export default function App() {
                         />
                       ))}
                     </SidebarSection>
-                  ))}
+                  </div>
                 </div>
               </div>
 
@@ -288,11 +315,10 @@ export default function App() {
                           <span className="sr-only">Divinity Bank</span>
                         </Link>
 
-                        {NavigationItems.map((section) =>
+                        {NavigationItems.topSections.flatMap((section) =>
                           section.items.map((item) => (
                             <SheetClose key={item.label} asChild>
-                              <NavLink key={item.label} to={item.path}>
-                                {/* Move `className` logic to <span> due to `asChild` treating `className` as a literal string */}
+                              <NavLink to={item.path}>
                                 {({ isActive }) => (
                                   <span
                                     className={cn(
@@ -308,6 +334,23 @@ export default function App() {
                             </SheetClose>
                           )),
                         )}
+                        {NavigationItems.bottomSection.items.map((item) => (
+                          <SheetClose key={item.label} asChild>
+                            <NavLink to={item.path}>
+                              {({ isActive }) => (
+                                <span
+                                  className={cn(
+                                    "font-semibold transition-colors duration-200 hover:text-foreground",
+                                    !isActive &&
+                                      "font-medium text-muted-foreground",
+                                  )}
+                                >
+                                  {item.label}
+                                </span>
+                              )}
+                            </NavLink>
+                          </SheetClose>
+                        ))}
                       </nav>
                     </SheetContent>
                   </Sheet>
