@@ -3,6 +3,11 @@ import { useState } from "react";
 
 import { cn } from "~/lib/utils/cn";
 
+const images = ["404_1.jpg", "404_2.jpg", "404_3.jpg", "404_4.jpg"];
+const offsets = Array.from({ length: images.length }, (_, i) =>
+  i % 2 === 0 ? "translate-y-8" : "-translate-y-8",
+);
+
 export default function CatchAllRoute() {
   const [isHovered, setIsHovered] = useState(false);
   const navigate = useNavigate();
@@ -12,27 +17,19 @@ export default function CatchAllRoute() {
     navigate(-1);
   };
 
-  // Define offsets for each image
-  const offsets = [
-    "-translate-y-8",
-    "translate-y-4",
-    "-translate-y-6",
-    "translate-y-10",
-  ];
-
   return (
     <main className="flex h-screen items-center justify-center bg-[#161616]">
-      <div className="relative -top-16 flex flex-col items-center justify-center text-center">
+      <div className="relative -top-4 flex flex-col items-center justify-center p-8 text-center md:-top-16">
         <div
-          className="relative mb-8 h-72 w-[400px] overflow-hidden"
+          className="relative mb-8 h-72 w-[256px] overflow-hidden sm:w-[384px] md:w-[512px]"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          {[1, 2, 3, 4].map((num, index) => (
+          {images.map((image, index) => (
             <img
-              key={num}
-              src={`https://imgs.divinity.milklegend.xyz/404_${num}.jpg`}
-              alt={`404 part ${num}`}
+              key={image}
+              src={`https://imgs.divinity.milklegend.xyz/${image}`}
+              alt={`404 pt. ${index + 1}`}
               className={cn(
                 "absolute h-full w-1/4 object-cover opacity-100 mix-blend-lighten brightness-125 transition-all duration-500 ease-in-out animate-in fade-in",
                 isHovered
