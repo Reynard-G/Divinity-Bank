@@ -1,6 +1,7 @@
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
+import { useFetcher } from "@remix-run/react";
 import { IconDownload } from "@tabler/icons-react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
 import { Button } from "~/components/ui/button";
@@ -24,32 +25,33 @@ import {
   exportTransactionsTable,
 } from "~/lib/utils/exportTable";
 
-interface ExportTransactionsDialogProps {
-  allTransactions: Transaction[];
-}
-
-export default function ExportTransactionsDialog({
-  allTransactions,
-}: ExportTransactionsDialogProps) {
+export default function ExportTransactionsDialog() {
+  const fetcher = useFetcher();
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [fileType, setFileType] = useState<ExportOptions["format"]>("csv");
   const [filename, setFilename] = useState<string>(
     `transactions-${new Date().toISOString().split("T")[0]}`,
   );
 
-  const handleExport = () => {
-    try {
-      exportTransactionsTable(allTransactions, {
-        filename,
-        format: fileType,
-      });
-    } catch (error) {
-      console.error("Error exporting transactions:", error);
-      toast.error("Error exporting transactions. Please try again.");
-    } finally {
-      setIsDialogOpen(false);
+  useEffect(() => {
+    if (fetcher.data && fetcher.state === "idle") {
+      if (fetcher.data.success) {
+        try {
+          exportTransactionsTable(fetcher.data.data as Transaction[], {
+            filename,
+            format: fileType,
+          });
+          toast.success("Transactions exported successfully");
+          setIsDialogOpen(false);
+        } catch (error) {
+          console.error("Error exporting transactions:", error);
+          toast.error("Error exporting transactions. Please try again.");
+        }
+      } else {
+        toast.error(fetcher.data.message || "Error exporting transactions");
+      }
     }
-  };
+  }, [fetcher.data, fetcher.state]); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
@@ -69,64 +71,80 @@ export default function ExportTransactionsDialog({
           <IconDownload size={30} aria-hidden="true" />
         </div>
 
-        <div className="mb-2 grid gap-2 px-12 text-center">
-          <h1 className="mb-2 text-lg font-semibold">Export</h1>
+        <fetcher.Form
+          method="post"
+          action="?/export"
+          encType="multipart/form-data"
+        >
+          <div className="mb-2 grid gap-2 px-12 text-center">
+            <h1 className="mb-2 text-lg font-semibold">Export</h1>
 
-          <div>
-            <p className="text-base leading-6 text-muted-foreground">
-              Are you sure you want to export & download all transactions
-              without any filters applied?
-            </p>
-          </div>
-
-          <div className="mt-3 grid gap-2">
-            <div className="relative grid grid-cols-1 gap-1">
-              <p className="text-left text-sm text-muted-foreground">
-                File Type
+            <div>
+              <p className="text-base leading-6 text-muted-foreground">
+                Are you sure you want to export & download all transactions
+                without any filters applied?
               </p>
-              <Select
-                value={fileType}
-                onValueChange={(value) =>
-                  setFileType(value as ExportOptions["format"])
-                }
-              >
-                <SelectTrigger>
-                  <SelectValue placeholder="Select file type" />
-                </SelectTrigger>
-
-                <SelectContent>
-                  <SelectItem value="csv">
-                    .csv (Comma-separated Values)
-                  </SelectItem>
-                  <SelectItem value="json">
-                    .json (JavaScript Object Notation)
-                  </SelectItem>
-                </SelectContent>
-              </Select>
             </div>
 
-            <div className="relative grid grid-cols-1 gap-1">
-              <p className="text-left text-sm text-muted-foreground">
-                Custom File Name&nbsp;
-                <small className="text-muted-foreground">(optional)</small>
-              </p>
-              <Input
-                placeholder="Enter file name"
-                value={filename}
-                onChange={(e) => setFilename(e.target.value)}
-              />
+            <div className="mt-3 grid gap-2">
+              <div className="relative grid grid-cols-1 gap-1">
+                <p className="text-left text-sm text-muted-foreground">
+                  File Type
+                </p>
+                <Select
+                  value={fileType}
+                  onValueChange={(value) =>
+                    setFileType(value as ExportOptions["format"])
+                  }
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select file type" />
+                  </SelectTrigger>
+
+                  <SelectContent>
+                    <SelectItem value="csv">
+                      .csv (Comma-separated Values)
+                    </SelectItem>
+                    <SelectItem value="json">
+                      .json (JavaScript Object Notation)
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="relative grid grid-cols-1 gap-1">
+                <p className="text-left text-sm text-muted-foreground">
+                  Custom File Name&nbsp;
+                  <small className="text-muted-foreground">(optional)</small>
+                </p>
+                <Input
+                  type="text"
+                  name="filename"
+                  placeholder="Enter file name"
+                  value={filename}
+                  onChange={(e) => setFilename(e.target.value)}
+                />
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="flex justify-between gap-5 border-t border-[#313131] px-12 py-6">
-          <Button variant="outline" className="w-full">
-            Cancel
-          </Button>
-          <Button className="w-full" onClick={handleExport}>
-            Download
-          </Button>
-        </div>
+          <Input type="hidden" name="fileType" value={fileType} />
+
+          <div className="flex justify-between gap-5 border-t border-[#313131] px-12 py-6">
+            <Button type="button" variant="outline" className="w-full">
+              Cancel
+            </Button>
+            <Button
+              type="submit"
+              name="_action"
+              value="export"
+              className="w-full"
+              disabled={fetcher.state === "submitting"}
+            >
+              {fetcher.state === "submitting" ? "Exporting..." : "Download"}
+            </Button>
+          </div>
+        </fetcher.Form>
       </DialogContent>
     </Dialog>
   );

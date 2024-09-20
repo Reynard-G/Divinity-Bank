@@ -172,6 +172,19 @@ export async function action({ request, params }: ActionFunctionArgs) {
           ),
         );
     },
+    async export() {
+      return getAllTransactions(userId, server)
+        .then((transactions) => json({ success: true, data: transactions }))
+        .catch((error) =>
+          json(
+            {
+              success: false,
+              message: "Export failed: " + getErrorMessage(error),
+            },
+            { status: 500 },
+          ),
+        );
+    },
   });
 }
 
