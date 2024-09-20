@@ -5,10 +5,12 @@ import {
   type MetaFunction,
 } from "@remix-run/node";
 import { Link, useFetcher } from "@remix-run/react";
+import { getClientIPAddress } from "remix-utils/get-client-ip-address";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { authenticator } from "~/lib/services/auth.server";
+import { rateLimiter } from "~/lib/services/ratelimit.server";
 
 type LoginFetcherResponse = {
   error?: string;
@@ -28,7 +30,18 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
+  const ip = getClientIPAddress(request);
+  const identifier = `login:${ip}`;
+
   try {
+    const { success } = await rateLimiter.limit(identifier);
+    if (!success) {
+      return json<LoginFetcherResponse>(
+        { error: "Too many login attempts. Please try again later." },
+        { status: 429 },
+      );
+    }
+
     return await authenticator.authenticate("user-pass", request, {
       successRedirect: "/app",
       throwOnError: true,
