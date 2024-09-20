@@ -1,8 +1,7 @@
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
 import {
   Await,
-  Form,
-  useActionData,
+  useFetcher,
   useLoaderData,
   useNavigation,
 } from "@remix-run/react";
@@ -29,12 +28,12 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { SpokeSpinner } from "~/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useMediaQuery } from "~/hooks/use-media-query";
-import { type action, type loader } from "~/routes/app.$server.transactions";
+import { type loader } from "~/routes/app.$server.transactions";
 import { NonSensitiveUser } from "~/types/User";
 
 export default function CreateTransactionsDialog() {
   const { allUsers } = useLoaderData<typeof loader>();
-  const actionData = useActionData<typeof action>();
+  const fetcher = useFetcher();
   const navigation = useNavigation();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
@@ -109,14 +108,20 @@ export default function CreateTransactionsDialog() {
   );
 
   useEffect(() => {
-    if (!actionData) return;
-
-    if (!actionData.success) {
-      toast.error(actionData.message);
-    } else {
-      toast.success(actionData.message);
+    if (fetcher.data && fetcher.state === "idle") {
+      if (fetcher.data.success) {
+        try {
+          toast.success(fetcher.data.message || "Transaction successful");
+          setIsDialogOpen(false);
+        } catch (error) {
+          console.error("Error submitting transaction:", error);
+          toast.error("Error submitting transaction. Please try again.");
+        }
+      } else {
+        toast.error(fetcher.data.message || "Error submitting transaction");
+      }
     }
-  }, [actionData]);
+  }, [fetcher.data, fetcher.state]);
 
   return (
     <>
@@ -137,7 +142,7 @@ export default function CreateTransactionsDialog() {
             <IconPlusMinus size={30} aria-hidden="true" />
           </div>
 
-          <Form
+          <fetcher.Form
             method="post"
             action={`?/${selectedTab}`}
             encType="multipart/form-data"
@@ -336,7 +341,7 @@ export default function CreateTransactionsDialog() {
                 </Button>
               </div>
             </div>
-          </Form>
+          </fetcher.Form>
         </DialogContent>
       </Dialog>
     </>
