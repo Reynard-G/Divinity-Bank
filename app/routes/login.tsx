@@ -35,7 +35,10 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   } catch (error) {
     if (error instanceof Response) throw error;
-    return json<LoginFetcherResponse>({ error: "Invalid username or password" }, { status: 401 });
+    return json<LoginFetcherResponse>(
+      { error: "Invalid username or password" },
+      { status: 401 },
+    );
   }
 }
 

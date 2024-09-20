@@ -25,8 +25,14 @@ import {
   exportTransactionsTable,
 } from "~/lib/utils/exportTable";
 
+export type ExportTransactionsDialogFetcherResponse = {
+  success: boolean;
+  message?: string;
+  data?: Transaction[];
+};
+
 export default function ExportTransactionsDialog() {
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<ExportTransactionsDialogFetcherResponse>();
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [fileType, setFileType] = useState<ExportOptions["format"]>("csv");
   const [filename, setFilename] = useState<string>(

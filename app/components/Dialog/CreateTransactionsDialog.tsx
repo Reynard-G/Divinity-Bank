@@ -31,9 +31,14 @@ import { useMediaQuery } from "~/hooks/use-media-query";
 import { type loader } from "~/routes/app.$server.transactions";
 import { NonSensitiveUser } from "~/types/User";
 
+export type CreateTransactionsDialogFetcherResponse = {
+  success: boolean;
+  message?: string;
+};
+
 export default function CreateTransactionsDialog() {
   const { allUsers } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<CreateTransactionsDialogFetcherResponse>();
   const navigation = useNavigation();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);

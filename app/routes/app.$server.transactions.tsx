@@ -9,6 +9,8 @@ import { Suspense } from "react";
 import { namedAction } from "remix-utils/named-action";
 
 import { TransactionsTable } from "~/components/DataTable/TransactionsTable";
+import { CreateTransactionsDialogFetcherResponse } from "~/components/Dialog/CreateTransactionsDialog";
+import { ExportTransactionsDialogFetcherResponse } from "~/components/Dialog/ExportTransactionsDialog";
 import { Separator } from "~/components/ui/separator";
 import { SpokeSpinner } from "~/components/ui/spinner";
 import {
@@ -75,7 +77,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
       const proofOfDeposit = formData.get("proofOfDeposit")?.toString();
 
       if (!amount || !proofOfDeposit) {
-        return json(
+        return json<CreateTransactionsDialogFetcherResponse>(
           {
             success: false,
             message: "Amount and proof of deposit are required",
@@ -85,16 +87,21 @@ export async function action({ request, params }: ActionFunctionArgs) {
       }
 
       if (typeof amount === "string" && isNaN(Number(amount))) {
-        return json(
+        return json<CreateTransactionsDialogFetcherResponse>(
           { success: false, message: "Invalid amount" },
           { status: 400 },
         );
       }
 
       return deposit(userId, Number(amount), proofOfDeposit, server)
-        .then(() => json({ success: true, message: "Deposit successful" }))
+        .then(() =>
+          json<CreateTransactionsDialogFetcherResponse>({
+            success: true,
+            message: "Deposit successful",
+          }),
+        )
         .catch((error) =>
-          json(
+          json<CreateTransactionsDialogFetcherResponse>(
             {
               success: false,
               message: "Deposit failed: " + getErrorMessage(error),
@@ -107,23 +114,28 @@ export async function action({ request, params }: ActionFunctionArgs) {
       const amount = formData.get("amount")?.toString();
 
       if (!amount) {
-        return json(
+        return json<CreateTransactionsDialogFetcherResponse>(
           { success: false, message: "Amount is required" },
           { status: 400 },
         );
       }
 
       if (typeof amount === "string" && isNaN(Number(amount))) {
-        return json(
+        return json<CreateTransactionsDialogFetcherResponse>(
           { success: false, message: "Invalid amount" },
           { status: 400 },
         );
       }
 
       return withdraw(userId, Number(amount), server)
-        .then(() => json({ success: true, message: "Withdrawal successful" }))
+        .then(() =>
+          json<CreateTransactionsDialogFetcherResponse>({
+            success: true,
+            message: "Withdrawal successful",
+          }),
+        )
         .catch((error) =>
-          json(
+          json<CreateTransactionsDialogFetcherResponse>(
             {
               success: false,
               message: "Withdrawal failed: " + getErrorMessage(error),
@@ -137,7 +149,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
       const recipient = formData.get("recipient")?.toString();
 
       if (!amount || !recipient) {
-        return json(
+        return json<CreateTransactionsDialogFetcherResponse>(
           {
             success: false,
             message: "Amount and recipient are required",
@@ -147,23 +159,28 @@ export async function action({ request, params }: ActionFunctionArgs) {
       }
 
       if (typeof amount === "string" && isNaN(Number(amount))) {
-        return json(
+        return json<CreateTransactionsDialogFetcherResponse>(
           { success: false, message: "Invalid amount" },
           { status: 400 },
         );
       }
 
       if (recipient.toString() === userId.toString()) {
-        return json(
+        return json<CreateTransactionsDialogFetcherResponse>(
           { success: false, message: "Unable to transfer to yourself" },
           { status: 400 },
         );
       }
 
       return transfer(userId, Number(recipient), Number(amount), server)
-        .then(() => json({ success: true, message: "Transfer successful" }))
+        .then(() =>
+          json<CreateTransactionsDialogFetcherResponse>({
+            success: true,
+            message: "Transfer successful",
+          }),
+        )
         .catch((error) =>
-          json(
+          json<CreateTransactionsDialogFetcherResponse>(
             {
               success: false,
               message: "Transfer failed: " + getErrorMessage(error),
@@ -174,9 +191,14 @@ export async function action({ request, params }: ActionFunctionArgs) {
     },
     async export() {
       return getAllTransactions(userId, server)
-        .then((transactions) => json({ success: true, data: transactions }))
+        .then((transactions) =>
+          json<ExportTransactionsDialogFetcherResponse>({
+            success: true,
+            data: transactions,
+          }),
+        )
         .catch((error) =>
-          json(
+          json<ExportTransactionsDialogFetcherResponse>(
             {
               success: false,
               message: "Export failed: " + getErrorMessage(error),
