@@ -4,11 +4,15 @@ import {
   type LoaderFunctionArgs,
   type MetaFunction,
 } from "@remix-run/node";
-import { Form, Link, useActionData } from "@remix-run/react";
+import { Link, useFetcher } from "@remix-run/react";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { authenticator } from "~/lib/services/auth.server";
+
+type LoginFetcherResponse = {
+  error?: string;
+};
 
 export const meta: MetaFunction = () => {
   return [
@@ -31,12 +35,12 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   } catch (error) {
     if (error instanceof Response) throw error;
-    return json({ error: "Invalid username or password" }, { status: 401 });
+    return json<LoginFetcherResponse>({ error: "Invalid username or password" }, { status: 401 });
   }
 }
 
 export default function Login() {
-  const actionData = useActionData<typeof action>();
+  const fetcher = useFetcher<LoginFetcherResponse>();
 
   return (
     <main className="relative h-dvh">
@@ -51,7 +55,7 @@ export default function Login() {
             </p>
           </div>
 
-          <Form method="post" className="flex flex-col gap-2">
+          <fetcher.Form method="post" className="flex flex-col gap-2">
             <Input
               placeholder="Username"
               type="text"
@@ -67,8 +71,8 @@ export default function Login() {
               className="delay-200 duration-700 animate-in fade-in slide-in-from-right-4 fill-mode-both"
             />
 
-            {actionData?.error && (
-              <p className="text-sm text-red-500">{actionData.error}</p>
+            {fetcher.data?.error && (
+              <p className="text-sm text-red-500">{fetcher.data.error}</p>
             )}
 
             <Button
@@ -77,7 +81,7 @@ export default function Login() {
             >
               Log in
             </Button>
-          </Form>
+          </fetcher.Form>
 
           <p className="text-center text-sm text-muted-foreground delay-500 duration-500 animate-in fade-in slide-in-from-bottom-3 fill-mode-both">
             Need to create an account?&nbsp;
