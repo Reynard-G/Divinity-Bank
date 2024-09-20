@@ -14,8 +14,7 @@
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
     "start": "remix-serve ./build/server/index.js",
-    "typecheck": "tsc",
-    "typegen": "wrangler types"
+    "typecheck": "tsc"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "^3.627.0",
