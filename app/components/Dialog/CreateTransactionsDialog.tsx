@@ -1,10 +1,5 @@
 import * as VisuallyHidden from "@radix-ui/react-visually-hidden";
-import {
-  Await,
-  useFetcher,
-  useLoaderData,
-  useNavigation,
-} from "@remix-run/react";
+import { Await, useFetcher, useLoaderData } from "@remix-run/react";
 import { IconPlus, IconPlusMinus, IconSelector } from "@tabler/icons-react";
 import { Suspense, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -39,7 +34,6 @@ export type CreateTransactionsDialogFetcherResponse = {
 export default function CreateTransactionsDialog() {
   const { allUsers } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<CreateTransactionsDialogFetcherResponse>();
-  const navigation = useNavigation();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [isUsersPopoverOpen, setIsUsersPopoverOpen] = useState<boolean>(false);
@@ -50,7 +44,7 @@ export default function CreateTransactionsDialog() {
   >("deposit");
   const [fileError, setFileError] = useState("");
 
-  const isSubmitting = navigation.state === "submitting";
+  const isSubmitting = fetcher.state === "submitting";
 
   const validateFile = (file: File) => {
     return new Promise<void>((resolve, reject) => {
