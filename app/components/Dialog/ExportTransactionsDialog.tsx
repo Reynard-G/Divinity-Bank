@@ -39,6 +39,8 @@ export default function ExportTransactionsDialog() {
     `transactions-${new Date().toISOString().split("T")[0]}`,
   );
 
+  const isSubmitting = fetcher.state === "submitting";
+
   useEffect(() => {
     if (fetcher.data && fetcher.state === "idle") {
       if (fetcher.data.success) {
@@ -145,9 +147,9 @@ export default function ExportTransactionsDialog() {
               name="_action"
               value="export"
               className="w-full"
-              disabled={fetcher.state === "submitting"}
+              disabled={isSubmitting}
             >
-              {fetcher.state === "submitting" ? "Exporting..." : "Download"}
+              {isSubmitting ? "Exporting..." : "Download"}
             </Button>
           </div>
         </fetcher.Form>

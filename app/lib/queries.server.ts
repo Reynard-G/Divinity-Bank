@@ -16,11 +16,10 @@ import {
   users,
 } from "~/lib/db/schema";
 import { filterColumn } from "~/lib/utils/filterColumns";
+import { formatCurrency } from "~/lib/utils/formatCurrency";
 import { GetTransactionsSchema } from "~/lib/validations";
 import { type DrizzleWhere } from "~/types/DataTable";
 import { NonSensitiveUser } from "~/types/User";
-
-import { formatCurrency } from "./utils/formatCurrency";
 
 /**
  * Get all servers.

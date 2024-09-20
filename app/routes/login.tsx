@@ -9,6 +9,7 @@ import { getClientIPAddress } from "remix-utils/get-client-ip-address";
 
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
+import { SpokeSpinner } from "~/components/ui/spinner";
 import { authenticator } from "~/lib/services/auth.server";
 import { rateLimiter } from "~/lib/services/ratelimit.server";
 
@@ -58,6 +59,8 @@ export async function action({ request }: ActionFunctionArgs) {
 export default function Login() {
   const fetcher = useFetcher<LoginFetcherResponse>();
 
+  const isSubmitting = fetcher.state === "submitting";
+
   return (
     <main className="relative h-dvh">
       <div className="flex h-full items-center justify-center">
@@ -94,7 +97,9 @@ export default function Login() {
             <Button
               type="submit"
               className="mt-4 w-full delay-300 duration-500 animate-in fade-in slide-in-from-bottom-5 fill-mode-both"
+              disabled={isSubmitting}
             >
+              {isSubmitting && <SpokeSpinner size="sm" className="mr-1" />}
               Log in
             </Button>
           </fetcher.Form>
