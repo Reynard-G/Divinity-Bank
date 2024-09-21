@@ -7,7 +7,7 @@ kill_timeout = 5
   strategy = "rolling"
   max_unavailable = 1
 
-[http_service]
+[[services]]
   internal_port = 8080
   processes = ["app"]
   protocol = "tcp"
@@ -25,7 +25,7 @@ kill_timeout = 5
     port = 443
 
   [[services.tcp_checks]]
-    grace_period = "500s"
+    grace_period = "10s"
     interval = "15s"
     restart_limit = 6
     timeout = "2s"

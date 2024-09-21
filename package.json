@@ -13,7 +13,7 @@
     "introspect": "drizzle-kit introspect",
     "generate": "drizzle-kit generate",
     "migrate": "drizzle-kit migrate",
-    "start": "remix-serve ./build/server/index.js",
+    "start": "PORT=8080 remix-serve ./build/server/index.js",
     "typecheck": "tsc"
   },
   "dependencies": {
