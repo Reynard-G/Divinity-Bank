@@ -31,11 +31,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const ip = getClientIPAddress(request);
+  const ip = getClientIPAddress(request) ?? "127.0.0.1";
   const identifier = `login:${ip}`;
 
   try {
     const { success } = await rateLimiter.limit(identifier);
+
     if (!success) {
       return json<LoginFetcherResponse>(
         { error: "Too many login attempts. Please try again later." },
