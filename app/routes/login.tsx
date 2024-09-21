@@ -35,13 +35,15 @@ export async function action({ request }: ActionFunctionArgs) {
   const identifier = `login:${ip}`;
 
   try {
-    const { success } = await rateLimiter.limit(identifier);
+    if (process.env.NODE_ENV !== "development") {
+      const { success } = await rateLimiter.limit(identifier);
 
-    if (!success) {
-      return json<LoginFetcherResponse>(
-        { error: "Too many login attempts. Please try again later." },
-        { status: 429 },
-      );
+      if (!success) {
+        return json<LoginFetcherResponse>(
+          { error: "Too many login attempts. Please try again later." },
+          { status: 429 },
+        );
+      }
     }
 
     return await authenticator.authenticate("user-pass", request, {
