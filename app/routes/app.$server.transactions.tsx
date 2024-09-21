@@ -50,7 +50,15 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     getTransactionStatuses(),
   ]);
 
-  return defer({ transactions, types, statuses, allUsers, allTransactions });
+  return defer(
+    { transactions, types, statuses, allUsers, allTransactions },
+    {
+      status: 200,
+      headers: {
+        "Cache-Control": "private, max-age=30",
+      },
+    },
+  );
 }
 
 export async function action({ request, params }: ActionFunctionArgs) {
