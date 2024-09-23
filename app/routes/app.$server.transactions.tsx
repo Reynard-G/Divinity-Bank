@@ -44,14 +44,13 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
 
   const transactions = getTransactions(userId, params.server, search);
   const allUsers = getNonSensitiveUserInfo();
-  const allTransactions = getAllTransactions(userId, params.server);
   const [types, statuses] = await Promise.all([
     getPaymentTypes(),
     getTransactionStatuses(),
   ]);
 
   return defer(
-    { transactions, types, statuses, allUsers, allTransactions },
+    { transactions, types, statuses, allUsers },
     {
       status: 200,
       headers: {
