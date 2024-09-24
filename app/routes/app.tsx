@@ -123,7 +123,7 @@ export default function App() {
     <>
       <div className="h-full overflow-hidden">
         <div className="h-full bg-[#161616] text-[#ededed]">
-          <div className="box-border h-screen w-full flex-grow overflow-y-scroll">
+          <div className="box-border h-screen w-full flex-grow overflow-y-auto">
             <div className="grid auto-cols-auto md:pl-[248px]">
               {/* Sidebar */}
               <div className="fixed bottom-0 left-0 top-0 z-0 box-border hidden w-[248px] flex-col border-r border-solid border-r-[#343434] bg-[#1c1c1c] md:flex">
@@ -237,7 +237,7 @@ export default function App() {
               {/* Main Content */}
               <div className="box-border flex min-h-full flex-col">
                 {/* Top Navigation */}
-                <nav className="sticky top-0 z-10 flex items-center border-b border-b-[#343434] bg-[#1c1c1c] px-4 py-2 pl-5">
+                <nav className="sticky top-0 z-10 flex items-center border-b border-b-[#343434] bg-[#1c1c1c] px-4 py-2 pl-5 h-16">
                   <div className="hidden flex-auto items-center justify-end gap-4 md:flex">
                     <Button variant="outline" asChild>
                       <a

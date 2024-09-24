@@ -53,7 +53,7 @@ export default function SettingsSidebarNav({
         </Select>
       </div>
 
-      <div className="hidden w-full overflow-x-auto bg-background px-1 py-2 md:block">
+      <div className="hidden w-full overflow-x-auto px-1 py-2 md:block">
         <nav
           className={cn(
             "flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-1",
