@@ -29,5 +29,8 @@ jobs:
         with:
           version: 9
 
+      - name: Install dependencies
+        run: pnpm install
+
       - name: 🔬 Lint
         run: pnpm run lint && pnpm run typecheck
