@@ -15,12 +15,6 @@ import SettingsSidebarNav from "~/components/Select/SettingsSidebarNav";
 import { Separator } from "~/components/ui/separator";
 
 const sidebarNavItems = [
-  // Change Password
-  {
-    title: "Profile",
-    icon: <IconUser size={18} />,
-    href: "/app/settings/profile",
-  },
   // Minecraft details
   {
     title: "Account",
@@ -50,8 +44,8 @@ export const meta: MetaFunction = () => {
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
-  if (url.pathname === "/app/settings") {
-    return redirect(`/app/settings/profile`);
+  if (url.pathname === "/app/settings" || url.pathname === "/app/settings/") {
+    return redirect(`/app/settings/account`);
   }
 
   return null;
@@ -59,7 +53,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Settings() {
   return (
-    <div className="mx-auto flex w-full max-w-7xl grow flex-col max-h-[calc(100vh-7rem)]">
+    <div className="mx-auto flex max-h-[calc(100vh-7rem)] w-full max-w-7xl grow flex-col">
       <div className="top-0 z-0">
         <div title="Transactions" className="space-y-0.5">
           <h1 className="flex-auto text-2xl font-semibold">Settings</h1>
@@ -71,12 +65,12 @@ export default function Settings() {
 
       <Separator className="mb-4 mt-2 lg:mb-6 lg:mt-4" />
 
-      <div className="flex flex-1 flex-col space-y-4 md:space-y-2 lg:overflow-hidden lg:flex-row lg:space-x-8 lg:space-y-0">
+      <div className="flex flex-1 flex-col space-y-4 md:space-y-2 lg:flex-row lg:space-x-8 lg:space-y-0 lg:overflow-hidden">
         <aside className="top-0 lg:sticky lg:w-1/3">
           <SettingsSidebarNav items={sidebarNavItems} />
         </aside>
 
-        <div className="flex w-full p-1 pr-4 pb-6">
+        <div className="flex w-full p-1 pb-6 pr-4">
           <Outlet />
         </div>
       </div>

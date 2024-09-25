@@ -84,7 +84,7 @@ export default function ExportTransactionsDialog() {
           action="?/export"
           encType="multipart/form-data"
         >
-          <div className="mb-2 grid gap-2 px-12 text-center">
+          <div className="mb-6 grid gap-2 px-12 text-center">
             <h1 className="mb-2 text-lg font-semibold">Export</h1>
 
             <div>

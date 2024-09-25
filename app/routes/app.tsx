@@ -104,7 +104,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const servers = await getServers();
 
   const url = new URL(request.url);
-  if (url.pathname === "/app") {
+  if (url.pathname === "/app" || url.pathname === "/app/") {
     return redirect(`/app/${servers[0].shortName}/dashboard`);
   }
 
@@ -237,7 +237,7 @@ export default function App() {
               {/* Main Content */}
               <div className="box-border flex min-h-full flex-col">
                 {/* Top Navigation */}
-                <nav className="sticky top-0 z-10 flex items-center border-b border-b-[#343434] bg-[#1c1c1c] px-4 py-2 pl-5 h-16">
+                <nav className="sticky top-0 z-10 flex h-16 items-center border-b border-b-[#343434] bg-[#1c1c1c] px-4 py-2 pl-5">
                   <div className="hidden flex-auto items-center justify-end gap-4 md:flex">
                     <Button variant="outline" asChild>
                       <a
