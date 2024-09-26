@@ -51,7 +51,7 @@ import {
   SheetTrigger,
 } from "~/components/ui/sheet";
 import { type Server } from "~/lib/db/schema";
-import { getServers } from "~/lib/queries.server";
+import { getServers } from "~/lib/get.queries.server";
 import { authenticator } from "~/lib/services/auth.server";
 import { cn } from "~/lib/utils/cn";
 import { type Server as SelectedServer } from "~/types/Server";

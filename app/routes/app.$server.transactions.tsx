@@ -14,15 +14,13 @@ import { ExportTransactionsDialogFetcherResponse } from "~/components/Dialog/Exp
 import { Separator } from "~/components/ui/separator";
 import { SpokeSpinner } from "~/components/ui/spinner";
 import {
-  deposit,
   getAllTransactions,
   getNonSensitiveUserInfo,
   getPaymentTypes,
   getTransactions,
   getTransactionStatuses,
-  transfer,
-  withdraw,
-} from "~/lib/queries.server";
+} from "~/lib/get.queries.server";
+import { deposit, transfer, withdraw } from "~/lib/post.queries.server";
 import { authenticator } from "~/lib/services/auth.server";
 import { uploadHandler } from "~/lib/services/s3.server";
 import { getErrorMessage } from "~/lib/utils/getErrorMessage";

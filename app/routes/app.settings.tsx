@@ -4,12 +4,7 @@ import {
   redirect,
 } from "@remix-run/node";
 import { Outlet } from "@remix-run/react";
-import {
-  IconNotification,
-  IconPalette,
-  IconTool,
-  IconUser,
-} from "@tabler/icons-react";
+import { IconNotification, IconPalette, IconTool } from "@tabler/icons-react";
 
 import SettingsSidebarNav from "~/components/Select/SettingsSidebarNav";
 import { Separator } from "~/components/ui/separator";

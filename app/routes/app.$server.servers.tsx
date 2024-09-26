@@ -16,7 +16,7 @@ import {
   getBalance,
   getServers,
   getTransactionSummary,
-} from "~/lib/queries.server";
+} from "~/lib/get.queries.server";
 import { authenticator } from "~/lib/services/auth.server";
 import { type Server as SelectedServer } from "~/types/Server";
 
