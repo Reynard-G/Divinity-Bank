@@ -56,7 +56,7 @@ export default function SettingsSidebarNav({
       <div className="hidden w-full overflow-x-auto px-1 py-2 md:block">
         <nav
           className={cn(
-            "flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-2 mt-[1px]",
+            "mt-[1px] flex space-x-2 lg:flex-col lg:space-x-0 lg:space-y-2",
             className,
           )}
           {...props}

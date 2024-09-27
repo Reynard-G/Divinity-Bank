@@ -19,6 +19,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { SpokeSpinner } from "~/components/ui/spinner";
 import { type Transaction } from "~/lib/db/schema";
 import {
   type ExportOptions,
@@ -42,21 +43,23 @@ export default function ExportTransactionsDialog() {
   const isSubmitting = fetcher.state === "submitting";
 
   useEffect(() => {
-    if (fetcher.data && fetcher.state === "idle") {
-      if (fetcher.data.success) {
-        try {
-          exportTransactionsTable(fetcher.data.data as Transaction[], {
-            filename,
-            format: fileType,
-          });
-          toast.success("Transactions exported successfully");
-          setIsDialogOpen(false);
-        } catch (error) {
-          console.error("Error exporting transactions:", error);
-          toast.error("Error exporting transactions. Please try again.");
-        }
-      } else {
-        toast.error(fetcher.data.message || "Error exporting transactions");
+    if (fetcher.data && !fetcher.data.success && fetcher.state === "idle") {
+      toast.error(fetcher.data.message);
+    } else if (
+      fetcher.data &&
+      fetcher.data.success &&
+      fetcher.state === "idle"
+    ) {
+      try {
+        exportTransactionsTable(fetcher.data.data as Transaction[], {
+          filename,
+          format: fileType,
+        });
+        toast.success("Transactions exported successfully");
+        setIsDialogOpen(false);
+      } catch (error) {
+        console.error("Error exporting transactions:", error);
+        toast.error("Error exporting transactions. Please try again.");
       }
     }
   }, [fetcher.data, fetcher.state]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -149,6 +152,7 @@ export default function ExportTransactionsDialog() {
               className="w-full"
               disabled={isSubmitting}
             >
+              {isSubmitting && <SpokeSpinner size="sm" className="mr-1" />}
               {isSubmitting ? "Exporting..." : "Download"}
             </Button>
           </div>
