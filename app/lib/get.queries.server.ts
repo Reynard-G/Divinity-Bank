@@ -18,7 +18,7 @@ import {
 import { filterColumn } from "~/lib/utils/filterColumns";
 import { GetTransactionsSchema } from "~/lib/validations";
 import { type DrizzleWhere } from "~/types/DataTable";
-import { NonSensitiveUser } from "~/types/User";
+import { NonSensitiveUser, UserSettingsDetails } from "~/types/User";
 
 /**
  * Get all servers.
@@ -62,6 +62,28 @@ export async function getNonSensitiveUserInfo(): Promise<NonSensitiveUser[]> {
     })
     .from(users)
     .orderBy(asc(users.id));
+}
+
+/**
+ * Get account settings details for a user.
+ *
+ * @param userId The ID of the user.
+ * @returns The account settings details.
+ */
+export async function getAccountSettingsDetails(
+  userId: number,
+): Promise<UserSettingsDetails> {
+  const user = await getUserById(userId);
+
+  if (!user) {
+    throw new Error("User not found");
+  }
+
+  return {
+    minecraftUsername: user.minecraftUsername,
+    minecraftUuid: user.minecraftUuid,
+    discordUsername: user.discordUsername,
+  };
 }
 
 /**

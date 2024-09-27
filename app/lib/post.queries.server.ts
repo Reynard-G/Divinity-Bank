@@ -1,10 +1,11 @@
+import { hash } from "@node-rs/bcrypt";
 import { eq } from "drizzle-orm";
 
 import PaymentTypes from "~/constants/PaymentTypes";
 import TransactionStatuses from "~/constants/TransactionStatuses";
 import TransactionTypes from "~/constants/TransactionTypes";
 import { db } from "~/lib/db/db.server";
-import { servers, transactions, users } from "~/lib/db/schema";
+import { servers, transactions, User, users } from "~/lib/db/schema";
 import { getBalance } from "~/lib/get.queries.server";
 import { formatCurrency } from "~/lib/utils/formatCurrency";
 
@@ -201,4 +202,33 @@ export async function transfer(
 
     return balance - Number(amount);
   });
+}
+
+/**
+ * Change a user's password.
+ *
+ * @param userId The ID of the user.
+ * @param newPassword The new password.
+ * @returns The new hashed password.
+ */
+export async function changePassword(
+  userId: number,
+  newPassword: string,
+): Promise<string> {
+  const hashedPassword = await hash(newPassword, 12);
+
+  await db.update(users).set({ hashedPassword }).where(eq(users.id, userId));
+
+  return hashedPassword;
+}
+
+/**
+ * Update a user's account settings.
+ *
+ */
+export async function updateAccountSettings(
+  userId: number,
+  settings: Partial<User>,
+): Promise<void> {
+  await db.update(users).set(settings).where(eq(users.id, userId));
 }

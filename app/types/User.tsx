@@ -14,3 +14,9 @@ export interface NonSensitiveUser {
   created_at: string;
   updated_at: string;
 }
+
+export interface UserSettingsDetails {
+  minecraftUsername: string;
+  minecraftUuid: string;
+  discordUsername: string;
+}
