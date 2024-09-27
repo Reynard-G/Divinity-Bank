@@ -51,7 +51,7 @@ import {
   SheetTrigger,
 } from "~/components/ui/sheet";
 import { type Server } from "~/lib/db/schema";
-import { getServers } from "~/lib/queries.server";
+import { getServers } from "~/lib/get.queries.server";
 import { authenticator } from "~/lib/services/auth.server";
 import { cn } from "~/lib/utils/cn";
 import { type Server as SelectedServer } from "~/types/Server";
@@ -104,7 +104,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const servers = await getServers();
 
   const url = new URL(request.url);
-  if (url.pathname === "/app") {
+  if (url.pathname === "/app" || url.pathname === "/app/") {
     return redirect(`/app/${servers[0].shortName}/dashboard`);
   }
 
@@ -123,7 +123,7 @@ export default function App() {
     <>
       <div className="h-full overflow-hidden">
         <div className="h-full bg-[#161616] text-[#ededed]">
-          <div className="box-border h-screen w-full flex-grow overflow-y-scroll">
+          <div className="box-border h-screen w-full flex-grow overflow-y-auto">
             <div className="grid auto-cols-auto md:pl-[248px]">
               {/* Sidebar */}
               <div className="fixed bottom-0 left-0 top-0 z-0 box-border hidden w-[248px] flex-col border-r border-solid border-r-[#343434] bg-[#1c1c1c] md:flex">
@@ -237,7 +237,7 @@ export default function App() {
               {/* Main Content */}
               <div className="box-border flex min-h-full flex-col">
                 {/* Top Navigation */}
-                <nav className="sticky top-0 z-10 flex items-center border-b border-b-[#343434] bg-[#1c1c1c] px-4 py-2 pl-5">
+                <nav className="sticky top-0 z-10 flex h-16 items-center border-b border-b-[#343434] bg-[#1c1c1c] px-4 py-2 pl-5">
                   <div className="hidden flex-auto items-center justify-end gap-4 md:flex">
                     <Button variant="outline" asChild>
                       <a

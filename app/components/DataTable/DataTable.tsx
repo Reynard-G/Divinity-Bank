@@ -30,7 +30,9 @@ export function DataTable<TData>({
 }: DataTableProps<TData>) {
   const navigation = useNavigation();
 
-  const isLoading = navigation.state === "loading";
+  const isLoading =
+    navigation.state === "loading" &&
+    navigation.location.pathname.includes("transactions");
 
   return (
     <div
