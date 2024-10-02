@@ -25,15 +25,10 @@ import {
   type ExportOptions,
   exportTransactionsTable,
 } from "~/lib/utils/exportTable";
-
-export type ExportTransactionsDialogFetcherResponse = {
-  success: boolean;
-  message?: string;
-  data?: Transaction[];
-};
+import { ExportActionData } from "~/routes/app.$server.transactions";
 
 export default function ExportTransactionsDialog() {
-  const fetcher = useFetcher<ExportTransactionsDialogFetcherResponse>();
+  const fetcher = useFetcher<ExportActionData>();
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [fileType, setFileType] = useState<ExportOptions["format"]>("csv");
   const [filename, setFilename] = useState<string>(

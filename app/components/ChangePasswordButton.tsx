@@ -12,9 +12,8 @@ import {
   DialogTrigger,
 } from "~/components/ui/dialog";
 import { Input } from "~/components/ui/input";
-import { AccountSettingsFetcherResponse } from "~/routes/app.settings.account";
-
-import { SpokeSpinner } from "./ui/spinner";
+import { SpokeSpinner } from "~/components/ui/spinner";
+import { action } from "~/routes/app.$server.transactions";
 
 interface ChangePasswordButtonProps {
   label: string;
@@ -33,7 +32,7 @@ export default function ChangePasswordButton({
   variant = "default",
   children,
 }: ChangePasswordButtonProps) {
-  const fetcher = useFetcher<AccountSettingsFetcherResponse>();
+  const fetcher = useFetcher<typeof action>();
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [oldPassword, setOldPassword] = useState<string>("");
   const [newPassword, setNewPassword] = useState<string>("");

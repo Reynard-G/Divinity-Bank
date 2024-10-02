@@ -253,7 +253,30 @@ export async function updateAccountSettings(
  */
 export async function updateAppearanceSettings(
   userId: number,
-  settings: Omit<Partial<UserSetting>, "id" | "user_id">,
+  settings: Omit<
+    Partial<UserSetting>,
+    | "id"
+    | "user_id"
+    | "discordCommunication"
+    | "discordTransactions"
+    | "discordSecurity"
+  >,
+): Promise<void> {
+  await db
+    .update(userSettings)
+    .set(settings)
+    .where(eq(userSettings.userId, userId));
+}
+
+/**
+ * Get a user's notification settings.
+ *
+ * @param userId The ID of the user.
+ * @returns The user's notification settings.
+ */
+export async function updateNotificationSettings(
+  userId: number,
+  settings: Omit<Partial<UserSetting>, "id" | "user_id" | "font">,
 ): Promise<void> {
   await db
     .update(userSettings)

@@ -1,5 +1,6 @@
 import { sql } from "drizzle-orm";
 import {
+  boolean,
   index,
   integer,
   numeric,
@@ -136,6 +137,11 @@ export const userSettings = pgTable(identifyTable("UserSettings"), {
       onUpdate: "cascade",
     }),
   font: text("font").notNull().default("Default"),
+  discordCommunication: boolean("discord_communication")
+    .notNull()
+    .default(false),
+  discordTransactions: boolean("discord_transactions").notNull().default(true),
+  discordSecurity: boolean("discord_security").notNull().default(true),
 });
 export type UserSetting = typeof userSettings.$inferSelect;
 export type NewUserSetting = typeof userSettings.$inferInsert;

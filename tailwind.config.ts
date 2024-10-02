@@ -15,6 +15,7 @@ export default {
     extend: {
       fontFamily: {
         neue_haas_grotesk: ['"Neue Haas Grotesk"', "sans-serif"],
+        atskinon_hyperlegible: ['"Atskinon Hyperlegible"', "sans-serif"],
         anta: ['"Anta"', "sans-serif"],
       },
       colors: {
