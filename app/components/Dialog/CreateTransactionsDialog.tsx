@@ -23,17 +23,12 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { SpokeSpinner } from "~/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useMediaQuery } from "~/hooks/use-media-query";
-import { type loader } from "~/routes/app.$server.transactions";
+import { action, type loader } from "~/routes/app.$server.transactions";
 import { NonSensitiveUser } from "~/types/User";
-
-export type CreateTransactionsDialogFetcherResponse = {
-  success: boolean;
-  message?: string;
-};
 
 export default function CreateTransactionsDialog() {
   const { allUsers } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher<CreateTransactionsDialogFetcherResponse>();
+  const fetcher = useFetcher<typeof action>();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [isUsersPopoverOpen, setIsUsersPopoverOpen] = useState<boolean>(false);
