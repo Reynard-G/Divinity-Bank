@@ -3,9 +3,6 @@ import { defineConfig } from "vite";
 import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
-  optimizeDeps: {
-    exclude: ["@node-rs/bcrypt"],
-  },
   plugins: [
     remix({
       future: {
@@ -16,4 +13,11 @@ export default defineConfig({
     }),
     tsconfigPaths(),
   ],
+  optimizeDeps: {
+    exclude: ["@node-rs/bcrypt"],
+  },
+  build: {
+    sourcemap: process.env.NODE_ENV !== "production",
+    cssMinify: "lightningcss",
+  },
 });

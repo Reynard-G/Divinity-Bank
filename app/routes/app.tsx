@@ -51,7 +51,7 @@ import {
   SheetTrigger,
 } from "~/components/ui/sheet";
 import { type Server } from "~/lib/db/schema";
-import { getServers } from "~/lib/get.queries.server";
+import { getAppearanceSettings, getServers } from "~/lib/get.queries.server";
 import { authenticator } from "~/lib/services/auth.server";
 import { cn } from "~/lib/utils/cn";
 import { type Server as SelectedServer } from "~/types/Server";
@@ -101,18 +101,21 @@ export async function loader({ request }: LoaderFunctionArgs) {
     failureRedirect: "/login",
   });
 
-  const servers = await getServers();
+  const [servers, appearanceSettings] = await Promise.all([
+    getServers(),
+    getAppearanceSettings(user.id),
+  ]);
 
   const url = new URL(request.url);
   if (url.pathname === "/app" || url.pathname === "/app/") {
     return redirect(`/app/${servers[0].shortName}/dashboard`);
   }
 
-  return { user, servers };
+  return { user, servers, font: appearanceSettings.font };
 }
 
 export default function App() {
-  const { user, servers } = useLoaderData<typeof loader>();
+  const { user, servers, font } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const [selectedServer, setSelectedServer] = useState<Server>(servers[0]);
   const [isServerPopoverOpen, setIsServerPopoverOpen] = useState(false);
@@ -121,7 +124,13 @@ export default function App() {
 
   return (
     <>
-      <div className="h-full overflow-hidden">
+      <div
+        className={cn(
+          "h-full overflow-hidden",
+          font === "Default" && "font-neue_haas_grotesk",
+          font === "System" && "font-sans",
+        )}
+      >
         <div className="h-full bg-[#161616] text-[#ededed]">
           <div className="box-border h-screen w-full flex-grow overflow-y-auto">
             <div className="grid auto-cols-auto md:pl-[248px]">

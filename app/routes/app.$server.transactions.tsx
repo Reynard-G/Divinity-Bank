@@ -76,7 +76,7 @@ export async function action({ request, params }: ActionFunctionArgs) {
 
   const server = params.server;
 
-  return namedAction(formData, {
+  return namedAction(request, {
     async deposit() {
       const amount = formData.get("amount")?.toString();
       const proofOfDeposit = formData.get("proofOfDeposit")?.toString();

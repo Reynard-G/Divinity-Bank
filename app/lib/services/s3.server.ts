@@ -84,7 +84,8 @@ export const uploadHandler = unstable_composeUploadHandlers(
 
       return uploadedImage;
     } catch (error) {
-      return undefined;
+      console.error("Error uploading image:", error);
+      throw new Error("Failed to upload image");
     }
   },
   unstable_createMemoryUploadHandler(),
