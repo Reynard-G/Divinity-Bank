@@ -129,6 +129,7 @@ export default function App() {
           "h-full overflow-hidden",
           font === "Default" && "font-neue_haas_grotesk",
           font === "System" && "font-sans",
+          font === "Atskinon Hyperlegible" && "font-atskinon_hyperlegible",
         )}
       >
         <div className="h-full bg-[#161616] text-[#ededed]">

@@ -107,7 +107,7 @@ export default function AppearanceSettings() {
               <SettingsSelect
                 name="font"
                 label="Font"
-                items={["Default", "System"]}
+                items={["Default", "System", "Atskinon Hyperlegible"]}
                 defaultItem={appearanceSettings.font}
                 placeholder="Select a font"
                 description="Change the font of the dashboard."
