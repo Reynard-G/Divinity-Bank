@@ -1,12 +1,13 @@
 import {
-  ActionFunctionArgs,
+  type ActionFunctionArgs,
   defer,
   json,
   type LoaderFunctionArgs,
 } from "@remix-run/node";
 import { Await, useFetcher, useLoaderData } from "@remix-run/react";
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { namedAction } from "remix-utils/named-action";
+import { toast } from "sonner";
 
 import AppSettingsLayout from "~/components/Layout/AppSettingsLayout";
 import SettingsSelect from "~/components/Select/SettingsSelect";
@@ -75,9 +76,21 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function AppearanceSettings() {
   const { appearanceSettings } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher();
+  const fetcher = useFetcher<typeof action>();
 
   const isSubmitting = fetcher.state === "submitting";
+
+  useEffect(() => {
+    if (fetcher.data && !fetcher.data.success && fetcher.state === "idle") {
+      toast.error(fetcher.data.message);
+    } else if (
+      fetcher.data &&
+      fetcher.data.success &&
+      fetcher.state === "idle"
+    ) {
+      toast.success(fetcher.data.message);
+    }
+  }, [fetcher.data, fetcher.state]);
 
   return (
     <AppSettingsLayout title="Appearance" desc="Customize the look of the app.">

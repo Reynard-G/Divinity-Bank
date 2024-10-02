@@ -125,6 +125,28 @@ export async function getAppearanceSettings(
 }
 
 /**
+ * Get notification settings for a user.
+ *
+ * @param userId The ID of the user.
+ * @returns The notification settings.
+ */
+export async function getNotificationSettings(
+  userId: number,
+): Promise<Partial<UserSetting>> {
+  const userSettings = await getUserSettingsById(userId);
+
+  if (!userSettings) {
+    throw new Error("User settings not found");
+  }
+
+  return {
+    discordCommunication: userSettings.discordCommunication,
+    discordTransactions: userSettings.discordTransactions,
+    discordSecurity: userSettings.discordSecurity,
+  };
+}
+
+/**
  * Get transactions based on the input provided. This function is used to
  * fetch transactions for the transactions table using the search parameters
  * provided by the user.

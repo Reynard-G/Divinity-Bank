@@ -1,6 +1,6 @@
 import { compare } from "@node-rs/bcrypt";
 import {
-  ActionFunctionArgs,
+  type ActionFunctionArgs,
   defer,
   json,
   type LoaderFunctionArgs,
@@ -22,11 +22,6 @@ import {
   updateAccountSettings,
 } from "~/lib/post.queries.server";
 import { authenticator } from "~/lib/services/auth.server";
-
-export type AccountSettingsFetcherResponse = {
-  success: boolean;
-  message?: string;
-};
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const userId = (
@@ -178,7 +173,7 @@ export async function action({ request }: ActionFunctionArgs) {
 
 export default function AccountSettings() {
   const { accountSettings } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher<AccountSettingsFetcherResponse>();
+  const fetcher = useFetcher<typeof action>();
 
   const isSubmitting = fetcher.state === "submitting";
 

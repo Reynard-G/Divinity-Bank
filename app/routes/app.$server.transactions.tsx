@@ -2,8 +2,8 @@ import {
   type ActionFunctionArgs,
   json,
   type LoaderFunctionArgs,
-  unstable_parseMultipartFormData,
   type TypedResponse,
+  unstable_parseMultipartFormData,
 } from "@remix-run/node";
 import { Await, defer, useLoaderData } from "@remix-run/react";
 import { Suspense } from "react";
@@ -29,17 +29,19 @@ import { searchParamsSchema } from "~/lib/validations";
 export type DepositActionData = { success: boolean; message: string };
 export type WithdrawActionData = { success: boolean; message: string };
 export type TransferActionData = { success: boolean; message: string };
-export type ExportActionData = { success: boolean; message: string; data?: Transaction[] };
+export type ExportActionData = {
+  success: boolean;
+  message: string;
+  data?: Transaction[];
+};
 
-type ActionData = 
-  | DepositActionData 
-  | WithdrawActionData 
-  | TransferActionData 
+type ActionData =
+  | DepositActionData
+  | WithdrawActionData
+  | TransferActionData
   | ExportActionData;
 
 export type ActionReturn = TypedResponse<ActionData>;
-
-export type ActionFunction = (args: ActionFunctionArgs) => Promise<ActionReturn>;
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const url = new URL(request.url);
