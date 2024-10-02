@@ -1,4 +1,6 @@
+import tailwindScrollbar from "tailwind-scrollbar";
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
   content: ["./app/**/*.{js,jsx,ts,tsx}"],
@@ -71,5 +73,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwind-scrollbar"), require("tailwindcss-animate")],
+  plugins: [tailwindScrollbar, tailwindcssAnimate],
 } satisfies Config;
