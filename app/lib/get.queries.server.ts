@@ -14,11 +14,13 @@ import {
   transactionStatuses,
   type User,
   users,
+  UserSetting,
+  userSettings,
 } from "~/lib/db/schema";
 import { filterColumn } from "~/lib/utils/filterColumns";
 import { GetTransactionsSchema } from "~/lib/validations";
 import { type DrizzleWhere } from "~/types/DataTable";
-import { NonSensitiveUser, UserSettingsDetails } from "~/types/User";
+import { NonSensitiveUser } from "~/types/User";
 
 /**
  * Get all servers.
@@ -44,6 +46,22 @@ export async function getUserById(userId: number): Promise<User | null> {
 }
 
 /**
+ * Get user settings by their ID.
+ *
+ * @param userId The ID of the user.
+ * @returns The user settings.
+ */
+export async function getUserSettingsById(
+  userId: number,
+): Promise<UserSetting> {
+  return db
+    .select()
+    .from(userSettings)
+    .where(eq(userSettings.userId, userId))
+    .then((res) => res[0] ?? null);
+}
+
+/**
  * Get non-sensitive information about all users. This is useful for
  * displaying user information in a non-sensitive way to the public.
  *
@@ -65,14 +83,14 @@ export async function getNonSensitiveUserInfo(): Promise<NonSensitiveUser[]> {
 }
 
 /**
- * Get account settings details for a user.
+ * Get account settings for a user.
  *
  * @param userId The ID of the user.
- * @returns The account settings details.
+ * @returns The account settings.
  */
-export async function getAccountSettingsDetails(
+export async function getAccountSettings(
   userId: number,
-): Promise<UserSettingsDetails> {
+): Promise<Partial<User>> {
   const user = await getUserById(userId);
 
   if (!user) {
@@ -83,6 +101,26 @@ export async function getAccountSettingsDetails(
     minecraftUsername: user.minecraftUsername,
     minecraftUuid: user.minecraftUuid,
     discordUsername: user.discordUsername,
+  };
+}
+
+/**
+ * Get appearance settings for a user.
+ *
+ * @param userId The ID of the user.
+ * @returns The appearance settings.
+ */
+export async function getAppearanceSettings(
+  userId: number,
+): Promise<Partial<UserSetting>> {
+  const userSettings = await getUserSettingsById(userId);
+
+  if (!userSettings) {
+    throw new Error("User settings not found");
+  }
+
+  return {
+    font: userSettings.font,
   };
 }
 

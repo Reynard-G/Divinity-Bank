@@ -42,9 +42,12 @@ export const paymentTypes = pgTable(identifyTable("PaymentTypes"), {
 export type PaymentType = typeof paymentTypes.$inferSelect;
 export type NewPaymentType = typeof paymentTypes.$inferInsert;
 
-export const transactionStatuses = pgTable(identifyTable("TransactionStatuses"), {
-  name: text("name").primaryKey().notNull(),
-});
+export const transactionStatuses = pgTable(
+  identifyTable("TransactionStatuses"),
+  {
+    name: text("name").primaryKey().notNull(),
+  },
+);
 export type TransactionStatus = typeof transactionStatuses.$inferSelect;
 export type NewTransactionStatus = typeof transactionStatuses.$inferInsert;
 
@@ -117,6 +120,25 @@ export const users = pgTable(
 );
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
+
+export const userSettings = pgTable(identifyTable("UserSettings"), {
+  id: integer("id").primaryKey().generatedByDefaultAsIdentity({
+    name: "UserSettings_id_seq",
+    startWith: 1,
+    increment: 1,
+    minValue: 1,
+    maxValue: 2147483647,
+  }),
+  userId: integer("user_id")
+    .notNull()
+    .references(() => users.id, {
+      onDelete: "restrict",
+      onUpdate: "cascade",
+    }),
+  font: text("font").notNull().default("Default"),
+});
+export type UserSetting = typeof userSettings.$inferSelect;
+export type NewUserSetting = typeof userSettings.$inferInsert;
 
 export const transactions = pgTable(
   identifyTable("Transactions"),

@@ -1,4 +1,5 @@
 import { Input } from "~/components/ui/input";
+import { cn } from "~/lib/utils/cn";
 
 interface SettingsInputProps {
   name: string;
@@ -6,6 +7,7 @@ interface SettingsInputProps {
   defaultValue?: string;
   placeholder?: string;
   description?: string;
+  className?: string;
   disabled?: boolean;
 }
 
@@ -15,6 +17,7 @@ export default function SettingsInput({
   defaultValue = undefined,
   placeholder = undefined,
   description,
+  className,
   disabled = false,
 }: SettingsInputProps) {
   return (
@@ -27,6 +30,7 @@ export default function SettingsInput({
           defaultValue={defaultValue}
           placeholder={placeholder}
           disabled={disabled}
+          className={cn(disabled && "cursor-not-allowed", className)}
         />
       </label>
 

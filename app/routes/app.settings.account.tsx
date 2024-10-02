@@ -16,10 +16,7 @@ import SettingsInput from "~/components/Input/SettingsInput";
 import AppSettingsLayout from "~/components/Layout/AppSettingsLayout";
 import { Button } from "~/components/ui/button";
 import { SpokeSpinner } from "~/components/ui/spinner";
-import {
-  getAccountSettingsDetails,
-  getUserById,
-} from "~/lib/get.queries.server";
+import { getAccountSettings, getUserById } from "~/lib/get.queries.server";
 import {
   changePassword,
   updateAccountSettings,
@@ -38,10 +35,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
     })
   ).id;
 
-  const accountSettingsDetails = getAccountSettingsDetails(userId);
+  const accountSettings = getAccountSettings(userId);
 
   return defer(
-    { accountSettingsDetails },
+    { accountSettings },
     {
       status: 200,
       headers: {
@@ -180,7 +177,7 @@ export async function action({ request }: ActionFunctionArgs) {
 }
 
 export default function AccountSettings() {
-  const { accountSettingsDetails } = useLoaderData<typeof loader>();
+  const { accountSettings } = useLoaderData<typeof loader>();
   const fetcher = useFetcher<AccountSettingsFetcherResponse>();
 
   const isSubmitting = fetcher.state === "submitting";
@@ -207,7 +204,7 @@ export default function AccountSettings() {
         }
       >
         <Await
-          resolve={accountSettingsDetails}
+          resolve={accountSettings}
           errorElement={
             <div className="flex h-48 items-center justify-center">
               <p className="text-red-500">
@@ -216,7 +213,7 @@ export default function AccountSettings() {
             </div>
           }
         >
-          {(accountSettingsDetails) => (
+          {(accountSettings) => (
             <fetcher.Form
               method="post"
               action="?/save_account_settings"
@@ -225,7 +222,7 @@ export default function AccountSettings() {
               <SettingsInput
                 name="minecraftUsername"
                 label="Username"
-                defaultValue={accountSettingsDetails.minecraftUsername}
+                defaultValue={accountSettings.minecraftUsername}
                 placeholder="Username"
                 description="This is your minecraft username. It will be used to verify and identify you in transactions."
               />
@@ -233,7 +230,7 @@ export default function AccountSettings() {
               <SettingsInput
                 name="minecraftUuid"
                 label="Minecraft UUID"
-                defaultValue={accountSettingsDetails.minecraftUuid}
+                defaultValue={accountSettings.minecraftUuid}
                 placeholder="Minecraft UUID"
                 description="Your minecraft UUID is primarily used to fetch your skin for other people to quickly identify you. Contact support if you wish to change this."
                 disabled={true}
@@ -242,7 +239,7 @@ export default function AccountSettings() {
               <SettingsInput
                 name="discordUsername"
                 label="Discord Username"
-                defaultValue={accountSettingsDetails.discordUsername}
+                defaultValue={accountSettings.discordUsername}
                 placeholder="Discord Username"
                 description="This is your discord username. It will be used to verify and identify you in discord."
               />

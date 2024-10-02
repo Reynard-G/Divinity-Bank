@@ -5,7 +5,14 @@ import PaymentTypes from "~/constants/PaymentTypes";
 import TransactionStatuses from "~/constants/TransactionStatuses";
 import TransactionTypes from "~/constants/TransactionTypes";
 import { db } from "~/lib/db/db.server";
-import { servers, transactions, User, users } from "~/lib/db/schema";
+import {
+  servers,
+  transactions,
+  User,
+  users,
+  UserSetting,
+  userSettings,
+} from "~/lib/db/schema";
 import { getBalance } from "~/lib/get.queries.server";
 import { formatCurrency } from "~/lib/utils/formatCurrency";
 
@@ -225,10 +232,31 @@ export async function changePassword(
 /**
  * Update a user's account settings.
  *
+ * @param userId The ID of the user.
+ * @param settings The settings to update.
  */
 export async function updateAccountSettings(
   userId: number,
-  settings: Partial<User>,
+  settings: Omit<
+    Partial<User>,
+    "id" | "hashedPassword" | "createdAt" | "updatedAt"
+  >,
 ): Promise<void> {
   await db.update(users).set(settings).where(eq(users.id, userId));
+}
+
+/**
+ * Update a user's appearance settings.
+ *
+ * @param userId The ID of the user.
+ * @param settings The settings to update.
+ */
+export async function updateAppearanceSettings(
+  userId: number,
+  settings: Omit<Partial<UserSetting>, "id" | "user_id">,
+): Promise<void> {
+  await db
+    .update(userSettings)
+    .set(settings)
+    .where(eq(userSettings.userId, userId));
 }
