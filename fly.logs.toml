@@ -1,0 +1,14 @@
+app = 'divinity-bank-logs'
+primary_region = 'dfw'
+
+[build]
+  image = 'ghcr.io/superfly/fly-log-shipper:latest'
+
+[[services]]
+  http_checks = []
+  internal_port = 8686
+
+[[vm]]
+  memory = '256mb'
+  cpu_kind = 'shared'
+  cpus = 1
