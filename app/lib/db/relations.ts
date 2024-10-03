@@ -4,13 +4,23 @@ import {
   accountTypes,
   paymentTypes,
   roles,
+  servers,
   transactions,
   transactionStatuses,
   transactionTypes,
   users,
-} from "./schema";
+  userSettings,
+} from "~/lib/db/schema";
+
+export const userSettingsRelations = relations(userSettings, ({ one }) => ({
+  user: one(users, {
+    fields: [userSettings.userId],
+    references: [users.id],
+  }),
+}));
 
 export const usersRelations = relations(users, ({ one, many }) => ({
+  userSettings: many(userSettings),
   accountType: one(accountTypes, {
     fields: [users.accountType],
     references: [accountTypes.name],
@@ -36,6 +46,10 @@ export const rolesRelations = relations(roles, ({ many }) => ({
 }));
 
 export const transactionsRelations = relations(transactions, ({ one }) => ({
+  server: one(servers, {
+    fields: [transactions.serverId],
+    references: [servers.id],
+  }),
   user_createdByUserId: one(users, {
     fields: [transactions.createdByUserId],
     references: [users.id],
@@ -58,6 +72,10 @@ export const transactionsRelations = relations(transactions, ({ one }) => ({
     references: [users.id],
     relationName: "transactions_userId_users_id",
   }),
+}));
+
+export const serversRelations = relations(servers, ({ many }) => ({
+  transactions: many(transactions),
 }));
 
 export const paymentTypesRelations = relations(paymentTypes, ({ many }) => ({

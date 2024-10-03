@@ -23,17 +23,12 @@ import { Skeleton } from "~/components/ui/skeleton";
 import { SpokeSpinner } from "~/components/ui/spinner";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "~/components/ui/tabs";
 import { useMediaQuery } from "~/hooks/use-media-query";
-import { type loader } from "~/routes/app.$server.transactions";
+import { action, type loader } from "~/routes/app.$server.transactions";
 import { NonSensitiveUser } from "~/types/User";
-
-export type CreateTransactionsDialogFetcherResponse = {
-  success: boolean;
-  message?: string;
-};
 
 export default function CreateTransactionsDialog() {
   const { allUsers } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher<CreateTransactionsDialogFetcherResponse>();
+  const fetcher = useFetcher<typeof action>();
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [isUsersPopoverOpen, setIsUsersPopoverOpen] = useState<boolean>(false);
@@ -107,18 +102,14 @@ export default function CreateTransactionsDialog() {
   );
 
   useEffect(() => {
-    if (fetcher.data && fetcher.state === "idle") {
-      if (fetcher.data.success) {
-        try {
-          toast.success(fetcher.data.message || "Transaction successful");
-          setIsDialogOpen(false);
-        } catch (error) {
-          console.error("Error submitting transaction:", error);
-          toast.error("Error submitting transaction. Please try again.");
-        }
-      } else {
-        toast.error(fetcher.data.message || "Error submitting transaction");
-      }
+    if (fetcher.data && !fetcher.data.success && fetcher.state === "idle") {
+      toast.error(fetcher.data.message);
+    } else if (
+      fetcher.data &&
+      fetcher.data.success &&
+      fetcher.state === "idle"
+    ) {
+      toast.success(fetcher.data.message);
     }
   }, [fetcher.data, fetcher.state]);
 
@@ -321,6 +312,7 @@ export default function CreateTransactionsDialog() {
             <div className="border-t border-[#313131]">
               <div className="flex justify-between gap-5 px-12 py-6">
                 <Button
+                  type="button"
                   variant="outline"
                   className="w-full"
                   onClick={() => setIsDialogOpen(false)}

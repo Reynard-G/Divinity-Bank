@@ -19,20 +19,16 @@ import {
   SelectTrigger,
   SelectValue,
 } from "~/components/ui/select";
+import { SpokeSpinner } from "~/components/ui/spinner";
 import { type Transaction } from "~/lib/db/schema";
 import {
   type ExportOptions,
   exportTransactionsTable,
 } from "~/lib/utils/exportTable";
-
-export type ExportTransactionsDialogFetcherResponse = {
-  success: boolean;
-  message?: string;
-  data?: Transaction[];
-};
+import { ExportActionData } from "~/routes/app.$server.transactions";
 
 export default function ExportTransactionsDialog() {
-  const fetcher = useFetcher<ExportTransactionsDialogFetcherResponse>();
+  const fetcher = useFetcher<ExportActionData>();
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [fileType, setFileType] = useState<ExportOptions["format"]>("csv");
   const [filename, setFilename] = useState<string>(
@@ -42,21 +38,23 @@ export default function ExportTransactionsDialog() {
   const isSubmitting = fetcher.state === "submitting";
 
   useEffect(() => {
-    if (fetcher.data && fetcher.state === "idle") {
-      if (fetcher.data.success) {
-        try {
-          exportTransactionsTable(fetcher.data.data as Transaction[], {
-            filename,
-            format: fileType,
-          });
-          toast.success("Transactions exported successfully");
-          setIsDialogOpen(false);
-        } catch (error) {
-          console.error("Error exporting transactions:", error);
-          toast.error("Error exporting transactions. Please try again.");
-        }
-      } else {
-        toast.error(fetcher.data.message || "Error exporting transactions");
+    if (fetcher.data && !fetcher.data.success && fetcher.state === "idle") {
+      toast.error(fetcher.data.message);
+    } else if (
+      fetcher.data &&
+      fetcher.data.success &&
+      fetcher.state === "idle"
+    ) {
+      try {
+        exportTransactionsTable(fetcher.data.data as Transaction[], {
+          filename,
+          format: fileType,
+        });
+        toast.success("Transactions exported successfully");
+        setIsDialogOpen(false);
+      } catch (error) {
+        console.error("Error exporting transactions:", error);
+        toast.error("Error exporting transactions. Please try again.");
       }
     }
   }, [fetcher.data, fetcher.state]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -84,7 +82,7 @@ export default function ExportTransactionsDialog() {
           action="?/export"
           encType="multipart/form-data"
         >
-          <div className="mb-2 grid gap-2 px-12 text-center">
+          <div className="mb-6 grid gap-2 px-12 text-center">
             <h1 className="mb-2 text-lg font-semibold">Export</h1>
 
             <div>
@@ -149,6 +147,7 @@ export default function ExportTransactionsDialog() {
               className="w-full"
               disabled={isSubmitting}
             >
+              {isSubmitting && <SpokeSpinner size="sm" className="mr-1" />}
               {isSubmitting ? "Exporting..." : "Download"}
             </Button>
           </div>

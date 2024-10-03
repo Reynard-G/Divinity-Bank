@@ -1,4 +1,6 @@
+import tailwindScrollbar from "tailwind-scrollbar";
 import type { Config } from "tailwindcss";
+import tailwindcssAnimate from "tailwindcss-animate";
 
 export default {
   content: ["./app/**/*.{js,jsx,ts,tsx}"],
@@ -13,6 +15,7 @@ export default {
     extend: {
       fontFamily: {
         neue_haas_grotesk: ['"Neue Haas Grotesk"', "sans-serif"],
+        atskinon_hyperlegible: ['"Atskinon Hyperlegible"', "sans-serif"],
         anta: ['"Anta"', "sans-serif"],
       },
       colors: {
@@ -71,5 +74,5 @@ export default {
       },
     },
   },
-  plugins: [require("tailwind-scrollbar"), require("tailwindcss-animate")],
+  plugins: [tailwindScrollbar, tailwindcssAnimate],
 } satisfies Config;
