@@ -13,10 +13,6 @@ import { SpokeSpinner } from "~/components/ui/spinner";
 import { authenticator } from "~/lib/services/auth.server";
 import { rateLimiter } from "~/lib/services/ratelimit.server";
 
-type LoginFetcherResponse = {
-  error?: string;
-};
-
 export const meta: MetaFunction = () => {
   return [
     { title: "Login • Divinity" },
@@ -39,7 +35,7 @@ export async function action({ request }: ActionFunctionArgs) {
       const { success } = await rateLimiter.limit(identifier);
 
       if (!success) {
-        return json<LoginFetcherResponse>(
+        return json(
           { error: "Too many login attempts. Please try again later." },
           { status: 429 },
         );
@@ -52,15 +48,12 @@ export async function action({ request }: ActionFunctionArgs) {
     });
   } catch (error) {
     if (error instanceof Response) throw error;
-    return json<LoginFetcherResponse>(
-      { error: "Invalid username or password" },
-      { status: 401 },
-    );
+    return json({ error: "Invalid username or password" }, { status: 401 });
   }
 }
 
 export default function Login() {
-  const fetcher = useFetcher<LoginFetcherResponse>();
+  const fetcher = useFetcher<typeof action>();
 
   const isSubmitting = fetcher.state === "submitting";
 
