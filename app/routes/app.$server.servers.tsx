@@ -51,7 +51,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     {
       status: 200,
       headers: {
-        "Cache-Control": "private, max-age=60",
+        "Cache-Control": "private, max-age=60", // 1 minute
       },
     },
   );

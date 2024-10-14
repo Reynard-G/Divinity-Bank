@@ -1,5 +1,5 @@
 import { AvatarImage } from "@radix-ui/react-avatar";
-import { type LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { defer, type LoaderFunctionArgs, redirect } from "@remix-run/node";
 import {
   Link,
   NavLink,
@@ -111,7 +111,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
     return redirect(`/app/${servers[0].shortName}/dashboard`);
   }
 
-  return { user, servers, font: appearanceSettings.font };
+  return defer(
+    { user, servers, font: appearanceSettings.font },
+    {
+      status: 200,
+      headers: {
+        "Cache-Control": "private, max-age=2592000", // 30 days
+      },
+    },
+  );
 }
 
 export default function App() {
