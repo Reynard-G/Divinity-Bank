@@ -311,7 +311,7 @@ export async function getAllTransactions(
 export async function getTransactionSummary(
   userId: number,
   serverShortName: string,
-): Promise<{ transactionsCount: number; latestTransactionDate: Date | null }> {
+): Promise<{ transactionsCount: number | null; latestTransactionDate: Date | null }> {
   return await db.transaction(async (tx) => {
     const server = await tx
       .select()
@@ -338,6 +338,13 @@ export async function getTransactionSummary(
         ),
       )
       .then((res) => res[0]);
+
+    if (Number(result.transactionCount) === 0) {
+      return {
+        transactionsCount: null,
+        latestTransactionDate: null,
+      };
+    }
 
     return {
       transactionsCount: Number(result.transactionCount),
@@ -376,7 +383,7 @@ export async function getTransactionStatuses(): Promise<TransactionStatus[]> {
 export async function getBalance(
   userId: number,
   serverShortName: string,
-): Promise<number> {
+): Promise<number | null> {
   return await db.transaction(async (tx) => {
     const [user, server] = await Promise.all([
       tx
@@ -399,6 +406,22 @@ export async function getBalance(
       throw new Error("Server not found");
     }
 
+    // Check if the user has any transactions on the server, if not, return null
+    const transactionCount = await tx
+      .select({ count: count() })
+      .from(transactions)
+      .where(
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.serverId, server.id),
+        ),
+      )
+      .then((res) => res[0]?.count ?? 0);
+
+    if (transactionCount === 0) {
+      return null;
+    }
+
     const [creditBalance, debitBalance] = await Promise.all([
       tx
         .select({ amount: sql<string>`SUM(amount)` })
@@ -418,6 +441,60 @@ export async function getBalance(
         .where(
           and(
             eq(transactions.userId, userId),
+            eq(transactions.serverId, server.id),
+            eq(transactions.transactionType, TransactionTypes.DEBIT),
+            or(
+              eq(transactions.status, TransactionStatuses.SUCCESS),
+              eq(transactions.status, TransactionStatuses.PENDING),
+            ),
+          ),
+        )
+        .then((res) => res[0]?.amount ?? 0),
+    ]);
+
+    return Number(creditBalance) - Number(debitBalance);
+  });
+}
+
+/**
+ * Get the total balance of a server.
+ *
+ * @param serverShortName The short name of the server.
+ * @returns The total balance of the server.
+ */
+export async function getTotalServerBalance(
+  serverShortName: string,
+): Promise<number> {
+  return await db.transaction(async (tx) => {
+    const server = await tx
+      .select()
+      .from(servers)
+      .where(eq(servers.shortName, serverShortName))
+      .then((res) => res[0]);
+
+    if (!server) {
+      throw new Error("Server not found");
+    }
+
+    const [creditBalance, debitBalance] = await Promise.all([
+      tx
+        .select({ amount: sql<string>`SUM(amount)`
+        })
+        .from(transactions)
+        .where(
+          and(
+            eq(transactions.serverId, server.id),
+            eq(transactions.transactionType, TransactionTypes.CREDIT),
+            eq(transactions.status, TransactionStatuses.SUCCESS),
+          ),
+        )
+        .then((res) => res[0]?.amount ?? 0),
+      tx
+        .select({ amount: sql<string>`SUM(amount)`
+        })
+        .from(transactions)
+        .where(
+          and(
             eq(transactions.serverId, server.id),
             eq(transactions.transactionType, TransactionTypes.DEBIT),
             or(

@@ -54,7 +54,7 @@ export async function deposit(
     }
 
     const newBalance =
-      (await getBalance(userId, serverShortName)) + Number(amount);
+      (await getBalance(userId, serverShortName) ?? 0.0) + Number(amount);
 
     await tx.insert(transactions).values({
       serverId: server.id,
@@ -108,7 +108,7 @@ export async function withdraw(
       throw new Error("Server not found");
     }
 
-    const balance = await getBalance(userId, serverShortName);
+    const balance = (await getBalance(userId, serverShortName)) ?? 0.0;
 
     if (balance < Number(amount)) {
       throw new Error("Insufficient funds");
@@ -177,7 +177,7 @@ export async function transfer(
       throw new Error("Recipient not found");
     }
 
-    const balance = await getBalance(userId, serverShortName);
+    const balance = (await getBalance(userId, serverShortName)) ?? 0.0;
 
     if (balance < Number(amount)) {
       throw new Error("Insufficient funds");

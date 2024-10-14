@@ -8,7 +8,7 @@ import { cn } from "~/lib/utils/cn";
 import { formatCurrency } from "~/lib/utils/formatCurrency";
 import { getRelativeTimeString } from "~/lib/utils/getRelativeTimeString";
 
-interface ServerSelectionCardProps {
+interface AdminServerSelectionCardProps {
   selectedServer: boolean;
   serverName: string;
   serverShortName?: string | undefined;
@@ -19,23 +19,23 @@ interface ServerSelectionCardProps {
    * If the server balance is `null`, it means the balance is not available.
    * If the server balance is a number, it means the balance is available.
    */
-  serverBalance: number | undefined | null;
-  transactionsAmount: number | undefined | null;
+  totalServerBalance: number | undefined | null;
+  totalTransactionsAmount: number | undefined | null;
   lastTransactionDate: Date | undefined | null;
-
+  
   onClick?: () => void;
 }
 
-export default function ServerSelectionCard({
+export default function AdminServerSelectionCard({
   selectedServer,
   serverName,
   serverShortName,
   serverBannerImage,
-  serverBalance,
-  transactionsAmount,
+  totalServerBalance,
+  totalTransactionsAmount,
   lastTransactionDate,
   ...props
-}: ServerSelectionCardProps) {
+}: AdminServerSelectionCardProps) {
   const [imageLoaded, setImageLoaded] = useState(false);
 
   return (
@@ -76,11 +76,11 @@ export default function ServerSelectionCard({
           <h3 className="text-lg font-bold">{serverName}</h3>
         </div>
         <div className="relative z-20 flex items-center gap-2">
-          {serverBalance === undefined ? (
+          {totalServerBalance === undefined ? (
             <Skeleton className="h-4 w-20" />
           ) : (
             <span className="text-sm font-medium text-[#ededed]">
-              {serverBalance === null ? "N/A" : formatCurrency(serverBalance)}
+              {totalServerBalance === null ? "N/A" : formatCurrency(totalServerBalance)}
             </span>
           )}
         </div>
@@ -90,15 +90,13 @@ export default function ServerSelectionCard({
         <div className="grid gap-4">
           <div className="flex items-center justify-between">
             <span className="text-sm font-normal text-[#ededed]">
-              Transactions
+              Total Transactions
             </span>
-            {transactionsAmount === undefined ? (
+            {totalTransactionsAmount === undefined ? (
               <Skeleton className="h-4 w-16" />
             ) : (
               <span className="text-sm font-normal text-[#ededed]">
-                {transactionsAmount === null
-                  ? "N/A"
-                  : transactionsAmount.toLocaleString()}
+                {totalTransactionsAmount === null ? "N/A" : totalTransactionsAmount}
               </span>
             )}
           </div>

@@ -7,14 +7,14 @@ import {
   useOutletContext,
 } from "@remix-run/react";
 import { Suspense } from "react";
+import AdminServerSelectionCard from "~/components/AdminServerSelectionCard";
 
-import ServerSelectionCard from "~/components/ServerSelectionCard";
 import ServerSelectionCardSkeletonList from "~/components/Skeleton/ServerSelectionCardSkeletonList";
 import { Separator } from "~/components/ui/separator";
 import { type Server } from "~/lib/db/schema";
 import {
-  getBalance,
   getServers,
+  getTotalServerBalance,
   getTransactionSummary,
 } from "~/lib/get.queries.server";
 import { authenticator } from "~/lib/services/auth.server";
@@ -33,7 +33,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     Promise.all(
       serverList.map(async (server) => {
         const [balance, transactionSummary] = await Promise.all([
-          getBalance(userId, server.shortName),
+          getTotalServerBalance(server.shortName),
           getTransactionSummary(userId, server.shortName),
         ]);
         return {
@@ -93,15 +93,15 @@ export default function Servers() {
                 <Suspense
                   key={server.id}
                   fallback={
-                    <ServerSelectionCard
+                    <AdminServerSelectionCard
                       selectedServer={location.pathname
                         .split("/")
                         .includes(server.shortName)}
                       serverName={server.name}
                       serverShortName={server.shortName}
                       serverBannerImage={server.bannerLink}
-                      serverBalance={undefined}
-                      transactionsAmount={undefined}
+                      totalServerBalance={undefined}
+                      totalTransactionsAmount={undefined}
                       lastTransactionDate={undefined}
                       onClick={() => setSelectedServer(server)}
                     />
@@ -113,15 +113,15 @@ export default function Servers() {
                         (data) => data.shortName === server.shortName,
                       );
                       return (
-                        <ServerSelectionCard
+                        <AdminServerSelectionCard
                           selectedServer={location.pathname
                             .split("/")
                             .includes(server.shortName)}
                           serverName={server.name}
                           serverShortName={server.shortName}
                           serverBannerImage={server.bannerLink}
-                          serverBalance={serverUserData?.balance ?? null}
-                          transactionsAmount={serverUserData?.transactionsCount ?? null}
+                          totalServerBalance={serverUserData?.balance ?? null}
+                          totalTransactionsAmount={serverUserData?.transactionsCount ?? null}
                           lastTransactionDate={
                             serverUserData?.latestTransactionDate
                               ? new Date(serverUserData.latestTransactionDate)

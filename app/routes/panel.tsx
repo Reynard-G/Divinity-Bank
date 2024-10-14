@@ -1,5 +1,5 @@
 import { AvatarImage } from "@radix-ui/react-avatar";
-import { defer, type LoaderFunctionArgs, redirect } from "@remix-run/node";
+import { type LoaderFunctionArgs, redirect } from "@remix-run/node";
 import {
   Link,
   NavLink,
@@ -14,7 +14,6 @@ import {
   IconHome,
   IconMenu,
   IconServer,
-  IconSettings,
   IconTransfer,
 } from "@tabler/icons-react";
 import { useState } from "react";
@@ -22,6 +21,7 @@ import { useState } from "react";
 import SidebarItem from "~/components/Sidebar/SidebarItem";
 import SidebarSection from "~/components/Sidebar/SidebarSection";
 import { Avatar, AvatarFallback } from "~/components/ui/avatar";
+import { Badge } from "~/components/ui/badge";
 import { Button } from "~/components/ui/button";
 import {
   Command,
@@ -52,7 +52,7 @@ import {
 } from "~/components/ui/sheet";
 import Roles from "~/constants/Roles";
 import { type Server } from "~/lib/db/schema";
-import { getAppearanceSettings, getServers } from "~/lib/get.queries.server";
+import { getServers } from "~/lib/get.queries.server";
 import { authenticator } from "~/lib/services/auth.server";
 import { cn } from "~/lib/utils/cn";
 import { type Server as SelectedServer } from "~/types/Server";
@@ -64,12 +64,12 @@ const getNavigationItems = (serverShortName: string) => ({
       items: [
         {
           label: "Home",
-          path: `/app/${serverShortName}/dashboard`,
+          path: `/panel/${serverShortName}/dashboard`,
           icon: <IconHome size={24} aria-hidden="true" />,
         },
         {
           label: "Servers",
-          path: `/app/${serverShortName}/servers`,
+          path: `/panel/${serverShortName}/servers`,
           icon: <IconServer size={24} aria-hidden="true" />,
         },
       ],
@@ -79,22 +79,12 @@ const getNavigationItems = (serverShortName: string) => ({
       items: [
         {
           label: "Transactions",
-          path: `/app/${serverShortName}/transactions`,
+          path: `/panel/${serverShortName}/transactions`,
           icon: <IconTransfer size={24} aria-hidden="true" />,
         },
       ],
     },
   ],
-  bottomSection: {
-    section: "User",
-    items: [
-      {
-        label: "Settings",
-        path: "/app/settings",
-        icon: <IconSettings size={24} aria-hidden="true" />,
-      },
-    ],
-  },
 });
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -102,33 +92,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
     failureRedirect: "/login",
   });
 
-  const [servers, appearanceSettings] = await Promise.all([
+  if ((user.role !== Roles.ADMIN) && (user.role !== Roles.BANKER)) {
+    return redirect("/unauthorized");
+  }
+
+  const [servers] = await Promise.all([
     getServers(),
-    getAppearanceSettings(user.id),
   ]);
 
   const url = new URL(request.url);
-  if (user.role === Roles.ADMIN && (url.pathname === "/app" || url.pathname === "/app/")) {
-    return redirect("/panel");
-  }
-  
-  if (url.pathname === "/app" || url.pathname === "/app/") {
-    return redirect(`/app/${servers[0].shortName}/dashboard`);
+  if (url.pathname === "/panel" || url.pathname === "/panel/") {
+    return redirect(`/panel/${servers[0].shortName}/dashboard`);
   }
 
-  return defer(
-    { user, servers, font: appearanceSettings.font },
-    {
-      status: 200,
-      headers: {
-        "Cache-Control": "private, max-age=2592000", // 30 days
-      },
-    },
-  );
+  return { user, servers };
 }
 
-export default function App() {
-  const { user, servers, font } = useLoaderData<typeof loader>();
+export default function Panel() {
+  const { user, servers } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
   const [selectedServer, setSelectedServer] = useState<Server>(servers[0]);
   const [isServerPopoverOpen, setIsServerPopoverOpen] = useState(false);
@@ -138,12 +119,7 @@ export default function App() {
   return (
     <>
       <div
-        className={cn(
-          "h-full overflow-hidden",
-          font === "Default" && "font-neue_haas_grotesk",
-          font === "System" && "font-sans",
-          font === "Atskinon Hyperlegible" && "font-atskinon_hyperlegible",
-        )}
+        className="h-full overflow-hidden"
       >
         <div className="h-full bg-[#161616] text-[#ededed]">
           <div className="box-border h-screen w-full flex-grow overflow-y-auto">
@@ -202,7 +178,7 @@ export default function App() {
                                   setSelectedServer(server);
                                   setIsServerPopoverOpen(false);
                                   navigate(
-                                    `/app/${server.shortName}/dashboard`,
+                                    `/panel/${server.shortName}/dashboard`,
                                   );
                                 }}
                               >
@@ -242,18 +218,6 @@ export default function App() {
                       </SidebarSection>
                     ))}
                   </div>
-                  <div>
-                    <SidebarSection>
-                      {NavigationItems.bottomSection.items.map((item) => (
-                        <SidebarItem
-                          key={item.label}
-                          label={item.label}
-                          path={item.path}
-                          icon={item.icon}
-                        />
-                      ))}
-                    </SidebarSection>
-                  </div>
                 </div>
               </div>
 
@@ -262,6 +226,8 @@ export default function App() {
                 {/* Top Navigation */}
                 <nav className="sticky top-0 z-10 flex h-16 items-center border-b border-b-[#343434] bg-[#1c1c1c] px-4 py-2 pl-5">
                   <div className="hidden flex-auto items-center justify-end gap-4 md:flex">
+                    <Badge variant="destructive" className="animate-pulse">ADMIN Panel</Badge>
+
                     <Button variant="outline" asChild>
                       <a
                         href="https://discord.com"
@@ -357,23 +323,6 @@ export default function App() {
                             </SheetClose>
                           )),
                         )}
-                        {NavigationItems.bottomSection.items.map((item) => (
-                          <SheetClose key={item.label} asChild>
-                            <NavLink to={item.path}>
-                              {({ isActive }) => (
-                                <span
-                                  className={cn(
-                                    "font-semibold transition-colors duration-200 hover:text-foreground",
-                                    !isActive &&
-                                      "font-medium text-muted-foreground",
-                                  )}
-                                >
-                                  {item.label}
-                                </span>
-                              )}
-                            </NavLink>
-                          </SheetClose>
-                        ))}
                       </nav>
                     </SheetContent>
                   </Sheet>
