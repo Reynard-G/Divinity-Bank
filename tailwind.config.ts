@@ -17,6 +17,7 @@ export default {
         neue_haas_grotesk: ['"Neue Haas Grotesk"', "sans-serif"],
         atskinon_hyperlegible: ['"Atskinon Hyperlegible"', "sans-serif"],
         anta: ['"Anta"', "sans-serif"],
+        metal_mania: ['"Metal Mania"', "cursive"],
       },
       colors: {
         border: "hsl(var(--border))",
