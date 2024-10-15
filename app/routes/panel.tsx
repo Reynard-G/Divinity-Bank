@@ -92,13 +92,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
     failureRedirect: "/login",
   });
 
-  if ((user.role !== Roles.ADMIN) && (user.role !== Roles.BANKER)) {
+  if (user.role !== Roles.ADMIN && user.role !== Roles.BANKER) {
     return redirect("/unauthorized");
   }
 
-  const [servers] = await Promise.all([
-    getServers(),
-  ]);
+  const [servers] = await Promise.all([getServers()]);
 
   const url = new URL(request.url);
   if (url.pathname === "/panel" || url.pathname === "/panel/") {
@@ -118,9 +116,7 @@ export default function Panel() {
 
   return (
     <>
-      <div
-        className="h-full overflow-hidden"
-      >
+      <div className="h-full overflow-hidden">
         <div className="h-full bg-[#161616] text-[#ededed]">
           <div className="box-border h-screen w-full flex-grow overflow-y-auto">
             <div className="grid auto-cols-auto md:pl-[248px]">
@@ -226,7 +222,9 @@ export default function Panel() {
                 {/* Top Navigation */}
                 <nav className="sticky top-0 z-10 flex h-16 items-center border-b border-b-[#343434] bg-[#1c1c1c] px-4 py-2 pl-5">
                   <div className="hidden flex-auto items-center justify-end gap-4 md:flex">
-                    <Badge variant="destructive" className="animate-pulse">ADMIN Panel</Badge>
+                    <Badge variant="destructive" className="animate-pulse">
+                      ADMIN Panel
+                    </Badge>
 
                     <Button variant="outline" asChild>
                       <a

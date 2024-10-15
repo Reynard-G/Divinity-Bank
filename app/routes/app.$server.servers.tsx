@@ -121,7 +121,9 @@ export default function Servers() {
                           serverShortName={server.shortName}
                           serverBannerImage={server.bannerLink}
                           serverBalance={serverUserData?.balance ?? null}
-                          transactionsAmount={serverUserData?.transactionsCount ?? null}
+                          transactionsAmount={
+                            serverUserData?.transactionsCount ?? null
+                          }
                           lastTransactionDate={
                             serverUserData?.latestTransactionDate
                               ? new Date(serverUserData.latestTransactionDate)

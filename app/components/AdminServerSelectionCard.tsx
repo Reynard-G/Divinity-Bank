@@ -22,7 +22,7 @@ interface AdminServerSelectionCardProps {
   totalServerBalance: number | undefined | null;
   totalTransactionsAmount: number | undefined | null;
   lastTransactionDate: Date | undefined | null;
-  
+
   onClick?: () => void;
 }
 
@@ -80,7 +80,9 @@ export default function AdminServerSelectionCard({
             <Skeleton className="h-4 w-20" />
           ) : (
             <span className="text-sm font-medium text-[#ededed]">
-              {totalServerBalance === null ? "N/A" : formatCurrency(totalServerBalance)}
+              {totalServerBalance === null
+                ? "N/A"
+                : formatCurrency(totalServerBalance)}
             </span>
           )}
         </div>
@@ -96,7 +98,9 @@ export default function AdminServerSelectionCard({
               <Skeleton className="h-4 w-16" />
             ) : (
               <span className="text-sm font-normal text-[#ededed]">
-                {totalTransactionsAmount === null ? "N/A" : totalTransactionsAmount}
+                {totalTransactionsAmount === null
+                  ? "N/A"
+                  : totalTransactionsAmount}
               </span>
             )}
           </div>

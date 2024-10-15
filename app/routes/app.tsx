@@ -108,10 +108,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
   ]);
 
   const url = new URL(request.url);
-  if (user.role === Roles.ADMIN && (url.pathname === "/app" || url.pathname === "/app/")) {
+  if (
+    user.role === Roles.ADMIN &&
+    (url.pathname === "/app" || url.pathname === "/app/")
+  ) {
     return redirect("/panel");
   }
-  
+
   if (url.pathname === "/app" || url.pathname === "/app/") {
     return redirect(`/app/${servers[0].shortName}/dashboard`);
   }

@@ -54,7 +54,7 @@ export async function deposit(
     }
 
     const newBalance =
-      (await getBalance(userId, serverShortName) ?? 0.0) + Number(amount);
+      ((await getBalance(userId, serverShortName)) ?? 0.0) + Number(amount);
 
     await tx.insert(transactions).values({
       serverId: server.id,

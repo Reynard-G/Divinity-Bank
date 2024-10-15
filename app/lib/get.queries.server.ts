@@ -311,7 +311,10 @@ export async function getAllTransactions(
 export async function getTransactionSummary(
   userId: number,
   serverShortName: string,
-): Promise<{ transactionsCount: number | null; latestTransactionDate: Date | null }> {
+): Promise<{
+  transactionsCount: number | null;
+  latestTransactionDate: Date | null;
+}> {
   return await db.transaction(async (tx) => {
     const server = await tx
       .select()
@@ -478,8 +481,7 @@ export async function getTotalServerBalance(
 
     const [creditBalance, debitBalance] = await Promise.all([
       tx
-        .select({ amount: sql<string>`SUM(amount)`
-        })
+        .select({ amount: sql<string>`SUM(amount)` })
         .from(transactions)
         .where(
           and(
@@ -490,8 +492,7 @@ export async function getTotalServerBalance(
         )
         .then((res) => res[0]?.amount ?? 0),
       tx
-        .select({ amount: sql<string>`SUM(amount)`
-        })
+        .select({ amount: sql<string>`SUM(amount)` })
         .from(transactions)
         .where(
           and(

@@ -7,8 +7,8 @@ import {
   useOutletContext,
 } from "@remix-run/react";
 import { Suspense } from "react";
-import AdminServerSelectionCard from "~/components/AdminServerSelectionCard";
 
+import AdminServerSelectionCard from "~/components/AdminServerSelectionCard";
 import ServerSelectionCardSkeletonList from "~/components/Skeleton/ServerSelectionCardSkeletonList";
 import { Separator } from "~/components/ui/separator";
 import { type Server } from "~/lib/db/schema";
@@ -121,7 +121,9 @@ export default function Servers() {
                           serverShortName={server.shortName}
                           serverBannerImage={server.bannerLink}
                           totalServerBalance={serverUserData?.balance ?? null}
-                          totalTransactionsAmount={serverUserData?.transactionsCount ?? null}
+                          totalTransactionsAmount={
+                            serverUserData?.transactionsCount ?? null
+                          }
                           lastTransactionDate={
                             serverUserData?.latestTransactionDate
                               ? new Date(serverUserData.latestTransactionDate)
