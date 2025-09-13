@@ -11,7 +11,12 @@ import { servers } from "@/lib/db/schema";
  * @returns An array of server objects, ordered by their ID.
  */
 export const getServers = cache(async (): Promise<Server[]> => {
-  return db.select().from(servers).orderBy(asc(servers.id));
+  try {
+    return db.select().from(servers).orderBy(asc(servers.id));
+  } catch (error) {
+    console.error("Failed to fetch servers:", error);
+    throw new Error("Failed to retrieve servers");
+  }
 });
 
 /**
@@ -22,12 +27,20 @@ export const getServers = cache(async (): Promise<Server[]> => {
  */
 export const getServerByShortName = cache(
   async (serverShortName: string): Promise<Server | null> => {
-    const server = await db
-      .select()
-      .from(servers)
-      .where(eq(servers.shortName, serverShortName))
-      .then((res) => res[0] || null);
+    try {
+      const server = await db
+        .select()
+        .from(servers)
+        .where(eq(servers.shortName, serverShortName))
+        .then((res) => res[0] || null);
 
-    return server;
+      return server;
+    } catch (error) {
+      console.error(
+        `Failed to fetch server with short name ${serverShortName}:`,
+        error
+      );
+      throw new Error("Failed to retrieve server by short name");
+    }
   }
 );

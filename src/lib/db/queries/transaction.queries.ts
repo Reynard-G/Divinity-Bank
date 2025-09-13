@@ -71,24 +71,32 @@ export interface TransactionWithDetails {
  */
 export const getBalance = cache(
   async (userId: number, serverId: number): Promise<number> => {
-    const result = await db
-      .select({
-        creditSum: sql<string>`COALESCE(SUM(CASE WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.CREDIT} THEN ${transactions.amount} ELSE 0 END), 0)`,
-        debitSum: sql<string>`COALESCE(SUM(CASE WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.DEBIT} THEN ${transactions.amount} ELSE 0 END), 0)`,
-      })
-      .from(transactions)
-      .where(
-        and(
-          eq(transactions.userId, userId),
-          eq(transactions.serverId, serverId),
-          eq(transactions.status, TRANSACTION_STATUSES.SUCCESS)
+    try {
+      const result = await db
+        .select({
+          creditSum: sql<string>`COALESCE(SUM(CASE WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.CREDIT} THEN ${transactions.amount} ELSE 0 END), 0)`,
+          debitSum: sql<string>`COALESCE(SUM(CASE WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.DEBIT} THEN ${transactions.amount} ELSE 0 END), 0)`,
+        })
+        .from(transactions)
+        .where(
+          and(
+            eq(transactions.userId, userId),
+            eq(transactions.serverId, serverId),
+            eq(transactions.status, TRANSACTION_STATUSES.SUCCESS)
+          )
         )
-      )
-      .then((res) => res[0] ?? { creditSum: "0", debitSum: "0" });
+        .then((res) => res[0] ?? { creditSum: "0", debitSum: "0" });
 
-    return new Decimal(result.creditSum)
-      .minus(new Decimal(result.debitSum))
-      .toNumber();
+      return new Decimal(result.creditSum)
+        .minus(new Decimal(result.debitSum))
+        .toNumber();
+    } catch (error) {
+      console.error(
+        `Failed to get balance for user ${userId} on server ${serverId}:`,
+        error
+      );
+      throw new Error("Failed to retrieve account balance");
+    }
   }
 );
 
@@ -101,30 +109,38 @@ export const getBalance = cache(
  */
 export const getAllServerBalances = cache(
   async (userId: number): Promise<ServerBalance[]> => {
-    const results = await db
-      .select({
-        serverId: transactions.serverId,
-        balance: sql<string>`
+    try {
+      const results = await db
+        .select({
+          serverId: transactions.serverId,
+          balance: sql<string>`
         COALESCE(
           SUM(CASE WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.CREDIT} THEN ${transactions.amount} ELSE 0 END), 0
         ) - COALESCE(
           SUM(CASE WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.DEBIT} THEN ${transactions.amount} ELSE 0 END), 0
         )
       `,
-      })
-      .from(transactions)
-      .where(
-        and(
-          eq(transactions.userId, userId),
-          eq(transactions.status, TRANSACTION_STATUSES.SUCCESS)
+        })
+        .from(transactions)
+        .where(
+          and(
+            eq(transactions.userId, userId),
+            eq(transactions.status, TRANSACTION_STATUSES.SUCCESS)
+          )
         )
-      )
-      .groupBy(transactions.serverId);
+        .groupBy(transactions.serverId);
 
-    return results.map((result) => ({
-      serverId: result.serverId,
-      balance: new Decimal(result.balance).toNumber(),
-    }));
+      return results.map((result) => ({
+        serverId: result.serverId,
+        balance: new Decimal(result.balance).toNumber(),
+      }));
+    } catch (error) {
+      console.error(
+        `Failed to get all server balances for user ${userId}:`,
+        error
+      );
+      throw new Error("Failed to retrieve user's server balances");
+    }
   }
 );
 
@@ -139,15 +155,26 @@ export async function getTransactionCount(
   userId: number,
   serverId: number
 ): Promise<number> {
-  const transactionCount = await db
-    .select({ count: sql<number>`COUNT(*)` })
-    .from(transactions)
-    .where(
-      and(eq(transactions.userId, userId), eq(transactions.serverId, serverId))
-    )
-    .then((res) => res[0]?.count ?? 0);
+  try {
+    const transactionCount = await db
+      .select({ count: sql<number>`COUNT(*)` })
+      .from(transactions)
+      .where(
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.serverId, serverId)
+        )
+      )
+      .then((res) => res[0]?.count ?? 0);
 
-  return Number(transactionCount);
+    return Number(transactionCount);
+  } catch (error) {
+    console.error(
+      `Failed to get transaction count for user ${userId} on server ${serverId}:`,
+      error
+    );
+    throw new Error("Failed to retrieve transaction count");
+  }
 }
 
 /**
@@ -158,19 +185,27 @@ export async function getTransactionCount(
  */
 export const getAllServerTransactionCounts = cache(
   async (userId: number): Promise<ServerTransactionCount[]> => {
-    const results = await db
-      .select({
-        serverId: transactions.serverId,
-        transactionCount: sql<number>`COUNT(*)`,
-      })
-      .from(transactions)
-      .where(eq(transactions.userId, userId))
-      .groupBy(transactions.serverId);
+    try {
+      const results = await db
+        .select({
+          serverId: transactions.serverId,
+          transactionCount: sql<number>`COUNT(*)`,
+        })
+        .from(transactions)
+        .where(eq(transactions.userId, userId))
+        .groupBy(transactions.serverId);
 
-    return results.map((result) => ({
-      serverId: result.serverId,
-      transactionCount: Number(result.transactionCount),
-    }));
+      return results.map((result) => ({
+        serverId: result.serverId,
+        transactionCount: Number(result.transactionCount),
+      }));
+    } catch (error) {
+      console.error(
+        `Failed to get all server transaction counts for user ${userId}:`,
+        error
+      );
+      throw new Error("Failed to retrieve user's server transaction counts");
+    }
   }
 );
 
@@ -185,15 +220,28 @@ export async function getLatestTransactionDate(
   userId: number,
   serverId: number
 ): Promise<Date | null> {
-  const result = await db
-    .select({ latestDate: sql<string | null>`MAX(${transactions.createdAt})` })
-    .from(transactions)
-    .where(
-      and(eq(transactions.userId, userId), eq(transactions.serverId, serverId))
-    )
-    .then((res) => res[0]?.latestDate || null);
+  try {
+    const result = await db
+      .select({
+        latestDate: sql<string | null>`MAX(${transactions.createdAt})`,
+      })
+      .from(transactions)
+      .where(
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.serverId, serverId)
+        )
+      )
+      .then((res) => res[0]?.latestDate || null);
 
-  return result ? new Date(result) : null;
+    return result ? new Date(result) : null;
+  } catch (error) {
+    console.error(
+      `Failed to get latest transaction date for user ${userId} on server ${serverId}:`,
+      error
+    );
+    throw new Error("Failed to retrieve latest transaction date");
+  }
 }
 
 /**
@@ -204,23 +252,33 @@ export async function getLatestTransactionDate(
  */
 export const getAllServerLatestTransactionDates = cache(
   async (userId: number): Promise<ServerLatestTransaction[]> => {
-    const results = await db
-      .select({
-        serverId: transactions.serverId,
-        latestTransactionDate: sql<
-          string | null
-        >`MAX(${transactions.createdAt})`,
-      })
-      .from(transactions)
-      .where(eq(transactions.userId, userId))
-      .groupBy(transactions.serverId);
+    try {
+      const results = await db
+        .select({
+          serverId: transactions.serverId,
+          latestTransactionDate: sql<
+            string | null
+          >`MAX(${transactions.createdAt})`,
+        })
+        .from(transactions)
+        .where(eq(transactions.userId, userId))
+        .groupBy(transactions.serverId);
 
-    return results.map((result) => ({
-      serverId: result.serverId,
-      latestTransactionDate: result.latestTransactionDate
-        ? new Date(result.latestTransactionDate)
-        : null,
-    }));
+      return results.map((result) => ({
+        serverId: result.serverId,
+        latestTransactionDate: result.latestTransactionDate
+          ? new Date(result.latestTransactionDate)
+          : null,
+      }));
+    } catch (error) {
+      console.error(
+        `Failed to get all server latest transaction dates for user ${userId}:`,
+        error
+      );
+      throw new Error(
+        "Failed to retrieve user's server latest transaction dates"
+      );
+    }
   }
 );
 
@@ -308,60 +366,72 @@ export async function getTransactions(input: GetTransactionsInput) {
   });
 
   // Get paginated data with relationships
-  const data = await db
-    .select({
-      id: transactions.id,
-      amount: transactions.amount,
-      fee: transactions.fee,
-      transactionType: transactions.transactionType,
-      paymentType: transactions.paymentType,
-      status: transactions.status,
-      note: transactions.note,
-      attachment: transactions.attachment,
-      createdAt: transactions.createdAt,
-      updatedAt: transactions.updatedAt,
-      user: {
-        id: users.id,
-        minecraftUsername: users.minecraftUsername,
-        discordUsername: users.discordUsername,
-      },
-      createdByUser: {
-        id: sql<number>`created_by_user.id`,
-        minecraftUsername: sql<string>`created_by_user.minecraft_username`,
-        minecraftUuid: sql<string>`created_by_user.minecraft_uuid`,
-        discordUsername: sql<string>`created_by_user.discord_username`,
-      },
-      server: {
-        id: servers.id,
-        name: servers.name,
-        shortName: servers.shortName,
-      },
-    })
-    .from(transactions)
-    .leftJoin(users, eq(transactions.userId, users.id))
-    .leftJoin(
-      sql`"Users" AS created_by_user`,
-      eq(transactions.createdByUserId, sql`created_by_user.id`)
-    )
-    .leftJoin(servers, eq(transactions.serverId, servers.id))
-    .where(where)
-    .orderBy(...orderBy)
-    .limit(perPage)
-    .offset(offset);
+  let data: TransactionWithDetails[];
+  try {
+    data = await db
+      .select({
+        id: transactions.id,
+        amount: transactions.amount,
+        fee: transactions.fee,
+        transactionType: transactions.transactionType,
+        paymentType: transactions.paymentType,
+        status: transactions.status,
+        note: transactions.note,
+        attachment: transactions.attachment,
+        createdAt: transactions.createdAt,
+        updatedAt: transactions.updatedAt,
+        user: {
+          id: users.id,
+          minecraftUsername: users.minecraftUsername,
+          discordUsername: users.discordUsername,
+        },
+        createdByUser: {
+          id: sql<number>`created_by_user.id`,
+          minecraftUsername: sql<string>`created_by_user.minecraft_username`,
+          minecraftUuid: sql<string>`created_by_user.minecraft_uuid`,
+          discordUsername: sql<string>`created_by_user.discord_username`,
+        },
+        server: {
+          id: servers.id,
+          name: servers.name,
+          shortName: servers.shortName,
+        },
+      })
+      .from(transactions)
+      .innerJoin(users, eq(transactions.userId, users.id))
+      .innerJoin(
+        sql`"Users" AS created_by_user`,
+        eq(transactions.createdByUserId, sql`created_by_user.id`)
+      )
+      .innerJoin(servers, eq(transactions.serverId, servers.id))
+      .where(where)
+      .orderBy(...orderBy)
+      .limit(perPage)
+      .offset(offset);
+  } catch (error) {
+    console.error("Error fetching transactions:", error);
+    throw new Error("Failed to fetch transactions");
+  }
 
   // Get total count
-  const totalResult = await db
-    .select({ count: count() })
-    .from(transactions)
-    .leftJoin(users, eq(transactions.userId, users.id))
-    .leftJoin(servers, eq(transactions.serverId, servers.id))
-    .where(where);
+  let totalResult: { count: number }[];
+  try {
+    totalResult = await db
+      .select({ count: count() })
+      .from(transactions)
+      .innerJoin(users, eq(transactions.userId, users.id))
+      .innerJoin(servers, eq(transactions.serverId, servers.id))
+      .where(where);
+  } catch (error) {
+    console.error("Error fetching transaction count:", error);
+    throw new Error("Failed to fetch transaction count");
+  }
 
-  const total = totalResult[0]?.count ?? 0;
+  const total = totalResult[0].count ?? 0;
   const pageCount = Math.ceil(total / perPage);
 
   return {
-    data: data as TransactionWithDetails[],
+    data,
     pageCount,
     total,
   };
@@ -371,104 +441,159 @@ export async function getTransactionStatusCounts(
   serverId: number,
   userId: number
 ) {
-  const results = await db
-    .select({
-      status: transactions.status,
-      count: count(),
-    })
-    .from(transactions)
-    .where(
-      and(eq(transactions.userId, userId), eq(transactions.serverId, serverId))
-    )
-    .groupBy(transactions.status);
+  try {
+    const results = await db
+      .select({
+        status: transactions.status,
+        count: count(),
+      })
+      .from(transactions)
+      .where(
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.serverId, serverId)
+        )
+      )
+      .groupBy(transactions.status);
 
-  return results.reduce(
-    (acc, { status, count }) => {
-      acc[status] = count;
-      return acc;
-    },
-    {} as Record<string, number>
-  );
+    return results.reduce(
+      (acc, { status, count }) => {
+        acc[status] = count;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
+  } catch (error) {
+    console.error(
+      `Failed to get transaction status counts for user ${userId} on server ${serverId}:`,
+      error
+    );
+    throw new Error("Failed to retrieve transaction status counts");
+  }
 }
 
 export async function getTransactionTypeCounts(
   userId: number,
   serverId: number
 ) {
-  const results = await db
-    .select({
-      type: transactions.transactionType,
-      count: count(),
-    })
-    .from(transactions)
-    .where(
-      and(eq(transactions.userId, userId), eq(transactions.serverId, serverId))
-    )
-    .groupBy(transactions.transactionType);
+  try {
+    const results = await db
+      .select({
+        type: transactions.transactionType,
+        count: count(),
+      })
+      .from(transactions)
+      .where(
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.serverId, serverId)
+        )
+      )
+      .groupBy(transactions.transactionType);
 
-  return results.reduce(
-    (acc, { type, count }) => {
-      acc[type] = count;
-      return acc;
-    },
-    {} as Record<string, number>
-  );
+    return results.reduce(
+      (acc, { type, count }) => {
+        acc[type] = count;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
+  } catch (error) {
+    console.error(
+      `Failed to get transaction type counts for user ${userId} on server ${serverId}:`,
+      error
+    );
+    throw new Error("Failed to retrieve transaction type counts");
+  }
 }
 
 export async function getPaymentTypeCounts(userId: number, serverId: number) {
-  const results = await db
-    .select({
-      type: transactions.paymentType,
-      count: count(),
-    })
-    .from(transactions)
-    .where(
-      and(eq(transactions.userId, userId), eq(transactions.serverId, serverId))
-    )
-    .groupBy(transactions.paymentType);
+  try {
+    const results = await db
+      .select({
+        type: transactions.paymentType,
+        count: count(),
+      })
+      .from(transactions)
+      .where(
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.serverId, serverId)
+        )
+      )
+      .groupBy(transactions.paymentType);
 
-  return results.reduce(
-    (acc, { type, count }) => {
-      acc[type] = count;
-      return acc;
-    },
-    {} as Record<string, number>
-  );
+    return results.reduce(
+      (acc, { type, count }) => {
+        acc[type] = count;
+        return acc;
+      },
+      {} as Record<string, number>
+    );
+  } catch (error) {
+    console.error(
+      `Failed to get payment type counts for user ${userId} on server ${serverId}:`,
+      error
+    );
+    throw new Error("Failed to retrieve payment type counts");
+  }
 }
 
 export async function getUserCounts(userId: number, serverId: number) {
-  const results = await db
-    .select({
-      id: users.id,
-      username: users.minecraftUsername,
-      count: count(),
-    })
-    .from(transactions)
-    .innerJoin(users, eq(transactions.userId, users.id))
-    .where(
-      and(eq(transactions.userId, userId), eq(transactions.serverId, serverId))
-    )
-    .groupBy(users.id);
+  try {
+    const results = await db
+      .select({
+        id: users.id,
+        username: users.minecraftUsername,
+        count: count(),
+      })
+      .from(transactions)
+      .innerJoin(users, eq(transactions.userId, users.id))
+      .where(
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.serverId, serverId)
+        )
+      )
+      .groupBy(users.id);
 
-  return results.reduce(
-    (acc, { id, username, count }) => {
-      acc[username] = { id, count };
-      return acc;
-    },
-    {} as Record<string, { id: number; count: number }>
-  );
+    return results.reduce(
+      (acc, { id, username, count }) => {
+        acc[username] = { id, count };
+        return acc;
+      },
+      {} as Record<string, { id: number; count: number }>
+    );
+  } catch (error) {
+    console.error(
+      `Failed to get user counts for user ${userId} on server ${serverId}:`,
+      error
+    );
+    throw new Error("Failed to retrieve user counts");
+  }
 }
 
 export async function getAmountRange(userId: number, serverId: number) {
-  const result = await db
-    .select({
-      min: sql<number>`COALESCE(MIN(CAST(${transactions.amount} AS DECIMAL)), 0)`,
-      max: sql<number>`COALESCE(MAX(CAST(${transactions.amount} AS DECIMAL)), 0)`,
-    })
-    .from(transactions)
-    .where(
-      and(eq(transactions.userId, userId), eq(transactions.serverId, serverId))
-    );
+  try {
+    const result = await db
+      .select({
+        min: sql<number>`COALESCE(MIN(CAST(${transactions.amount} AS DECIMAL)), 0)`,
+        max: sql<number>`COALESCE(MAX(CAST(${transactions.amount} AS DECIMAL)), 0)`,
+      })
+      .from(transactions)
+      .where(
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.serverId, serverId)
+        )
+      );
 
-  return result[0] ?? { min: 0, max: 0 };
+    return result[0] ?? { min: 0, max: 0 };
+  } catch (error) {
+    console.error(
+      `Failed to get amount range for user ${userId} on server ${serverId}:`,
+      error
+    );
+    throw new Error("Failed to retrieve amount range");
+  }
 }

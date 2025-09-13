@@ -16,6 +16,10 @@ export async function generateStaticParams() {
     .orderBy(servers.id)
     .then((rows) => rows.map((row) => row.shortName));
 
+  if (serverShortNames.length === 0) {
+    throw new Error("No servers found - check database configuration");
+  }
+
   return serverShortNames.map((shortName) => ({
     server: shortName,
   }));
