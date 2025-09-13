@@ -5,4 +5,4 @@ export const PAYMENT_TYPES = Object.freeze({
   INTEREST: "INTEREST",
 } as const);
 
-export type PaymentType = typeof PAYMENT_TYPES[keyof typeof PAYMENT_TYPES];
+export type PaymentType = (typeof PAYMENT_TYPES)[keyof typeof PAYMENT_TYPES];

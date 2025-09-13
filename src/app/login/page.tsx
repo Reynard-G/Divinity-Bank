@@ -23,7 +23,11 @@ export default function LoginPage() {
             </p>
           </div>
 
-          <form action={formAction} autoComplete="off" className="flex flex-col gap-2">
+          <form
+            action={formAction}
+            autoComplete="off"
+            className="flex flex-col gap-2"
+          >
             <Input
               name="username"
               placeholder="Username"

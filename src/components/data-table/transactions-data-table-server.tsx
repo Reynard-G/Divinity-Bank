@@ -1,11 +1,13 @@
-import { 
-  getTransactions, 
-  getTransactionStatusCounts, 
-  getTransactionTypeCounts, 
-  getPaymentTypeCounts, 
+"use server";
+
+import {
+  getTransactions,
+  getTransactionStatusCounts,
+  getTransactionTypeCounts,
+  getPaymentTypeCounts,
   getAmountRange,
   getUserCounts,
-  type TransactionWithDetails
+  type TransactionWithDetails,
 } from "@/lib/db/queries/transaction.queries";
 import { getValidFilters } from "@/lib/utils/data-table";
 import { TransactionsDataTableClient } from "@/components/data-table/transactions-data-table-client";
@@ -30,7 +32,7 @@ export async function TransactionsDataTableServer({
 }: TransactionsDataTableServerProps) {
   const page = parseInt(searchParams.page ?? "1", 10);
   const perPage = parseInt(searchParams.perPage ?? "10", 10);
-  
+
   const sort = searchParams.sort
     ? JSON.parse(decodeURIComponent(searchParams.sort))
     : [{ id: "createdAt", desc: true }];
@@ -47,7 +49,14 @@ export async function TransactionsDataTableServer({
   const validFilters = getValidFilters(filters);
   const joinOperator = searchParams.operator === "or" ? "or" : "and";
 
-  const [transactionData, statusCounts, typeCounts, paymentCounts, userCounts, amountRange] = await Promise.all([
+  const [
+    transactionData,
+    statusCounts,
+    typeCounts,
+    paymentCounts,
+    userCounts,
+    amountRange,
+  ] = await Promise.all([
     getTransactions({
       page,
       perPage,
@@ -58,7 +67,7 @@ export async function TransactionsDataTableServer({
       serverId,
     }),
     getTransactionStatusCounts(userId, serverId),
-    getTransactionTypeCounts(userId, serverId), 
+    getTransactionTypeCounts(userId, serverId),
     getPaymentTypeCounts(userId, serverId),
     getUserCounts(userId, serverId),
     getAmountRange(userId, serverId),

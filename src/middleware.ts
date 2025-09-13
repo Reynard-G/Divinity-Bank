@@ -14,17 +14,17 @@ export async function middleware(request: NextRequest) {
     if (!session) {
       return NextResponse.redirect(new URL("/login", request.url));
     }
-    
+
     await updateSession(session);
-    
+
     const serverMatch = pathname.match(/^\/app\/server\/([^\/]+)(\/|$)/); // Match /app/server/:server or /app/server/:server/
     if (serverMatch) {
-      response.cookies.set('lastVisitedServer', serverMatch[1], {
+      response.cookies.set("lastVisitedServer", serverMatch[1], {
         httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'lax',
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
         maxAge: 60 * 60 * 24 * 30, // 30 days
-        path: '/',
+        path: "/",
       });
     }
 
@@ -41,9 +41,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    "/app/:path*",
-    "/panel/:path*",
-    "/login/:path*",
-  ],
+  matcher: ["/app/:path*", "/panel/:path*", "/login/:path*"],
 };

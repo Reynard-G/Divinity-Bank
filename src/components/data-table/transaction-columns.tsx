@@ -20,7 +20,7 @@ import {
   CheckCircle,
   Clock,
   XCircle,
-  AlertCircle
+  AlertCircle,
 } from "lucide-react";
 import { TransactionsDataTableClientProps } from "@/components/data-table/transactions-data-table-client";
 
@@ -29,7 +29,10 @@ export function getTransactionColumns(
   typeCounts: TransactionsDataTableClientProps["typeCounts"] = {},
   paymentCounts: TransactionsDataTableClientProps["paymentCounts"] = {},
   userCounts: TransactionsDataTableClientProps["userCounts"] = {},
-  amountRange: TransactionsDataTableClientProps["amountRange"] = { min: 0, max: 1000 }
+  amountRange: TransactionsDataTableClientProps["amountRange"] = {
+    min: 0,
+    max: 1000,
+  }
 ): ColumnDef<TransactionWithDetails>[] {
   return [
     {
@@ -38,9 +41,7 @@ export function getTransactionColumns(
       header: ({ column }) => (
         <DataTableColumnHeader column={column} title="ID" />
       ),
-      cell: ({ row }) => (
-        <div className="text-sm">{row.getValue("id")}</div>
-      ),
+      cell: ({ row }) => <div className="text-sm">{row.getValue("id")}</div>,
       enableSorting: true,
       enableColumnFilter: false,
       size: 80,
@@ -57,10 +58,18 @@ export function getTransactionColumns(
           <div className="flex items-center space-x-2">
             <Avatar className="h-6 w-6 rounded">
               <AvatarImage
-                src={createdBy.minecraftUuid ? `https://crafatar.com/avatars/${createdBy.minecraftUuid}?size=24&overlay` : undefined}
+                src={
+                  createdBy.minecraftUuid
+                    ? `https://crafatar.com/avatars/${createdBy.minecraftUuid}?size=24&overlay`
+                    : undefined
+                }
                 alt={createdBy.minecraftUsername || "User Avatar"}
               />
-              <AvatarFallback>{createdBy.minecraftUsername ? createdBy.minecraftUsername.charAt(0).toUpperCase() : "N/A"}</AvatarFallback>
+              <AvatarFallback>
+                {createdBy.minecraftUsername
+                  ? createdBy.minecraftUsername.charAt(0).toUpperCase()
+                  : "N/A"}
+              </AvatarFallback>
             </Avatar>
             <span className="max-w-[100px] truncate text-sm">
               {createdBy.minecraftUsername || "Unknown User"}
@@ -71,11 +80,13 @@ export function getTransactionColumns(
       meta: {
         label: "Created By",
         variant: "multiSelect",
-        options: Object.entries(userCounts).map(([username, { id, count }]) => ({
-          label: username,
-          value: id.toString(),
-          count,
-        })),
+        options: Object.entries(userCounts).map(
+          ([username, { id, count }]) => ({
+            label: username,
+            value: id.toString(),
+            count,
+          })
+        ),
       },
       enableColumnFilter: true,
       enableSorting: false,
@@ -93,7 +104,10 @@ export function getTransactionColumns(
         const isCredit = transactionType.toLowerCase() === "credit";
         return (
           <div className="text-sm">
-            <span className="text-muted-foreground">{isCredit ? "+" : "-"}</span>{formatCurrency(amount)}
+            <span className="text-muted-foreground">
+              {isCredit ? "+" : "-"}
+            </span>
+            {formatCurrency(amount)}
           </div>
         );
       },
@@ -118,7 +132,8 @@ export function getTransactionColumns(
         const fee = parseFloat(row.getValue("fee"));
         return (
           <div className="text-sm">
-            {fee > 0 && "-"}{formatCurrency(fee)}
+            {fee > 0 && "-"}
+            {formatCurrency(fee)}
           </div>
         );
       },
@@ -165,10 +180,7 @@ export function getTransactionColumns(
         const TransactionTypeIcon = getTransactionTypeIcon();
 
         return (
-          <Badge
-            variant={getTransactionTypeVariant()}
-            className="capitalize"
-          >
+          <Badge variant={getTransactionTypeVariant()} className="capitalize">
             <TransactionTypeIcon className="mr-1 h-3 w-3" />
             {type}
           </Badge>
@@ -349,7 +361,11 @@ export function getTransactionColumns(
         return (
           <div className="max-w-32">
             {note ? (
-              <Scroller orientation="horizontal" hideScrollbar className="flex items-center space-x-2">
+              <Scroller
+                orientation="horizontal"
+                hideScrollbar
+                className="flex items-center space-x-2"
+              >
                 <span className="text-sm">{note}</span>
               </Scroller>
             ) : (
@@ -380,16 +396,13 @@ export function getTransactionColumns(
             <Calendar className="h-4 w-4 text-muted-foreground" />
             <div>
               <div className="text-sm">
-                {formatDate(
-                  new Date(createdAt),
-                  {
-                    month: 'short',
-                    day: '2-digit',
-                    year: 'numeric',
-                    hour: undefined,
-                    minute: undefined,
-                  }
-                )}
+                {formatDate(new Date(createdAt), {
+                  month: "short",
+                  day: "2-digit",
+                  year: "numeric",
+                  hour: undefined,
+                  minute: undefined,
+                })}
               </div>
               <div className="text-xs text-muted-foreground">
                 {new Date(createdAt).toLocaleTimeString()}

@@ -8,11 +8,14 @@ export const loginSchema = z.object({
     .string()
     .min(3, "Username must be at least 3 characters long")
     .max(16, "Username must be at most 16 characters long")
-    .regex(/^[a-zA-Z0-9_]+$/, "Username can only contain letters, numbers, and underscores"),
+    .regex(
+      /^[a-zA-Z0-9_]+$/,
+      "Username can only contain letters, numbers, and underscores"
+    ),
   password: z
     .string()
     .min(3, "Password must be at least 3 characters long")
-    .max(128, "Password must be at most 128 characters long")
+    .max(128, "Password must be at most 128 characters long"),
 });
 
 export type LoginInput = z.infer<typeof loginSchema>;

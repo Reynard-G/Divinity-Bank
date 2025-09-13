@@ -27,7 +27,7 @@ export interface ServerLatestTransaction {
 export interface GetTransactionsInput {
   page: number;
   perPage: number;
-  sort?: Array<{ id: string; desc: boolean; }>;
+  sort?: Array<{ id: string; desc: boolean }>;
   filters?: ExtendedColumnFilter<TransactionWithDetails>[];
   joinOperator?: JoinOperator;
   userId?: number;
@@ -64,63 +64,69 @@ export interface TransactionWithDetails {
 
 /**
  * Fetches the balance of the current user for a specific server.
- * 
+ *
  * @param userId - The ID of the user whose balance is to be fetched.
  * @param serverId - The ID of the server for which the balance is to be fetched.
  * @returns The balance as a number, or 0 if no transactions are found.
  */
-export const getBalance = cache(async (userId: number, serverId: number): Promise<number> => {
-  const result = await db
-    .select({
-      creditSum: sql<string>`COALESCE(SUM(CASE WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.CREDIT} THEN ${transactions.amount} ELSE 0 END), 0)`,
-      debitSum: sql<string>`COALESCE(SUM(CASE WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.DEBIT} THEN ${transactions.amount} ELSE 0 END), 0)`
-    })
-    .from(transactions)
-    .where(
-      and(
-        eq(transactions.userId, userId),
-        eq(transactions.serverId, serverId),
-        eq(transactions.status, TRANSACTION_STATUSES.SUCCESS)
+export const getBalance = cache(
+  async (userId: number, serverId: number): Promise<number> => {
+    const result = await db
+      .select({
+        creditSum: sql<string>`COALESCE(SUM(CASE WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.CREDIT} THEN ${transactions.amount} ELSE 0 END), 0)`,
+        debitSum: sql<string>`COALESCE(SUM(CASE WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.DEBIT} THEN ${transactions.amount} ELSE 0 END), 0)`,
+      })
+      .from(transactions)
+      .where(
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.serverId, serverId),
+          eq(transactions.status, TRANSACTION_STATUSES.SUCCESS)
+        )
       )
-    )
-    .then(res => res[0] ?? { creditSum: "0", debitSum: "0" });
+      .then((res) => res[0] ?? { creditSum: "0", debitSum: "0" });
 
-  return new Decimal(result.creditSum).minus(new Decimal(result.debitSum)).toNumber();
-});
+    return new Decimal(result.creditSum)
+      .minus(new Decimal(result.debitSum))
+      .toNumber();
+  }
+);
 
 /**
  * Fetches the balances for all servers for a specific user in a single query.
  * This is much more efficient than calling getBalance() for each server individually.
- * 
+ *
  * @param userId - The ID of the user whose server balances are to be fetched.
  * @returns An array of ServerBalance objects, each containing a server ID and its balance.
  */
-export const getAllServerBalances = cache(async (userId: number): Promise<ServerBalance[]> => {
-  const results = await db
-    .select({
-      serverId: transactions.serverId,
-      balance: sql<string>`
+export const getAllServerBalances = cache(
+  async (userId: number): Promise<ServerBalance[]> => {
+    const results = await db
+      .select({
+        serverId: transactions.serverId,
+        balance: sql<string>`
         COALESCE(
           SUM(CASE WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.CREDIT} THEN ${transactions.amount} ELSE 0 END), 0
         ) - COALESCE(
           SUM(CASE WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.DEBIT} THEN ${transactions.amount} ELSE 0 END), 0
         )
-      `
-    })
-    .from(transactions)
-    .where(
-      and(
-        eq(transactions.userId, userId),
-        eq(transactions.status, TRANSACTION_STATUSES.SUCCESS)
+      `,
+      })
+      .from(transactions)
+      .where(
+        and(
+          eq(transactions.userId, userId),
+          eq(transactions.status, TRANSACTION_STATUSES.SUCCESS)
+        )
       )
-    )
-    .groupBy(transactions.serverId);
+      .groupBy(transactions.serverId);
 
-  return results.map(result => ({
-    serverId: result.serverId,
-    balance: new Decimal(result.balance).toNumber()
-  }));
-});
+    return results.map((result) => ({
+      serverId: result.serverId,
+      balance: new Decimal(result.balance).toNumber(),
+    }));
+  }
+);
 
 /**
  * Fetches the transaction count for a user on a specific server.
@@ -129,17 +135,17 @@ export const getAllServerBalances = cache(async (userId: number): Promise<Server
  * @param serverId - The ID of the server.
  * @returns The count of transactions as a number.
  */
-export async function getTransactionCount(userId: number, serverId: number): Promise<number> {
+export async function getTransactionCount(
+  userId: number,
+  serverId: number
+): Promise<number> {
   const transactionCount = await db
     .select({ count: sql<number>`COUNT(*)` })
     .from(transactions)
     .where(
-      and(
-        eq(transactions.userId, userId),
-        eq(transactions.serverId, serverId)
-      )
+      and(eq(transactions.userId, userId), eq(transactions.serverId, serverId))
     )
-    .then(res => res[0]?.count ?? 0);
+    .then((res) => res[0]?.count ?? 0);
 
   return Number(transactionCount);
 }
@@ -150,21 +156,23 @@ export async function getTransactionCount(userId: number, serverId: number): Pro
  * @param userId - The ID of the user whose server transaction counts are to be fetched.
  * @returns An array of ServerTransactionCount objects, each containing a server ID and its transaction count.
  */
-export const getAllServerTransactionCounts = cache(async (userId: number): Promise<ServerTransactionCount[]> => {
-  const results = await db
-    .select({
-      serverId: transactions.serverId,
-      transactionCount: sql<number>`COUNT(*)`
-    })
-    .from(transactions)
-    .where(eq(transactions.userId, userId))
-    .groupBy(transactions.serverId);
+export const getAllServerTransactionCounts = cache(
+  async (userId: number): Promise<ServerTransactionCount[]> => {
+    const results = await db
+      .select({
+        serverId: transactions.serverId,
+        transactionCount: sql<number>`COUNT(*)`,
+      })
+      .from(transactions)
+      .where(eq(transactions.userId, userId))
+      .groupBy(transactions.serverId);
 
-  return results.map(result => ({
-    serverId: result.serverId,
-    transactionCount: Number(result.transactionCount)
-  }));
-});
+    return results.map((result) => ({
+      serverId: result.serverId,
+      transactionCount: Number(result.transactionCount),
+    }));
+  }
+);
 
 /**
  * Fetches the latest transaction date for a user on a specific server.
@@ -173,50 +181,56 @@ export const getAllServerTransactionCounts = cache(async (userId: number): Promi
  * @param serverId - The ID of the server.
  * @returns The latest transaction date as a Date object, or null if no transactions are found.
  */
-export async function getLatestTransactionDate(userId: number, serverId: number): Promise<Date | null> {
+export async function getLatestTransactionDate(
+  userId: number,
+  serverId: number
+): Promise<Date | null> {
   const result = await db
     .select({ latestDate: sql<string | null>`MAX(${transactions.createdAt})` })
     .from(transactions)
     .where(
-      and(
-        eq(transactions.userId, userId),
-        eq(transactions.serverId, serverId)
-      )
+      and(eq(transactions.userId, userId), eq(transactions.serverId, serverId))
     )
-    .then(res => res[0]?.latestDate || null);
+    .then((res) => res[0]?.latestDate || null);
 
   return result ? new Date(result) : null;
 }
 
 /**
  * Fetches the latest transaction dates for all servers for a specific user in a single query.
- * 
+ *
  * @param userId - The ID of the user whose server latest transaction dates are to be fetched.
  * @returns An array of ServerLatestTransaction objects, each containing a server ID and its latest transaction date.
  */
-export const getAllServerLatestTransactionDates = cache(async (userId: number): Promise<ServerLatestTransaction[]> => {
-  const results = await db
-    .select({
-      serverId: transactions.serverId,
-      latestTransactionDate: sql<string | null>`MAX(${transactions.createdAt})`
-    })
-    .from(transactions)
-    .where(eq(transactions.userId, userId))
-    .groupBy(transactions.serverId);
+export const getAllServerLatestTransactionDates = cache(
+  async (userId: number): Promise<ServerLatestTransaction[]> => {
+    const results = await db
+      .select({
+        serverId: transactions.serverId,
+        latestTransactionDate: sql<
+          string | null
+        >`MAX(${transactions.createdAt})`,
+      })
+      .from(transactions)
+      .where(eq(transactions.userId, userId))
+      .groupBy(transactions.serverId);
 
-  return results.map(result => ({
-    serverId: result.serverId,
-    latestTransactionDate: result.latestTransactionDate ? new Date(result.latestTransactionDate) : null
-  }));
-});
+    return results.map((result) => ({
+      serverId: result.serverId,
+      latestTransactionDate: result.latestTransactionDate
+        ? new Date(result.latestTransactionDate)
+        : null,
+    }));
+  }
+);
 
 /**
  * Retrieves a paginated list of transactions with filtering, sorting, and relationship data.
- * 
+ *
  * This function performs a complex query to fetch transactions along with their associated
  * user, creator, and server information. It supports pagination, multiple sort options,
  * and flexible filtering with AND/OR operators.
- * 
+ *
  * @param input - The query parameters for retrieving transactions
  * @param input.page - The page number for pagination (1-based)
  * @param input.perPage - Number of transactions to return per page
@@ -225,12 +239,12 @@ export const getAllServerLatestTransactionDates = cache(async (userId: number): 
  * @param input.joinOperator - Logical operator ("and" or "or") for combining filters (defaults to "and")
  * @param input.userId - User ID to filter transactions by user
  * @param input.serverId - Server ID to filter transactions by server
- * 
+ *
  * @returns Promise that resolves to an object containing:
  *   - data: Array of transactions with user, creator, and server details
  *   - pageCount: Total number of pages based on perPage size
  *   - total: Total count of transactions matching the filters
- * 
+ *
  * @example
  * ```typescript
  * const result = await getTransactions({
@@ -261,21 +275,35 @@ export async function getTransactions(input: GetTransactionsInput) {
   const orderBy = sort.map((sortItem) => {
     switch (sortItem.id) {
       case "amount":
-        return sortItem.desc ? desc(transactions.amount) : asc(transactions.amount);
+        return sortItem.desc
+          ? desc(transactions.amount)
+          : asc(transactions.amount);
       case "fee":
         return sortItem.desc ? desc(transactions.fee) : asc(transactions.fee);
       case "transactionType":
-        return sortItem.desc ? desc(transactions.transactionType) : asc(transactions.transactionType);
+        return sortItem.desc
+          ? desc(transactions.transactionType)
+          : asc(transactions.transactionType);
       case "paymentType":
-        return sortItem.desc ? desc(transactions.paymentType) : asc(transactions.paymentType);
+        return sortItem.desc
+          ? desc(transactions.paymentType)
+          : asc(transactions.paymentType);
       case "status":
-        return sortItem.desc ? desc(transactions.status) : asc(transactions.status);
+        return sortItem.desc
+          ? desc(transactions.status)
+          : asc(transactions.status);
       case "createdAt":
-        return sortItem.desc ? desc(transactions.createdAt) : asc(transactions.createdAt);
+        return sortItem.desc
+          ? desc(transactions.createdAt)
+          : asc(transactions.createdAt);
       case "updatedAt":
-        return sortItem.desc ? desc(transactions.updatedAt) : asc(transactions.updatedAt);
+        return sortItem.desc
+          ? desc(transactions.updatedAt)
+          : asc(transactions.updatedAt);
       default:
-        return sortItem.desc ? desc(transactions.createdAt) : asc(transactions.createdAt);
+        return sortItem.desc
+          ? desc(transactions.createdAt)
+          : asc(transactions.createdAt);
     }
   });
 
@@ -339,7 +367,10 @@ export async function getTransactions(input: GetTransactionsInput) {
   };
 }
 
-export async function getTransactionStatusCounts(serverId: number, userId: number) {
+export async function getTransactionStatusCounts(
+  serverId: number,
+  userId: number
+) {
   const results = await db
     .select({
       status: transactions.status,
@@ -347,20 +378,23 @@ export async function getTransactionStatusCounts(serverId: number, userId: numbe
     })
     .from(transactions)
     .where(
-      and(
-        eq(transactions.userId, userId),
-        eq(transactions.serverId, serverId),
-      )
+      and(eq(transactions.userId, userId), eq(transactions.serverId, serverId))
     )
     .groupBy(transactions.status);
 
-  return results.reduce((acc, { status, count }) => {
-    acc[status] = count;
-    return acc;
-  }, {} as Record<string, number>);
+  return results.reduce(
+    (acc, { status, count }) => {
+      acc[status] = count;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 }
 
-export async function getTransactionTypeCounts(userId: number, serverId: number) {
+export async function getTransactionTypeCounts(
+  userId: number,
+  serverId: number
+) {
   const results = await db
     .select({
       type: transactions.transactionType,
@@ -368,17 +402,17 @@ export async function getTransactionTypeCounts(userId: number, serverId: number)
     })
     .from(transactions)
     .where(
-      and(
-        eq(transactions.userId, userId),
-        eq(transactions.serverId, serverId),
-      )
+      and(eq(transactions.userId, userId), eq(transactions.serverId, serverId))
     )
     .groupBy(transactions.transactionType);
 
-  return results.reduce((acc, { type, count }) => {
-    acc[type] = count;
-    return acc;
-  }, {} as Record<string, number>);
+  return results.reduce(
+    (acc, { type, count }) => {
+      acc[type] = count;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 }
 
 export async function getPaymentTypeCounts(userId: number, serverId: number) {
@@ -389,17 +423,17 @@ export async function getPaymentTypeCounts(userId: number, serverId: number) {
     })
     .from(transactions)
     .where(
-      and(
-        eq(transactions.userId, userId),
-        eq(transactions.serverId, serverId),
-      )
+      and(eq(transactions.userId, userId), eq(transactions.serverId, serverId))
     )
     .groupBy(transactions.paymentType);
 
-  return results.reduce((acc, { type, count }) => {
-    acc[type] = count;
-    return acc;
-  }, {} as Record<string, number>);
+  return results.reduce(
+    (acc, { type, count }) => {
+      acc[type] = count;
+      return acc;
+    },
+    {} as Record<string, number>
+  );
 }
 
 export async function getUserCounts(userId: number, serverId: number) {
@@ -412,17 +446,17 @@ export async function getUserCounts(userId: number, serverId: number) {
     .from(transactions)
     .innerJoin(users, eq(transactions.userId, users.id))
     .where(
-      and(
-        eq(transactions.userId, userId),
-        eq(transactions.serverId, serverId),
-      )
+      and(eq(transactions.userId, userId), eq(transactions.serverId, serverId))
     )
     .groupBy(users.id);
 
-  return results.reduce((acc, { id, username, count }) => {
-    acc[username] = { id, count };
-    return acc;
-  }, {} as Record<string, { id: number; count: number; }>);
+  return results.reduce(
+    (acc, { id, username, count }) => {
+      acc[username] = { id, count };
+      return acc;
+    },
+    {} as Record<string, { id: number; count: number }>
+  );
 }
 
 export async function getAmountRange(userId: number, serverId: number) {
@@ -433,10 +467,7 @@ export async function getAmountRange(userId: number, serverId: number) {
     })
     .from(transactions)
     .where(
-      and(
-        eq(transactions.userId, userId),
-        eq(transactions.serverId, serverId),
-      )
+      and(eq(transactions.userId, userId), eq(transactions.serverId, serverId))
     );
 
   return result[0] ?? { min: 0, max: 0 };

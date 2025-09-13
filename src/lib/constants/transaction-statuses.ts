@@ -4,4 +4,5 @@ export const TRANSACTION_STATUSES = Object.freeze({
   SUCCESS: "SUCCESS",
 } as const);
 
-export type TransactionStatus = typeof TRANSACTION_STATUSES[keyof typeof TRANSACTION_STATUSES];
+export type TransactionStatus =
+  (typeof TRANSACTION_STATUSES)[keyof typeof TRANSACTION_STATUSES];

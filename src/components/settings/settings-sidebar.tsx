@@ -38,7 +38,7 @@ export function SettingsSidebar() {
               pathname === item.href
                 ? "bg-accent text-accent-foreground"
                 : "hover:bg-transparent hover:underline",
-              "justify-start",
+              "justify-start"
             )}
           >
             <span className="mr-2">{item.icon}</span>

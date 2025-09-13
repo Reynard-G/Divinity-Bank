@@ -1,6 +1,9 @@
 import { unauthorized } from "next/navigation";
 
-import { getAllServerBalances, getAllServerTransactionCounts } from "@/lib/db/queries/transaction.queries";
+import {
+  getAllServerBalances,
+  getAllServerTransactionCounts,
+} from "@/lib/db/queries/transaction.queries";
 import { getServers } from "@/lib/db/queries/server.queries";
 import { getCurrentUser } from "@/lib/db/queries/user.queries";
 import { formatCurrency } from "@/lib/utils/format-currency";
@@ -17,27 +20,37 @@ export async function SummaryCards() {
     getAllServerTransactionCounts(user.id),
   ]);
 
-  const totalBalance = balanceData.reduce((sum, server) =>
-    sum + (server.balance ?? 0), 0);
-  const totalTransactions = transactionCountData.reduce((sum, server) =>
-    sum + (server.transactionCount ?? 0), 0);
-  const activeServers = transactionCountData.filter(server => server.transactionCount > 0).length;
+  const totalBalance = balanceData.reduce(
+    (sum, server) => sum + (server.balance ?? 0),
+    0
+  );
+  const totalTransactions = transactionCountData.reduce(
+    (sum, server) => sum + (server.transactionCount ?? 0),
+    0
+  );
+  const activeServers = transactionCountData.filter(
+    (server) => server.transactionCount > 0
+  ).length;
 
   return (
-    <div className="grid gap-4 md:grid-cols-3 mb-8">
+    <div className="mb-8 grid gap-4 md:grid-cols-3">
       <Card>
         <CardHeader className="pb-2">
           <CardTitle className="text-sm font-medium">Total Balance</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="text-2xl font-bold">{formatCurrency(totalBalance)}</div>
+          <div className="text-2xl font-bold">
+            {formatCurrency(totalBalance)}
+          </div>
           <p className="text-xs text-muted-foreground">across all servers</p>
         </CardContent>
       </Card>
 
       <Card>
         <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium">Total Transactions</CardTitle>
+          <CardTitle className="text-sm font-medium">
+            Total Transactions
+          </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{totalTransactions}</div>
@@ -51,7 +64,9 @@ export async function SummaryCards() {
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">{activeServers}</div>
-          <p className="text-xs text-muted-foreground">of {servers.length} servers</p>
+          <p className="text-xs text-muted-foreground">
+            of {servers.length} servers
+          </p>
         </CardContent>
       </Card>
     </div>

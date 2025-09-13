@@ -11,7 +11,9 @@ async function getTargetServerForRedirect(): Promise<string | null> {
   const cookieStore = await cookies();
   const lastVisitedServer = cookieStore.get("lastVisitedServer")?.value;
   if (lastVisitedServer) {
-    const matchedServer = servers.find(server => server.shortName === lastVisitedServer);
+    const matchedServer = servers.find(
+      (server) => server.shortName === lastVisitedServer
+    );
     if (matchedServer) return matchedServer.shortName;
   }
 

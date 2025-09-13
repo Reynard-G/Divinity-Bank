@@ -5,21 +5,21 @@ import { isIP } from "is-ip";
  * determine the client's IP address.
  */
 const headerNames = Object.freeze([
-	"X-Azure-ClientIP" /** Azure Front Door */,
-	"X-Client-IP",
-	"X-Forwarded-For",
-	"HTTP-X-Forwarded-For",
-	"Fly-Client-IP",
-	"CF-Connecting-IP",
-	"Fastly-Client-Ip",
-	"True-Client-Ip",
-	"X-Real-IP",
-	"X-Cluster-Client-IP",
-	"X-Forwarded",
-	"Forwarded-For",
-	"Forwarded",
-	"DO-Connecting-IP" /** Digital ocean app platform */,
-	"oxygen-buyer-ip" /** Shopify oxygen platform */,
+  "X-Azure-ClientIP" /** Azure Front Door */,
+  "X-Client-IP",
+  "X-Forwarded-For",
+  "HTTP-X-Forwarded-For",
+  "Fly-Client-IP",
+  "CF-Connecting-IP",
+  "Fastly-Client-Ip",
+  "True-Client-Ip",
+  "X-Real-IP",
+  "X-Cluster-Client-IP",
+  "X-Forwarded",
+  "Forwarded-For",
+  "Forwarded",
+  "DO-Connecting-IP" /** Digital ocean app platform */,
+  "oxygen-buyer-ip" /** Shopify oxygen platform */,
 ] as const);
 
 /**
@@ -28,11 +28,11 @@ const headerNames = Object.freeze([
  * If it's a Headers returns the object directly.
  */
 function getHeaders(requestOrHeaders: Request | Headers): Headers {
-	if (requestOrHeaders instanceof Request) {
-		return requestOrHeaders.headers;
-	}
+  if (requestOrHeaders instanceof Request) {
+    return requestOrHeaders.headers;
+  }
 
-	return requestOrHeaders;
+  return requestOrHeaders;
 }
 
 /**
@@ -65,31 +65,31 @@ function getHeaders(requestOrHeaders: Request | Headers): Headers {
 export function getClientIPAddress(headers: Headers): string | null;
 export function getClientIPAddress(request: Request): string | null;
 export function getClientIPAddress(
-	requestOrHeaders: Request | Headers,
+  requestOrHeaders: Request | Headers
 ): string | null {
-	const headers = getHeaders(requestOrHeaders);
+  const headers = getHeaders(requestOrHeaders);
 
-	const ipAddress = headerNames
-		.flatMap((headerName) => {
-			const value = headers.get(headerName);
-			if (headerName === "Forwarded") {
-				return parseForwardedHeader(value);
-			}
-			if (!value?.includes(",")) return value;
-			return value.split(",").map((ip) => ip.trim());
-		})
-		.find((ip) => {
-			if (ip === null) return false;
-			return isIP(ip);
-		});
+  const ipAddress = headerNames
+    .flatMap((headerName) => {
+      const value = headers.get(headerName);
+      if (headerName === "Forwarded") {
+        return parseForwardedHeader(value);
+      }
+      if (!value?.includes(",")) return value;
+      return value.split(",").map((ip) => ip.trim());
+    })
+    .find((ip) => {
+      if (ip === null) return false;
+      return isIP(ip);
+    });
 
-	return ipAddress ?? null;
+  return ipAddress ?? null;
 }
 
 function parseForwardedHeader(value: string | null): string | null {
-	if (!value) return null;
-	for (const part of value.split(";")) {
-		if (part.startsWith("for=")) return part.slice(4);
-	}
-	return null;
+  if (!value) return null;
+  for (const part of value.split(";")) {
+    if (part.startsWith("for=")) return part.slice(4);
+  }
+  return null;
 }

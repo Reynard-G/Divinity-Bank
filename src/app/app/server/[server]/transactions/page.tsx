@@ -3,13 +3,13 @@ import type { Metadata } from "next";
 import { unauthorized } from "next/navigation";
 
 import { PageHeader } from "@/components/ui/page-header";
-import { TransactionsDataTable } from "@/components/data-table/transactions-data-table";
+import { TransactionsDataTableServer as TransactionsDataTable } from "@/components/data-table/transactions-data-table-server";
 import { getCurrentUser } from "@/lib/db/queries/user.queries";
 import { getServerByShortName } from "@/lib/db/queries/server.queries";
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
 
 interface TransactionsPageProps {
-  params: Promise<{ server: string; }>;
+  params: Promise<{ server: string }>;
   searchParams: Promise<{
     page?: string;
     perPage?: string;
@@ -19,7 +19,10 @@ interface TransactionsPageProps {
   }>;
 }
 
-export default async function TransactionsPage({ params, searchParams }: TransactionsPageProps) {
+export default async function TransactionsPage({
+  params,
+  searchParams,
+}: TransactionsPageProps) {
   const { server: serverSlug } = await params;
   const tableSearchParams = await searchParams;
 
@@ -45,14 +48,7 @@ export default async function TransactionsPage({ params, searchParams }: Transac
               columnCount={6}
               rowCount={10}
               filterCount={2}
-              cellWidths={[
-                "6rem",
-                "4rem",
-                "10rem",
-                "10rem",
-                "10rem",
-                "10rem",
-              ]}
+              cellWidths={["6rem", "4rem", "10rem", "10rem", "10rem", "10rem"]}
               withViewOptions={true}
               withPagination={true}
               shrinkZero={true}
@@ -70,7 +66,9 @@ export default async function TransactionsPage({ params, searchParams }: Transac
   );
 }
 
-export async function generateMetadata({ params }: TransactionsPageProps): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: TransactionsPageProps): Promise<Metadata> {
   const { server: serverSlug } = await params;
   const server = await getServerByShortName(serverSlug);
 

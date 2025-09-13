@@ -14,7 +14,7 @@ import {
   inArray,
   notInArray,
   type SQL,
-  type Column
+  type Column,
 } from "drizzle-orm";
 import { transactions } from "@/lib/db/schema";
 import type { ExtendedColumnFilter, JoinOperator } from "@/types/data-table";
@@ -24,7 +24,7 @@ export function buildWhereClause(
   filters: ExtendedColumnFilter<TransactionWithDetails>[],
   joinOperator: JoinOperator,
   userId?: number,
-  serverId?: number,
+  serverId?: number
 ): SQL | undefined {
   const conditions: (SQL | undefined)[] = [];
 
@@ -80,7 +80,10 @@ export function buildWhereClause(
     : or(...validConditions);
 }
 
-export function buildTextCondition(column: Column, filter: ExtendedColumnFilter<TransactionWithDetails>): SQL | undefined {
+export function buildTextCondition(
+  column: Column,
+  filter: ExtendedColumnFilter<TransactionWithDetails>
+): SQL | undefined {
   switch (filter.operator) {
     case "iLike":
       return typeof filter.value === "string"
@@ -111,7 +114,10 @@ export function buildTextCondition(column: Column, filter: ExtendedColumnFilter<
   }
 }
 
-export function buildNumericCondition(column: Column, filter: ExtendedColumnFilter<TransactionWithDetails>): SQL | undefined {
+export function buildNumericCondition(
+  column: Column,
+  filter: ExtendedColumnFilter<TransactionWithDetails>
+): SQL | undefined {
   switch (filter.operator) {
     case "eq":
       return eq(column, filter.value);
@@ -127,12 +133,14 @@ export function buildNumericCondition(column: Column, filter: ExtendedColumnFilt
       return gte(column, filter.value);
     case "isBetween":
       if (Array.isArray(filter.value) && filter.value.length === 2) {
-        const firstValue = filter.value[0] != null && filter.value[0] !== ""
-          ? Number(filter.value[0])
-          : null;
-        const secondValue = filter.value[1] != null && filter.value[1] !== ""
-          ? Number(filter.value[1])
-          : null;
+        const firstValue =
+          filter.value[0] != null && filter.value[0] !== ""
+            ? Number(filter.value[0])
+            : null;
+        const secondValue =
+          filter.value[1] != null && filter.value[1] !== ""
+            ? Number(filter.value[1])
+            : null;
 
         if (firstValue === null && secondValue === null) {
           return undefined;
@@ -142,7 +150,7 @@ export function buildNumericCondition(column: Column, filter: ExtendedColumnFilt
           firstValue !== null ? gte(column, firstValue) : undefined,
           secondValue !== null ? lte(column, secondValue) : undefined,
         ].filter(Boolean) as SQL[];
-        
+
         return and(...conditions);
       }
       return undefined;
@@ -155,13 +163,28 @@ export function buildNumericCondition(column: Column, filter: ExtendedColumnFilt
   }
 }
 
-export function buildDateCondition(column: Column, filter: ExtendedColumnFilter<TransactionWithDetails>): SQL | undefined {
+export function buildDateCondition(
+  column: Column,
+  filter: ExtendedColumnFilter<TransactionWithDetails>
+): SQL | undefined {
   switch (filter.operator) {
     case "eq":
       if (typeof filter.value === "string") {
         const date = new Date(Number(filter.value));
-        const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-        const endOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
+        const startOfDay = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate()
+        );
+        const endOfDay = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          23,
+          59,
+          59,
+          999
+        );
         return and(
           gte(column, startOfDay.toISOString()),
           lte(column, endOfDay.toISOString())
@@ -171,8 +194,20 @@ export function buildDateCondition(column: Column, filter: ExtendedColumnFilter<
     case "ne":
       if (typeof filter.value === "string") {
         const date = new Date(Number(filter.value));
-        const startOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate());
-        const endOfDay = new Date(date.getFullYear(), date.getMonth(), date.getDate(), 23, 59, 59, 999);
+        const startOfDay = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate()
+        );
+        const endOfDay = new Date(
+          date.getFullYear(),
+          date.getMonth(),
+          date.getDate(),
+          23,
+          59,
+          59,
+          999
+        );
         return or(
           lt(column, startOfDay.toISOString()),
           gt(column, endOfDay.toISOString())
@@ -197,12 +232,14 @@ export function buildDateCondition(column: Column, filter: ExtendedColumnFilter<
         : undefined;
     case "isBetween":
       if (Array.isArray(filter.value) && filter.value.length === 2) {
-        const startDate = filter.value[0] != null && filter.value[0] !== ""
-          ? new Date(Number(filter.value[0])).toISOString()
-          : null;
-        const endDate = filter.value[1] != null && filter.value[1] !== ""
-          ? new Date(Number(filter.value[1])).toISOString()
-          : null;
+        const startDate =
+          filter.value[0] != null && filter.value[0] !== ""
+            ? new Date(Number(filter.value[0])).toISOString()
+            : null;
+        const endDate =
+          filter.value[1] != null && filter.value[1] !== ""
+            ? new Date(Number(filter.value[1])).toISOString()
+            : null;
 
         if (!startDate && !endDate) {
           return undefined;
@@ -210,9 +247,9 @@ export function buildDateCondition(column: Column, filter: ExtendedColumnFilter<
 
         const conditions = [
           startDate ? gte(column, startDate) : undefined,
-          endDate ? lte(column, endDate) : undefined
+          endDate ? lte(column, endDate) : undefined,
         ].filter(Boolean) as SQL[];
-        
+
         return and(...conditions);
       }
       return undefined;

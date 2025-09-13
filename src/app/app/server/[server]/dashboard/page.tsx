@@ -29,7 +29,9 @@ export default async function DashboardPage({ params }: ServerDirectoryParams) {
   );
 }
 
-export async function generateMetadata({ params }: ServerDirectoryParams): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: ServerDirectoryParams): Promise<Metadata> {
   const { server: serverSlug } = await params;
   const server = await getServerByShortName(serverSlug);
 

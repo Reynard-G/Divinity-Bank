@@ -33,8 +33,11 @@ export const servers = pgTable(
       .notNull(),
   },
   (table) => [
-    index("Servers_short_name_idx").using("btree", table.shortName.asc().nullsLast().op("text_ops")),
-  ],
+    index("Servers_short_name_idx").using(
+      "btree",
+      table.shortName.asc().nullsLast().op("text_ops")
+    ),
+  ]
 );
 export type Server = typeof servers.$inferSelect;
 export type NewServer = typeof servers.$inferInsert;
@@ -105,14 +108,26 @@ export const users = pgTable(
       .notNull(),
   },
   (table) => [
-    index("Users_account_type_idx").using("btree", table.accountType.asc().nullsLast().op("text_ops")),
-    index("Users_role_idx").using("btree", table.role.asc().nullsLast().op("text_ops")),
+    index("Users_account_type_idx").using(
+      "btree",
+      table.accountType.asc().nullsLast().op("text_ops")
+    ),
+    index("Users_role_idx").using(
+      "btree",
+      table.role.asc().nullsLast().op("text_ops")
+    ),
     unique("Users_minecraft_uuid_key").on(table.minecraftUuid),
     unique("Users_minecraft_username_key").on(table.minecraftUsername),
     unique("Users_discord_username_key").on(table.discordUsername),
-    check("Users_discord_username_check", sql`length(${table.discordUsername}) <= 32`),
-    check("Users_minecraft_username_check", sql`length(${table.minecraftUsername}) <= 16`),
-  ],
+    check(
+      "Users_discord_username_check",
+      sql`length(${table.discordUsername}) <= 32`
+    ),
+    check(
+      "Users_minecraft_username_check",
+      sql`length(${table.minecraftUsername}) <= 16`
+    ),
+  ]
 );
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
@@ -137,11 +152,12 @@ export const userSettings = pgTable(
     discordCommunication: boolean("discord_communication")
       .notNull()
       .default(false),
-    discordTransactions: boolean("discord_transactions").notNull().default(true),
+    discordTransactions: boolean("discord_transactions")
+      .notNull()
+      .default(true),
     discordSecurity: boolean("discord_security").notNull().default(true),
-  }, (table) => [
-    unique("UserSettings_id_key").on(table.id),
-  ],
+  },
+  (table) => [unique("UserSettings_id_key").on(table.id)]
 );
 export type UserSetting = typeof userSettings.$inferSelect;
 export type NewUserSetting = typeof userSettings.$inferInsert;
@@ -204,20 +220,42 @@ export const transactions = pgTable(
       .notNull(),
   },
   (table) => [
-    index("idx_transactions_user_server_status_type").using("btree",
+    index("idx_transactions_user_server_status_type").using(
+      "btree",
       table.userId.asc().nullsLast().op("int4_ops"),
       table.serverId.asc().nullsLast().op("int4_ops"),
       table.status.asc().nullsLast().op("text_ops"),
-      table.transactionType.asc().nullsLast().op("text_ops"),
+      table.transactionType.asc().nullsLast().op("text_ops")
     ),
-    index("Transactions_created_at_idx").using("btree", table.createdAt.asc().nullsLast().op("timestamptz_ops")),
-    index("Transactions_created_by_user_id_idx").using("btree", table.createdByUserId.asc().nullsLast().op("int4_ops")),
-    index("Transactions_payment_type_idx").using("btree", table.paymentType.asc().nullsLast().op("text_ops")),
-    index("Transactions_server_id_idx").using("btree", table.serverId.asc().nullsLast().op("int4_ops")),
-    index("Transactions_status_idx").using("btree", table.status.asc().nullsLast().op("text_ops")),
-    index("Transactions_transaction_type_idx").using("btree", table.transactionType.asc().nullsLast().op("text_ops")),
-    index("Transactions_user_id_idx").using("btree", table.userId.asc().nullsLast().op("int4_ops")),
-  ],
+    index("Transactions_created_at_idx").using(
+      "btree",
+      table.createdAt.asc().nullsLast().op("timestamptz_ops")
+    ),
+    index("Transactions_created_by_user_id_idx").using(
+      "btree",
+      table.createdByUserId.asc().nullsLast().op("int4_ops")
+    ),
+    index("Transactions_payment_type_idx").using(
+      "btree",
+      table.paymentType.asc().nullsLast().op("text_ops")
+    ),
+    index("Transactions_server_id_idx").using(
+      "btree",
+      table.serverId.asc().nullsLast().op("int4_ops")
+    ),
+    index("Transactions_status_idx").using(
+      "btree",
+      table.status.asc().nullsLast().op("text_ops")
+    ),
+    index("Transactions_transaction_type_idx").using(
+      "btree",
+      table.transactionType.asc().nullsLast().op("text_ops")
+    ),
+    index("Transactions_user_id_idx").using(
+      "btree",
+      table.userId.asc().nullsLast().op("int4_ops")
+    ),
+  ]
 );
 export type Transaction = typeof transactions.$inferSelect;
 export type NewTransaction = typeof transactions.$inferInsert;

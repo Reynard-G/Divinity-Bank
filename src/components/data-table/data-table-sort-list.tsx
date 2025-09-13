@@ -99,25 +99,25 @@ export function DataTableSortList<TData>({
       onSortingChange((prevSorting) => {
         if (!prevSorting) return prevSorting;
         return prevSorting.map((sort) =>
-          sort.id === sortId ? { ...sort, ...updates } : sort,
+          sort.id === sortId ? { ...sort, ...updates } : sort
         );
       });
     },
-    [onSortingChange],
+    [onSortingChange]
   );
 
   const onSortRemove = React.useCallback(
     (sortId: string) => {
       onSortingChange((prevSorting) =>
-        prevSorting.filter((item) => item.id !== sortId),
+        prevSorting.filter((item) => item.id !== sortId)
       );
     },
-    [onSortingChange],
+    [onSortingChange]
   );
 
   const onSortingReset = React.useCallback(
     () => onSortingChange(table.initialState.sorting),
-    [onSortingChange, table.initialState.sorting],
+    [onSortingChange, table.initialState.sorting]
   );
 
   React.useEffect(() => {
@@ -163,7 +163,7 @@ export function DataTableSortList<TData>({
         onSortingReset();
       }
     },
-    [sorting.length, onSortingReset],
+    [sorting.length, onSortingReset]
   );
 
   return (
@@ -180,7 +180,7 @@ export function DataTableSortList<TData>({
             {sorting.length > 0 && (
               <Badge
                 variant="secondary"
-                className="bg-[#0a0a0a]/50 h-[18.24px] rounded-[3.2px] px-[5.12px] font-mono font-normal text-[10.4px]"
+                className="h-[18.24px] rounded-[3.2px] bg-[#0a0a0a]/50 px-[5.12px] font-mono text-[10.4px] font-normal"
               >
                 {sorting.length}
               </Badge>
@@ -190,7 +190,7 @@ export function DataTableSortList<TData>({
         <PopoverContent
           aria-labelledby={labelId}
           aria-describedby={descriptionId}
-          className="flex w-full max-w-(--radix-popover-content-available-width) origin-(--radix-popover-content-transform-origin) flex-col gap-3.5 p-4 sm:min-w-[380px]"
+          className="max-w-(--radix-popover-content-available-width) origin-(--radix-popover-content-transform-origin) flex w-full flex-col gap-3.5 p-4 sm:min-w-[380px]"
           {...props}
         >
           <div className="flex flex-col gap-1">
@@ -200,8 +200,8 @@ export function DataTableSortList<TData>({
             <p
               id={descriptionId}
               className={cn(
-                "text-muted-foreground text-sm",
-                sorting.length > 0 && "sr-only",
+                "text-sm text-muted-foreground",
+                sorting.length > 0 && "sr-only"
               )}
             >
               {sorting.length > 0
@@ -307,7 +307,7 @@ function DataTableSortItem({
         onSortRemove(sort.id);
       }
     },
-    [sort.id, showFieldSelector, showDirectionSelector, onSortRemove],
+    [sort.id, showFieldSelector, showDirectionSelector, onSortRemove]
   );
 
   return (
@@ -366,7 +366,7 @@ function DataTableSortItem({
         >
           <SelectTrigger
             aria-controls={directionListboxId}
-            className="h-8 w-24 rounded data-size:h-8"
+            className="data-size:h-8 h-8 w-24 rounded"
           >
             <SelectValue />
           </SelectTrigger>

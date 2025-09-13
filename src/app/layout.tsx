@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
-import { NuqsAdapter } from 'nuqs/adapters/next/app';
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
@@ -22,17 +22,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark">
       <body
-        className={`
-          ${inter.className} 
-          font-neue_haas_grotesk 
-          tracking-wide 
-          antialiased 
-          dark
-        `}
+        className={` ${inter.className} dark font-neue_haas_grotesk tracking-wide antialiased`}
       >
-        <NuqsAdapter>
-          {children}
-        </NuqsAdapter>
+        <NuqsAdapter>{children}</NuqsAdapter>
         <Toaster />
       </body>
     </html>

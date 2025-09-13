@@ -15,9 +15,7 @@ export function PageHeader({ title, description, children }: PageHeaderProps) {
           {children}
         </div>
         {description && (
-          <p className="text-sm text-muted-foreground">
-            {description}
-          </p>
+          <p className="text-sm text-muted-foreground">{description}</p>
         )}
       </div>
       <Separator className="mb-6 mt-4" />

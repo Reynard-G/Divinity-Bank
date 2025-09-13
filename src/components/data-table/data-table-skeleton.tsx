@@ -32,7 +32,7 @@ export function DataTableSkeleton({
 }: DataTableSkeletonProps) {
   const cozyCellWidths = Array.from(
     { length: columnCount },
-    (_, index) => cellWidths[index % cellWidths.length] ?? "auto",
+    (_, index) => cellWidths[index % cellWidths.length] ?? "auto"
   );
 
   return (
@@ -44,12 +44,12 @@ export function DataTableSkeleton({
         <div className="flex flex-1 items-center gap-2">
           {filterCount > 0
             ? Array.from({ length: filterCount }).map((_, i) => (
-              <Skeleton key={i} className="h-7 w-18 border-dashed" />
-            ))
+                <Skeleton key={i} className="w-18 h-7 border-dashed" />
+              ))
             : null}
         </div>
         {withViewOptions ? (
-          <Skeleton className="ml-auto hidden h-7 w-18 lg:flex" />
+          <Skeleton className="w-18 ml-auto hidden h-7 lg:flex" />
         ) : null}
       </div>
       <div className="rounded-md border">
@@ -91,13 +91,13 @@ export function DataTableSkeleton({
         </Table>
       </div>
       {withPagination ? (
-        <div className="flex flex-col-reverse items-center gap-4 sm:flex-row sm:gap-6 lg:gap-8 sm:ml-auto">
+        <div className="flex flex-col-reverse items-center gap-4 sm:ml-auto sm:flex-row sm:gap-6 lg:gap-8">
           <div className="flex items-center gap-4 sm:gap-6 lg:gap-8">
             <div className="flex items-center gap-2">
               <Skeleton className="h-7 w-24" />
-              <Skeleton className="h-7 w-18" />
+              <Skeleton className="w-18 h-7" />
             </div>
-            <div className="flex items-center justify-center font-medium text-sm">
+            <div className="flex items-center justify-center text-sm font-medium">
               <Skeleton className="h-7 w-20" />
             </div>
             <div className="flex items-center gap-2">

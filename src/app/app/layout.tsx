@@ -1,5 +1,5 @@
 import { unauthorized } from "next/navigation";
-import NextTopLoader from 'nextjs-toploader';
+import NextTopLoader from "nextjs-toploader";
 
 import { AppSidebar } from "@/components/layout/app-sidebar";
 import { AppHeader } from "@/components/layout/app-header";
@@ -36,7 +36,11 @@ export default async function AppLayout({
 
   return (
     <>
-      <NextTopLoader color="#FAFAFA" shadow="0px 0px 10px rgba(0, 0, 0, 0.1)" showSpinner={false} />
+      <NextTopLoader
+        color="#FAFAFA"
+        shadow="0px 0px 10px rgba(0, 0, 0, 0.1)"
+        showSpinner={false}
+      />
 
       <div className="h-full overflow-hidden">
         <div className="h-full bg-[#161616] text-[#ededed]">

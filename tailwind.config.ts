@@ -79,8 +79,5 @@ export default {
       },
     },
   },
-  plugins: [
-    tailwindcssAnimate,
-    tailwindScrollbar,
-  ],
+  plugins: [tailwindcssAnimate, tailwindScrollbar],
 } satisfies Config;

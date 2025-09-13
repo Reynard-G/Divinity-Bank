@@ -12,7 +12,7 @@ export interface SessionPayload {
   exp: number;
 }
 
-export async function encrypt(payload: Omit<SessionPayload, 'exp'>) {
+export async function encrypt(payload: Omit<SessionPayload, "exp">) {
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -25,7 +25,7 @@ export async function decrypt(input: string): Promise<SessionPayload | null> {
     const { payload } = await jwtVerify(input, key, {
       algorithms: ["HS256"],
     });
-    
+
     // Validate the payload has all required fields
     if (
       typeof payload.id === "string" &&
@@ -42,7 +42,7 @@ export async function decrypt(input: string): Promise<SessionPayload | null> {
         exp: payload.exp,
       };
     }
-    
+
     console.error("Invalid JWT payload structure:", payload);
     return null;
   } catch (error) {
@@ -77,9 +77,9 @@ export async function createSession(
 export async function getSession(): Promise<SessionPayload | null> {
   const cookieStore = await cookies();
   const session = cookieStore.get("session")?.value;
-  
+
   if (!session) return null;
-  
+
   return await decrypt(session);
 }
 

@@ -31,7 +31,14 @@ export function TransactionsDataTableClient({
   amountRange,
 }: TransactionsDataTableClientProps) {
   const columns = React.useMemo(
-    () => getTransactionColumns(statusCounts, typeCounts, paymentCounts, userCounts, amountRange),
+    () =>
+      getTransactionColumns(
+        statusCounts,
+        typeCounts,
+        paymentCounts,
+        userCounts,
+        amountRange
+      ),
     [statusCounts, typeCounts, paymentCounts, userCounts, amountRange]
   );
 
@@ -57,10 +64,7 @@ export function TransactionsDataTableClient({
   return (
     <DataTable table={table}>
       <DataTableAdvancedToolbar table={table}>
-        <DataTableSortList
-          table={table}
-          align="start"
-        />
+        <DataTableSortList table={table} align="start" />
         <DataTableFilterList
           table={table}
           shallow={shallow}

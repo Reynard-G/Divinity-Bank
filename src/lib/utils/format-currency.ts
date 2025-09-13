@@ -3,7 +3,7 @@
  */
 export function formatCurrency(
   amount: number,
-  opts: Intl.NumberFormatOptions = {},
+  opts: Intl.NumberFormatOptions = {}
 ): string {
   return new Intl.NumberFormat("en-US", {
     style: "currency",

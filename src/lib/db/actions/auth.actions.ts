@@ -23,7 +23,10 @@ type LoginFormState = {
  * Login server action
  * Validates user credentials and creates a session
  */
-export async function login(_state: LoginFormState | null, formData: FormData): Promise<LoginFormState> {
+export async function login(
+  _state: LoginFormState | null,
+  formData: FormData
+): Promise<LoginFormState> {
   try {
     const ip = getClientIPAddress(await headers());
     const ipIdentifier = `login:${ip}`;
@@ -86,7 +89,10 @@ export async function login(_state: LoginFormState | null, formData: FormData): 
       throw error;
     }
 
-    console.error("Login Server Action Error:", error instanceof Error ? error.message : error);
+    console.error(
+      "Login Server Action Error:",
+      error instanceof Error ? error.message : error
+    );
     return {
       success: false,
       error: "An unexpected error occurred during login.",
@@ -97,7 +103,7 @@ export async function login(_state: LoginFormState | null, formData: FormData): 
 /**
  * Logout server action
  * Deletes the current session and redirects to the login page
- * 
+ *
  * @returns {Promise<never>} Never resolves, always redirects
  */
 export async function logout(): Promise<never> {

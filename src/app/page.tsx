@@ -6,9 +6,9 @@ export default function HomePage() {
       <div className="w-full max-w-md space-y-6 text-center">
         <div className="space-y-2">
           <img
-            src="/logo.svg" 
-            alt="Divinity Bank Logo" 
-            className="mx-auto mb-4 w-16" 
+            src="/logo.svg"
+            alt="Divinity Bank Logo"
+            className="mx-auto mb-4 w-16"
           />
           <h1 className="text-4xl font-bold tracking-tight">
             Welcome to Divinity Bank
@@ -17,7 +17,7 @@ export default function HomePage() {
             Secure financial management for Minecraft servers
           </p>
         </div>
-        
+
         <div className="space-y-4">
           <Link
             href="/app"
@@ -25,7 +25,7 @@ export default function HomePage() {
           >
             Go to Dashboard
           </Link>
-          
+
           <Link
             href="/login"
             className="inline-flex h-12 w-full items-center justify-center rounded-md border border-input bg-background px-6 text-sm font-medium ring-offset-background transition-colors hover:bg-accent hover:text-accent-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"

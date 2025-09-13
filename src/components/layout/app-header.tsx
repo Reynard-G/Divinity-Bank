@@ -2,7 +2,14 @@
 
 import { useRouter } from "nextjs-toploader/app";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { logout } from "@/lib/db/actions/auth.actions";
 import type { UserForComponents } from "@/app/app/layout";
@@ -37,10 +44,7 @@ export function AppHeader({ user }: { user: UserForComponents }) {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Avatar className="rounded shadow-[0px_0px_0px_1px_#161616] transition-shadow duration-200 hover:shadow-[0px_0px_0px_3px_#383838]">
-              <AvatarImage
-                src={user.image}
-                alt="User Avatar"
-              />
+              <AvatarImage src={user.image} alt="User Avatar" />
             </Avatar>
           </DropdownMenuTrigger>
           <DropdownMenuContent>
@@ -50,9 +54,7 @@ export function AppHeader({ user }: { user: UserForComponents }) {
               Settings
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleSignOut}>
-              Logout
-            </DropdownMenuItem>
+            <DropdownMenuItem onClick={handleSignOut}>Logout</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

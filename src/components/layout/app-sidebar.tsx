@@ -13,7 +13,11 @@ import {
   IconChevronDown,
   IconChevronUp,
 } from "@tabler/icons-react";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -25,7 +29,11 @@ import {
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils/cn";
 import type { Server } from "@/lib/db/schema";
-import { createServerRoutes, createServerRoute, SERVER_ROUTES } from "@/lib/utils/server-routes";
+import {
+  createServerRoutes,
+  createServerRoute,
+  SERVER_ROUTES,
+} from "@/lib/utils/server-routes";
 
 interface SidebarItemProps {
   label: string;
@@ -44,7 +52,7 @@ function SidebarItem({ label, path, icon }: SidebarItemProps) {
         "flex items-center rounded-lg p-2 text-sm font-semibold leading-5 text-[#a0a0a0] no-underline transition-colors duration-100",
         isActive
           ? "bg-[#282828] text-[#ededed]"
-          : "hover:bg-[#232323] hover:text-[#ededed]",
+          : "hover:bg-[#232323] hover:text-[#ededed]"
       )}
     >
       <div className="flex grow items-center gap-2">
@@ -71,11 +79,13 @@ export function AppSidebar({ servers }: { servers: Server[] }) {
 
   // Extract current server from pathname
   useEffect(() => {
-    if (pathname.startsWith('/app/') && servers.length > 0) {
+    if (pathname.startsWith("/app/") && servers.length > 0) {
       const page = pathname.match(/^\/app\/server\/([^\/]+)\/?/); // Match /app/server/:server or /app/server/:server/
       const serverFromPath = page ? page[1] : null;
-      
-      const matchedServer = servers.find(server => server.shortName === serverFromPath);
+
+      const matchedServer = servers.find(
+        (server) => server.shortName === serverFromPath
+      );
       if (matchedServer) {
         setSelectedServer(matchedServer);
       } else {
@@ -86,8 +96,8 @@ export function AppSidebar({ servers }: { servers: Server[] }) {
 
   // Get navigation items based on current server
   const getNavigationItems = (serverShortName: string | null) => {
-    const baseServer = serverShortName || (servers[0]?.shortName || 'default');
-    
+    const baseServer = serverShortName || servers[0]?.shortName || "default";
+
     return [
       {
         section: "Main",
@@ -134,7 +144,7 @@ export function AppSidebar({ servers }: { servers: Server[] }) {
       <div className="fixed bottom-0 left-0 top-0 z-0 box-border hidden w-[248px] flex-col border-r border-solid border-r-[#343434] bg-[#1c1c1c] md:flex">
         <div>
           <Link
-            className="mx-4 mb-1 mt-6 flex cursor-pointer flex-row gap-2 bg-none p-0 justify-center"
+            className="mx-4 mb-1 mt-6 flex cursor-pointer flex-row justify-center gap-2 bg-none p-0"
             href="/"
           >
             <img src="/logo.svg" alt="Logo" className="w-12" />
@@ -150,10 +160,10 @@ export function AppSidebar({ servers }: { servers: Server[] }) {
           </div>
         </div>
 
-        <div className="flex h-full flex-col justify-between overflow-y-auto py-3 px-3">
+        <div className="flex h-full flex-col justify-between overflow-y-auto px-3 py-3">
           <div>
             <SidebarSection>
-              <div className="text-center text-sm text-[#a0a0a0] py-4">
+              <div className="py-4 text-center text-sm text-[#a0a0a0]">
                 Contact admin to get access to servers
               </div>
             </SidebarSection>
@@ -181,9 +191,9 @@ export function AppSidebar({ servers }: { servers: Server[] }) {
   return (
     <div className="fixed bottom-0 left-0 top-0 z-0 box-border hidden w-[248px] flex-col border-r border-solid border-r-[#343434] bg-[#1c1c1c] md:flex">
       {/* Sidebar Brand */}
-      <div className="min-h-16 flex flex-col items-center">
+      <div className="flex min-h-16 flex-col items-center">
         <Link
-          className="h-full flex cursor-pointer flex-row gap-2 bg-none p-0 items-center justify-center"
+          className="flex h-full cursor-pointer flex-row items-center justify-center gap-2 bg-none p-0"
           href="/"
         >
           <img src="/logo.svg" alt="Logo" className="w-12" />
@@ -233,10 +243,16 @@ export function AppSidebar({ servers }: { servers: Server[] }) {
                         setSelectedServer(server);
                         setIsServerPopoverOpen(false);
                         // Navigate to the same page type on the new server
-                        const page = pathname.match(/^\/app\/server\/[^\/]+\/([^\/]+)/); // Match /app/server/:server/:page
-                        const currentPageType = page ? page[1] : SERVER_ROUTES.DASHBOARD;
+                        const page = pathname.match(
+                          /^\/app\/server\/[^\/]+\/([^\/]+)/
+                        ); // Match /app/server/:server/:page
+                        const currentPageType = page
+                          ? page[1]
+                          : SERVER_ROUTES.DASHBOARD;
 
-                        router.push(createServerRoute(server.shortName, currentPageType));
+                        router.push(
+                          createServerRoute(server.shortName, currentPageType)
+                        );
                       }}
                     >
                       <IconCheck
@@ -245,7 +261,7 @@ export function AppSidebar({ servers }: { servers: Server[] }) {
                           "mr-2 h-4 w-4",
                           server.id === selectedServer?.id
                             ? "opacity-100"
-                            : "opacity-0",
+                            : "opacity-0"
                         )}
                         aria-hidden="true"
                       />
@@ -260,7 +276,7 @@ export function AppSidebar({ servers }: { servers: Server[] }) {
       </div>
 
       {/* Navigation */}
-      <div className="flex h-full flex-col justify-between overflow-y-auto py-3 px-3 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
+      <div className="flex h-full flex-col justify-between overflow-y-auto px-3 py-3 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">
         <div>
           {navigationItems.map((section) => (
             <SidebarSection key={section.section}>

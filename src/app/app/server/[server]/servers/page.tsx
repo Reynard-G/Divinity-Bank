@@ -15,7 +15,7 @@ export default async function ServersPage({ params }: ServerDirectoryParams) {
 
   return (
     <div className="mx-auto flex w-full max-w-7xl grow flex-col">
-      {(servers && servers.length > 0) ? (
+      {servers && servers.length > 0 ? (
         <PageHeader
           title="Servers"
           description="View and manage your accounts across different servers."
@@ -34,7 +34,7 @@ export default async function ServersPage({ params }: ServerDirectoryParams) {
       <Suspense fallback={<ServerGridSkeleton />}>
         <ServerGrid serverSlug={currentServerSlug} />
       </Suspense>
-    </div >
+    </div>
   );
 }
 

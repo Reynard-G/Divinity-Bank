@@ -1,11 +1,11 @@
-'use client';
+"use client";
 
-import { useMediaQuery } from '@/hooks/use-media-query';
-import { useRouter } from 'next/navigation';
+import { useMediaQuery } from "@/hooks/use-media-query";
+import { useRouter } from "next/navigation";
 
 export default function NotFound() {
   const router = useRouter();
-  const isMobile = useMediaQuery('(max-width: 768px)');
+  const isMobile = useMediaQuery("(max-width: 768px)");
 
   return (
     <main className="relative flex h-screen items-center justify-center overflow-hidden bg-[#010101]">
@@ -16,7 +16,14 @@ export default function NotFound() {
           playsInline
           className="absolute inset-0 h-full w-full object-cover"
         >
-          <source src={isMobile ? '/not-found_background_1080x1080.mp4' : '/not-found_background_1920x1080.mp4'} type="video/mp4" />
+          <source
+            src={
+              isMobile
+                ? "/not-found_background_1080x1080.mp4"
+                : "/not-found_background_1920x1080.mp4"
+            }
+            type="video/mp4"
+          />
         </video>
       )}
       <div className="relative z-10 flex flex-col items-center justify-center p-8 text-center">

@@ -6,7 +6,7 @@ import { getServerByShortName } from "@/lib/db/queries/server.queries";
 
 interface ServerLayoutProps {
   children: React.ReactNode;
-  params: Promise<{ server: string; }>;
+  params: Promise<{ server: string }>;
 }
 
 export async function generateStaticParams() {
@@ -23,23 +23,21 @@ export async function generateStaticParams() {
 
 export default async function ServerLayout({
   children,
-  params
+  params,
 }: ServerLayoutProps) {
   const { server: serverSlug } = await params;
   const server = await getServerByShortName(serverSlug);
 
-  return (
-    <>
-      {children}
-    </>
-  );
+  return <>{children}</>;
 }
 
 export type ServerDirectoryParams = {
-  params: Promise<{ server: string; }>;
+  params: Promise<{ server: string }>;
 };
 
-export async function generateMetadata({ params }: ServerDirectoryParams): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: ServerDirectoryParams): Promise<Metadata> {
   const { server: serverSlug } = await params;
   const server = await getServerByShortName(serverSlug);
 
