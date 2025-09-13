@@ -1,8 +1,14 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-const secretKey = process.env.JWT_SECRET;
-const key = new TextEncoder().encode(secretKey);
+function getKey(): Uint8Array {
+  const secretKey = process.env.JWT_SECRET;
+  if (!secretKey) {
+    throw new Error("JWT_SECRET environment variable is required");
+  }
+
+  return new TextEncoder().encode(secretKey);
+}
 
 export interface SessionPayload {
   id: string;
@@ -13,6 +19,8 @@ export interface SessionPayload {
 }
 
 export async function encrypt(payload: Omit<SessionPayload, "exp">) {
+  const key = getKey();
+
   return await new SignJWT(payload)
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -21,6 +29,8 @@ export async function encrypt(payload: Omit<SessionPayload, "exp">) {
 }
 
 export async function decrypt(input: string): Promise<SessionPayload | null> {
+  const key = getKey();
+
   try {
     const { payload } = await jwtVerify(input, key, {
       algorithms: ["HS256"],
