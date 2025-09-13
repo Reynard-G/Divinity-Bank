@@ -753,11 +753,15 @@ function onFilterInputRender<TData>({
 
       const displayValue =
         filter.operator === "isBetween" && dateValue.length === 2
-          ? `${formatDate(new Date(Number(dateValue[0])))} - ${formatDate(
-              new Date(Number(dateValue[1]))
+          ? `${formatDate(new Date(Number(dateValue[0])), { hour: undefined, minute: undefined })} - ${formatDate(
+              new Date(Number(dateValue[1])),
+              { hour: undefined, minute: undefined }
             )}`
           : dateValue[0]
-            ? formatDate(new Date(Number(dateValue[0])))
+            ? formatDate(new Date(Number(dateValue[0])), {
+                hour: undefined,
+                minute: undefined,
+              })
             : "Pick a date";
 
       return (
@@ -787,7 +791,7 @@ function onFilterInputRender<TData>({
               <Calendar
                 aria-label={`Select ${columnMeta?.label} date range`}
                 mode="range"
-                initialFocus
+                captionLayout="dropdown"
                 selected={
                   dateValue.length === 2
                     ? {
@@ -814,7 +818,7 @@ function onFilterInputRender<TData>({
               <Calendar
                 aria-label={`Select ${columnMeta?.label} date`}
                 mode="single"
-                initialFocus
+                captionLayout="dropdown"
                 selected={
                   dateValue[0] ? new Date(Number(dateValue[0])) : undefined
                 }
