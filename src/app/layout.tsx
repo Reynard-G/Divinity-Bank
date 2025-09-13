@@ -20,9 +20,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
       <body
-        className={` ${inter.className} dark font-neue_haas_grotesk tracking-wide antialiased`}
+        className={`${inter.className} font-neue_haas_grotesk tracking-wide antialiased`}
       >
         <NuqsAdapter>{children}</NuqsAdapter>
         <Toaster />
