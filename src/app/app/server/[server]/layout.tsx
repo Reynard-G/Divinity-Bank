@@ -25,13 +25,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export default async function ServerLayout({
-  children,
-  params,
-}: ServerLayoutProps) {
-  const { server: serverSlug } = await params;
-  const server = await getServerByShortName(serverSlug);
-
+export default async function ServerLayout({ children }: ServerLayoutProps) {
   return <>{children}</>;
 }
 
