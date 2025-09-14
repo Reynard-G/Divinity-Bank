@@ -27,7 +27,7 @@ export function AppHeader({ user }: { user: UserForComponents }) {
   };
 
   return (
-    <nav className="sticky top-0 flex h-16 items-center border-b border-b-[#3b3b3b] bg-header px-4 py-2 pl-5">
+    <nav className="sticky top-0 z-10 flex h-16 items-center border-b border-b-[#3b3b3b] bg-header px-4 py-2 pl-5">
       <div className="hidden flex-auto items-center justify-end gap-4 md:flex">
         <Button variant="outline" asChild>
           <a
@@ -43,7 +43,7 @@ export function AppHeader({ user }: { user: UserForComponents }) {
 
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Avatar className="rounded border border-border transition-[filter] duration-200 hover:brightness-[120%] hover:contrast-[80%]">
+            <Avatar className="h-9 w-9 rounded transition-[filter] duration-200 hover:brightness-[120%] hover:contrast-[80%]">
               <AvatarImage src={user.image} alt="User Avatar" />
             </Avatar>
           </DropdownMenuTrigger>
