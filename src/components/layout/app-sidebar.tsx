@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useRouter } from "nextjs-toploader/app";
@@ -162,7 +163,13 @@ export function AppSidebar({ servers }: { servers: Server[] }) {
           className="flex h-full cursor-pointer flex-row items-center justify-center gap-2 bg-none p-0"
           href="/"
         >
-          <img src="/logo.svg" alt="Logo" className="w-12" />
+          <Image
+            unoptimized
+            src="/logo.svg"
+            alt="Logo"
+            width={48}
+            height={48}
+          />
           <h1 className="text-center font-anta text-xl font-bold tracking-wider text-foreground">
             Divinity
           </h1>

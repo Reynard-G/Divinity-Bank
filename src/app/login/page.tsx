@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState } from "react";
+import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,10 +14,16 @@ export default function LoginPage() {
   return (
     <main className="relative h-dvh">
       <div className="flex h-full items-center justify-center">
-        <div className="flex w-full max-w-sm flex-col gap-4">
+        <div className="flex w-full max-w-xs flex-col gap-4 md:max-w-sm">
           {/* Top Branding */}
           <div className="flex flex-col items-center pb-6 duration-500 animate-in fade-in slide-in-from-top-5 fill-mode-both">
-            <img src="/logo.svg" alt="Logo" className="m-4 w-12" />
+            <Image
+              src="/logo.svg"
+              alt="Logo"
+              width={48}
+              height={48}
+              className="mb-2"
+            />
             <p className="text-xl font-semibold">Welcome Back</p>
             <p className="text-base text-muted-foreground">
               Log in to your account to continue

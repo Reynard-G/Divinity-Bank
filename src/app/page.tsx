@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 
 export default function HomePage() {
@@ -5,10 +6,12 @@ export default function HomePage() {
     <main className="flex min-h-screen flex-col items-center justify-center p-4 font-sans">
       <div className="w-full max-w-md space-y-6 text-center">
         <div className="space-y-2">
-          <img
+          <Image
             src="/logo.svg"
             alt="Divinity Bank Logo"
-            className="mx-auto mb-4 w-16"
+            width={128}
+            height={128}
+            className="mx-auto mb-4"
           />
           <h1 className="text-4xl font-bold tracking-tight">
             Welcome to Divinity Bank
