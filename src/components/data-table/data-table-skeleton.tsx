@@ -44,12 +44,12 @@ export function DataTableSkeleton({
         <div className="flex flex-1 items-center gap-2">
           {filterCount > 0
             ? Array.from({ length: filterCount }).map((_, i) => (
-                <Skeleton key={i} className="w-18 h-7 border-dashed" />
+                <Skeleton key={i} className="h-7 w-20 border-dashed" />
               ))
             : null}
         </div>
         {withViewOptions ? (
-          <Skeleton className="w-18 ml-auto hidden h-7 lg:flex" />
+          <Skeleton className="ml-auto hidden h-7 w-24 lg:flex" />
         ) : null}
       </div>
       <div className="rounded-md border">
