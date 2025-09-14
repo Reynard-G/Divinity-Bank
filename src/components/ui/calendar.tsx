@@ -101,6 +101,7 @@ function Calendar({
           "group/day relative aspect-square h-full w-full select-none p-0 text-center [&:first-child[data-selected=true]_button]:rounded-l-md [&:last-child[data-selected=true]_button]:rounded-r-md",
           defaultClassNames.day
         ),
+        day_button: cn("dark:hover:bg-accent/75", defaultClassNames.day_button),
         range_start: cn(
           "bg-accent rounded-l-md",
           defaultClassNames.range_start

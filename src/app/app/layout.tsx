@@ -43,7 +43,7 @@ export default async function AppLayout({
       />
 
       <div className="h-full overflow-hidden">
-        <div className="h-full bg-[#161616] text-[#ededed]">
+        <div className="h-full bg-background text-foreground">
           <div className="box-border h-screen w-full grow overflow-y-auto">
             <div className="grid auto-cols-auto md:pl-[248px]">
               <AppSidebar servers={servers} />
