@@ -7,6 +7,7 @@ export default function HomePage() {
       <div className="w-full max-w-md space-y-6 text-center">
         <div className="space-y-2">
           <Image
+            unoptimized
             src="/logo.svg"
             alt="Divinity Bank Logo"
             width={128}

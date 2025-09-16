@@ -18,6 +18,7 @@ export default function LoginPage() {
           {/* Top Branding */}
           <div className="flex flex-col items-center pb-6 duration-500 animate-in fade-in slide-in-from-top-5 fill-mode-both">
             <Image
+              unoptimized
               src="/logo.svg"
               alt="Logo"
               width={48}
