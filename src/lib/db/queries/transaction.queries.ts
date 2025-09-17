@@ -74,17 +74,55 @@ export interface TransactionWithDetails {
 export const getBalance = cache(
   async (userId: number, serverId: number): Promise<number> => {
     try {
+      /**
+       * Calculates the total credit and debit amounts for a specific user and server.
+       *
+       * Credit Sum: Totals all SUCCESSFUL credit transactions (money added to account)
+       * Debit Sum: Totals all PENDING and SUCCESSFUL debit transactions (money spent/reserved)
+       *
+       * The reason for including PENDING debits is to account for funds that are
+       * reserved/withdrawn but not yet fully processed, ensuring the available
+       * balance reflects these pending transactions.
+       *
+       * The query uses conditional aggregation with CASE statements to:
+       * 1. Sum credits only when transaction type is CREDIT and status is SUCCESS
+       * 2. Sum debits when transaction type is DEBIT and status is PENDING or SUCCESS
+       * 3. Return "0" as default using COALESCE if no matching transactions exist (e.g., new user)
+       *
+       * This effectively calculates available balance by including:
+       * - All successfully added funds (credits)
+       * - All reserved and committed funds (debits)
+       *
+       * @returns Object with creditSum and debitSum as strings
+       */
       const result = await db
         .select({
-          creditSum: sql<string>`COALESCE(SUM(CASE WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.CREDIT} THEN ${transactions.amount} ELSE 0 END), 0)`,
-          debitSum: sql<string>`COALESCE(SUM(CASE WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.DEBIT} THEN ${transactions.amount} ELSE 0 END), 0)`,
+          creditSum: sql<string>`
+            COALESCE( SUM(
+            CASE 
+            WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.CREDIT} 
+              AND ${transactions.status} = ${TRANSACTION_STATUSES.SUCCESS} THEN
+              ${transactions.amount} 
+              ELSE 0 
+            END ), 0 )
+          `,
+          debitSum: sql<string>`
+            COALESCE( SUM(
+            CASE 
+            WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.DEBIT} 
+              AND
+              ${transactions.status} IN (${TRANSACTION_STATUSES.PENDING},
+                                         ${TRANSACTION_STATUSES.SUCCESS}) THEN
+              ${transactions.amount} 
+              ELSE 0 
+            END ), 0 )
+          `,
         })
         .from(transactions)
         .where(
           and(
             eq(transactions.userId, userId),
-            eq(transactions.serverId, serverId),
-            eq(transactions.status, TRANSACTION_STATUSES.SUCCESS)
+            eq(transactions.serverId, serverId)
           )
         )
         .then((res) => res[0] ?? { creditSum: "0", debitSum: "0" });
