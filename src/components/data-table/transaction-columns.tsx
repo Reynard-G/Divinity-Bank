@@ -99,7 +99,7 @@ export function getTransactionColumns(
         <DataTableColumnHeader column={column} title="Amount" />
       ),
       cell: ({ row }) => {
-        const amount = parseFloat(row.getValue("amount"));
+        const amount = Number(row.getValue("amount"));
         const transactionType = row.getValue("transactionType") as string;
         const isCredit = transactionType.toLowerCase() === "credit";
         return (
@@ -129,7 +129,7 @@ export function getTransactionColumns(
         <DataTableColumnHeader column={column} title="Fee" />
       ),
       cell: ({ row }) => {
-        const fee = parseFloat(row.getValue("fee"));
+        const fee = Number(row.getValue("fee"));
         return (
           <div className="text-sm">
             {fee > 0 && "-"}
