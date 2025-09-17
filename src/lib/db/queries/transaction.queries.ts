@@ -1,3 +1,5 @@
+"use server";
+
 import { cache } from "react";
 import { sql, and, asc, desc, eq, count } from "drizzle-orm";
 import Decimal from "decimal.js-light";
