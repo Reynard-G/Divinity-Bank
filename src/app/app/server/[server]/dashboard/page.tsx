@@ -8,7 +8,7 @@ import { QuickActions } from "@/components/dashboard/quick-actions";
 import { PageHeader } from "@/components/ui/page-header";
 import { getServerByShortName } from "@/lib/db/queries/server.queries";
 
-export default async function DashboardPage({ params }: ServerDirectoryParams) {
+export default async function ServerDashboardPage({ params }: ServerDirectoryParams) {
   const { server: serverSlug } = await params;
 
   return (

@@ -19,7 +19,7 @@ interface TransactionsPageProps {
   }>;
 }
 
-export default async function TransactionsPage({
+export default async function ServerTransactionsPage({
   params,
   searchParams,
 }: TransactionsPageProps) {

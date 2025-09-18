@@ -7,7 +7,7 @@ import { ServerGridSkeleton } from "@/components/servers/server-grid-skeleton";
 import { SummaryCards } from "@/components/servers/summary-cards";
 import { SummaryCardsSkeleton } from "@/components/servers/summary-cards-skeleton";
 
-export default async function ServersPage({ params }: ServerDirectoryParams) {
+export default async function ServerListPage({ params }: ServerDirectoryParams) {
   const { server: currentServerSlug } = await params;
 
   return (
