@@ -23,7 +23,7 @@ const nextConfig = {
       },
     ],
     loader: "custom",
-    loaderFile: "./cloudflare-image-loader.js",
+    loaderFile: "./src/lib/utils/cloudflare-image-loader.js",
   },
 };
 
