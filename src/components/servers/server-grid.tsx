@@ -93,10 +93,10 @@ export async function ServerGrid({ serverSlug }: ServerGridProps) {
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Last Activity:</span>
                 <span className="text-sm text-muted-foreground">
-                  {formatRelativeDate(
-                    latestTransactionData.find((d) => d.serverId === server.id)
-                      ?.latestTransactionDate || "No activity"
-                  )}
+                  {(() => {
+                    const latestDate = latestTransactionData.find((d) => d.serverId === server.id)?.latestTransactionDate;
+                    return latestDate ? formatRelativeDate(latestDate) : "No activity";
+                  })()}
                 </span>
               </div>
 
