@@ -177,76 +177,78 @@ export function AppSidebar({ servers }: { servers: Server[] }) {
       </div>
 
       {/* Server Selector */}
-      <div className="relative px-5 pt-3">
-        <Popover
-          open={isServerPopoverOpen}
-          onOpenChange={setIsServerPopoverOpen}
-        >
-          <PopoverTrigger asChild>
-            <Button
-              variant="outline"
-              role="combobox"
-              aria-label="Server selector"
-              aria-expanded={isServerPopoverOpen}
-              className="w-full justify-between !bg-background"
-            >
-              <div className="flex items-center gap-2">
-                <IconServer size={20} aria-hidden="true" />
-                {selectedServer?.name || "Select server"}
-              </div>
+      {pathname.startsWith("/app/server/") && (
+        <div className="relative px-5 pt-3">
+          <Popover
+            open={isServerPopoverOpen}
+            onOpenChange={setIsServerPopoverOpen}
+          >
+            <PopoverTrigger asChild>
+              <Button
+                variant="outline"
+                role="combobox"
+                aria-label="Server selector"
+                aria-expanded={isServerPopoverOpen}
+                className="w-full justify-between !bg-background"
+              >
+                <div className="flex items-center gap-2">
+                  <IconServer size={20} aria-hidden="true" />
+                  {selectedServer?.name || "Select server"}
+                </div>
 
-              {isServerPopoverOpen ? (
-                <IconChevronUp size={16} aria-hidden="true" />
-              ) : (
-                <IconChevronDown size={16} aria-hidden="true" />
-              )}
-            </Button>
-          </PopoverTrigger>
+                {isServerPopoverOpen ? (
+                  <IconChevronUp size={16} aria-hidden="true" />
+                ) : (
+                  <IconChevronDown size={16} aria-hidden="true" />
+                )}
+              </Button>
+            </PopoverTrigger>
 
-          <PopoverContent className="mx-3 w-[221px] p-0">
-            <Command>
-              <CommandInput placeholder="Search servers..." />
-              <CommandList>
-                <CommandEmpty>No servers found.</CommandEmpty>
-                <CommandGroup>
-                  {servers.map((server) => (
-                    <CommandItem
-                      key={server.id}
-                      onSelect={() => {
-                        setSelectedServer(server);
-                        setIsServerPopoverOpen(false);
-                        // Navigate to the same page type on the new server
-                        const page = pathname.match(
-                          /^\/app\/server\/[^\/]+\/([^\/]+)/
-                        ); // Match /app/server/:server/:page
-                        const currentPageType = page
-                          ? page[1]
-                          : SERVER_ROUTES.DASHBOARD;
+            <PopoverContent className="mx-3 w-[221px] p-0">
+              <Command>
+                <CommandInput placeholder="Search servers..." />
+                <CommandList>
+                  <CommandEmpty>No servers found.</CommandEmpty>
+                  <CommandGroup>
+                    {servers.map((server) => (
+                      <CommandItem
+                        key={server.id}
+                        onSelect={() => {
+                          setSelectedServer(server);
+                          setIsServerPopoverOpen(false);
+                          // Navigate to the same page type on the new server
+                          const page = pathname.match(
+                            /^\/app\/server\/[^\/]+\/([^\/]+)/
+                          ); // Match /app/server/:server/:page
+                          const currentPageType = page
+                            ? page[1]
+                            : SERVER_ROUTES.DASHBOARD;
 
-                        router.push(
-                          createServerRoute(server.shortName, currentPageType)
-                        );
-                      }}
-                    >
-                      <IconCheck
-                        size={16}
-                        className={cn(
-                          "mr-2 h-4 w-4",
-                          server.id === selectedServer?.id
-                            ? "opacity-100"
-                            : "opacity-0"
-                        )}
-                        aria-hidden="true"
-                      />
-                      {server.name}
-                    </CommandItem>
-                  ))}
-                </CommandGroup>
-              </CommandList>
-            </Command>
-          </PopoverContent>
-        </Popover>
-      </div>
+                          router.push(
+                            createServerRoute(server.shortName, currentPageType)
+                          );
+                        }}
+                      >
+                        <IconCheck
+                          size={16}
+                          className={cn(
+                            "mr-2 h-4 w-4",
+                            server.id === selectedServer?.id
+                              ? "opacity-100"
+                              : "opacity-0"
+                          )}
+                          aria-hidden="true"
+                        />
+                        {server.name}
+                      </CommandItem>
+                    ))}
+                  </CommandGroup>
+                </CommandList>
+              </Command>
+            </PopoverContent>
+          </Popover>
+        </div>
+      )}
 
       {/* Navigation */}
       <div className="flex h-full flex-col justify-between overflow-y-auto px-5 py-5 scrollbar-thin scrollbar-track-transparent scrollbar-thumb-transparent">

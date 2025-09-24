@@ -5,7 +5,12 @@ import { sql, and, asc, desc, eq, count } from "drizzle-orm";
 import Decimal from "decimal.js-light";
 
 import { db } from "@/lib/db";
-import { transactions, users, servers } from "@/lib/db/schema";
+import {
+  transactions,
+  users,
+  servers,
+  type Transaction,
+} from "@/lib/db/schema";
 import { buildWhereClause } from "@/lib/db/queries/query-utils";
 import { TRANSACTION_STATUSES } from "@/lib/constants/transaction-statuses";
 import { TRANSACTION_TYPES } from "@/lib/constants/transaction-types";
@@ -44,6 +49,7 @@ export interface TransactionWithDetails {
   paymentType: string;
   status: string;
   note: string | null;
+  attachment: string | null;
   createdAt: string;
   updatedAt: string;
   user: {
@@ -65,11 +71,96 @@ export interface TransactionWithDetails {
 }
 
 /**
+ * Fetches a transaction by its ID.
+ *
+ * @param id - The ID of the transaction to fetch.
+ * @returns The transaction object if found, otherwise null.
+ * @throws Error if the database query fails.
+ */
+export async function getTransactionById(
+  id: number
+): Promise<Transaction | null> {
+  try {
+    const transaction = await db
+      .select()
+      .from(transactions)
+      .where(eq(transactions.id, id))
+      .then((res) => res[0] || null);
+
+    return transaction;
+  } catch (error) {
+    console.error(`Failed to get transaction with id ${id}:`, error);
+    throw new Error("Failed to retrieve transaction");
+  }
+}
+
+/**
+ * Fetches a transaction by its ID with all related details.
+ *
+ * @param id - The ID of the transaction to fetch.
+ * @returns The transaction object with details if found, otherwise null.
+ * @throws Error if the database query fails.
+ */
+export async function getTransactionByIdWithDetails(
+  id: number
+): Promise<TransactionWithDetails | null> {
+  try {
+    const transaction = await db
+      .select({
+        id: transactions.id,
+        amount: transactions.amount,
+        fee: transactions.fee,
+        transactionType: transactions.transactionType,
+        paymentType: transactions.paymentType,
+        status: transactions.status,
+        note: transactions.note,
+        attachment: transactions.attachment,
+        createdAt: transactions.createdAt,
+        updatedAt: transactions.updatedAt,
+        user: {
+          id: users.id,
+          minecraftUsername: users.minecraftUsername,
+          discordUsername: users.discordUsername,
+        },
+        createdByUser: {
+          id: sql<number>`created_by_user.id`,
+          minecraftUsername: sql<string>`created_by_user.minecraft_username`,
+          minecraftUuid: sql<string>`created_by_user.minecraft_uuid`,
+          discordUsername: sql<string>`created_by_user.discord_username`,
+        },
+        server: {
+          id: servers.id,
+          name: servers.name,
+          shortName: servers.shortName,
+        },
+      })
+      .from(transactions)
+      .innerJoin(users, eq(transactions.userId, users.id))
+      .innerJoin(
+        sql`"Users" AS created_by_user`,
+        eq(transactions.createdByUserId, sql`created_by_user.id`)
+      )
+      .innerJoin(servers, eq(transactions.serverId, servers.id))
+      .where(eq(transactions.id, id))
+      .then((res) => res[0] || null);
+
+    return transaction;
+  } catch (error) {
+    console.error(
+      `Failed to get transaction with details for id ${id}:`,
+      error
+    );
+    throw new Error("Failed to retrieve transaction with details");
+  }
+}
+
+/**
  * Fetches the balance of the current user for a specific server.
  *
  * @param userId - The ID of the user whose balance is to be fetched.
  * @param serverId - The ID of the server for which the balance is to be fetched.
  * @returns The balance as a number, or 0 if no transactions are found.
+ * @throws Error if the database query fails.
  */
 export const getBalance = cache(
   async (userId: number, serverId: number): Promise<number> => {
@@ -146,6 +237,7 @@ export const getBalance = cache(
  *
  * @param userId - The ID of the user whose server balances are to be fetched.
  * @returns An array of ServerBalance objects, each containing a server ID and its balance.
+ * @throws Error if the database query fails.
  */
 export const getAllServerBalances = cache(
   async (userId: number): Promise<ServerBalance[]> => {
@@ -190,6 +282,7 @@ export const getAllServerBalances = cache(
  * @param userId - The ID of the user.
  * @param serverId - The ID of the server.
  * @returns The count of transactions as a number.
+ * @throws Error if the database query fails.
  */
 export async function getTransactionCount(
   userId: number,
@@ -222,6 +315,7 @@ export async function getTransactionCount(
  *
  * @param userId - The ID of the user whose server transaction counts are to be fetched.
  * @returns An array of ServerTransactionCount objects, each containing a server ID and its transaction count.
+ * @throws Error if the database query fails.
  */
 export const getAllServerTransactionCounts = cache(
   async (userId: number): Promise<ServerTransactionCount[]> => {
@@ -255,6 +349,7 @@ export const getAllServerTransactionCounts = cache(
  * @param userId - The ID of the user.
  * @param serverId - The ID of the server.
  * @returns The latest transaction date as a Date object, or null if no transactions are found.
+ * @throws Error if the database query fails.
  */
 export async function getLatestTransactionDate(
   userId: number,
@@ -289,6 +384,7 @@ export async function getLatestTransactionDate(
  *
  * @param userId - The ID of the user whose server latest transaction dates are to be fetched.
  * @returns An array of ServerLatestTransaction objects, each containing a server ID and its latest transaction date.
+ * @throws Error if the database query fails.
  */
 export const getAllServerLatestTransactionDates = cache(
   async (userId: number): Promise<ServerLatestTransaction[]> => {
@@ -342,6 +438,8 @@ export const getAllServerLatestTransactionDates = cache(
  *   - data: Array of transactions with user, creator, and server details
  *   - pageCount: Total number of pages based on perPage size
  *   - total: Total count of transactions matching the filters
+ *
+ * @throws Error if the database query fails.
  *
  * @example
  * ```typescript
@@ -476,11 +574,18 @@ export async function getTransactions(input: GetTransactionsInput) {
     total,
   };
 }
-
+/**
+ * Fetches counts of transactions grouped by their status for a specific user and server.
+ *
+ * @param userId - The ID of the user whose transactions are to be counted.
+ * @param serverId - The ID of the server for which the transactions are to be counted.
+ * @return A record mapping each transaction status to its count.
+ * @throws Error if the database query fails.
+ */
 export async function getTransactionStatusCounts(
   serverId: number,
   userId: number
-) {
+): Promise<Record<string, number>> {
   try {
     const results = await db
       .select({
@@ -512,10 +617,18 @@ export async function getTransactionStatusCounts(
   }
 }
 
+/**
+ * Fetches counts of transactions grouped by their type for a specific user and server.
+ *
+ * @param userId - The ID of the user whose transactions are to be counted.
+ * @param serverId - The ID of the server for which the transactions are to be counted.
+ * @return A record mapping each transaction type to its count.
+ * @throws Error if the database query fails.
+ */
 export async function getTransactionTypeCounts(
   userId: number,
   serverId: number
-) {
+): Promise<Record<string, number>> {
   try {
     const results = await db
       .select({
@@ -547,7 +660,18 @@ export async function getTransactionTypeCounts(
   }
 }
 
-export async function getPaymentTypeCounts(userId: number, serverId: number) {
+/**
+ * Fetches counts of transactions grouped by their payment type for a specific user and server.
+ *
+ * @param userId - The ID of the user whose transactions are to be counted.
+ * @param serverId - The ID of the server for which the transactions are to be counted.
+ * @return A record mapping each payment type to its count.
+ * @throws Error if the database query fails.
+ */
+export async function getPaymentTypeCounts(
+  userId: number,
+  serverId: number
+): Promise<Record<string, number>> {
   try {
     const results = await db
       .select({
@@ -579,7 +703,18 @@ export async function getPaymentTypeCounts(userId: number, serverId: number) {
   }
 }
 
-export async function getUserCounts(userId: number, serverId: number) {
+/**
+ * Fetches counts of transactions grouped by user for a specific user and server.
+ *
+ * @param userId - The ID of the user whose transactions are to be counted.
+ * @param serverId - The ID of the server for which the transactions are to be counted.
+ * @return A record mapping each username to an object containing user ID and count of transactions.
+ * @throws Error if the database query fails.
+ */
+export async function getUserCounts(
+  userId: number,
+  serverId: number
+): Promise<Record<string, { id: number; count: number }>> {
   try {
     const results = await db
       .select({
@@ -613,7 +748,18 @@ export async function getUserCounts(userId: number, serverId: number) {
   }
 }
 
-export async function getAmountRange(userId: number, serverId: number) {
+/**
+ * Fetches the minimum and maximum transaction amounts for a specific user and server.
+ *
+ * @param userId - The ID of the user whose transaction amounts are to be analyzed.
+ * @param serverId - The ID of the server for which the transaction amounts are to be analyzed.
+ * @returns An object containing the minimum and maximum transaction amounts.
+ * @throws Error if the database query fails.
+ */
+export async function getAmountRange(
+  userId: number,
+  serverId: number
+): Promise<{ min: number; max: number }> {
   try {
     const result = await db
       .select({

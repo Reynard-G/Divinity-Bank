@@ -1,6 +1,11 @@
 "use server";
 
-import { PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import {
+  GetObjectCommand,
+  PutObjectCommand,
+  S3Client,
+} from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 import { v4 as uuidv4 } from "uuid";
 
 const S3 = new S3Client({
@@ -75,5 +80,36 @@ export async function uploadImageFileToS3(
       success: false,
       error: "Failed to upload file to storage",
     };
+  }
+}
+
+/**
+ * Generates a pre-signed URL for accessing a file in S3
+ *
+ * @param key The S3 key (path) of the file
+ * @param expiresIn The number of seconds until the URL expires (default: 1 hour)
+ * @returns Promise resolving to the pre-signed URL or null if error
+ */
+export async function getPresignedUrl(
+  key: string,
+  expiresIn: number = 3600 // 1 hour default
+): Promise<string | null> {
+  try {
+    const bucket = process.env.R2_BUCKET_NAME;
+    if (!bucket) {
+      console.error("R2_BUCKET_NAME environment variable not set");
+      return null;
+    }
+
+    const command = new GetObjectCommand({
+      Bucket: bucket,
+      Key: key,
+    });
+
+    const presignedUrl = await getSignedUrl(S3, command, { expiresIn });
+    return presignedUrl;
+  } catch (error) {
+    console.error("Error generating pre-signed URL:", error);
+    return null;
   }
 }
