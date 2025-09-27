@@ -9,9 +9,10 @@ import {
   transactions,
   users,
   servers,
-  type Transaction,
+  type SelectTransaction,
 } from "@/lib/db/schema";
 import { buildWhereClause } from "@/lib/db/queries/query-utils";
+import { getBalanceQuery } from "@/lib/db/utils/balance-query";
 import { TRANSACTION_STATUSES } from "@/lib/constants/transaction-statuses";
 import { TRANSACTION_TYPES } from "@/lib/constants/transaction-types";
 import type { ExtendedColumnFilter, JoinOperator } from "@/types/data-table";
@@ -55,6 +56,7 @@ export interface TransactionWithDetails {
   user: {
     id: number;
     minecraftUsername: string;
+    minecraftUuid: string;
     discordUsername: string;
   };
   createdByUser: {
@@ -79,7 +81,7 @@ export interface TransactionWithDetails {
  */
 export async function getTransactionById(
   id: number
-): Promise<Transaction | null> {
+): Promise<SelectTransaction | null> {
   try {
     const transaction = await db
       .select()
@@ -120,6 +122,7 @@ export async function getTransactionByIdWithDetails(
         user: {
           id: users.id,
           minecraftUsername: users.minecraftUsername,
+          minecraftUuid: users.minecraftUuid,
           discordUsername: users.discordUsername,
         },
         createdByUser: {
@@ -174,53 +177,11 @@ export const getBalance = cache(
        * The reason for including PENDING debits is to account for funds that are
        * reserved/withdrawn but not yet fully processed, ensuring the available
        * balance reflects these pending transactions.
-       *
-       * The query uses conditional aggregation with CASE statements to:
-       * 1. Sum credits only when transaction type is CREDIT and status is SUCCESS
-       * 2. Sum debits when transaction type is DEBIT and status is PENDING or SUCCESS
-       * 3. Return "0" as default using COALESCE if no matching transactions exist (e.g., new user)
-       *
-       * This effectively calculates available balance by including:
-       * - All successfully added funds (credits)
-       * - All reserved and committed funds (debits)
-       *
-       * @returns Object with creditSum and debitSum as strings
        */
-      const result = await db
-        .select({
-          creditSum: sql<string>`
-            COALESCE( SUM(
-            CASE 
-            WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.CREDIT} 
-              AND ${transactions.status} = ${TRANSACTION_STATUSES.SUCCESS} THEN
-              ${transactions.amount} 
-              ELSE 0 
-            END ), 0 )
-          `,
-          debitSum: sql<string>`
-            COALESCE( SUM(
-            CASE 
-            WHEN ${transactions.transactionType} = ${TRANSACTION_TYPES.DEBIT} 
-              AND
-              ${transactions.status} IN (${TRANSACTION_STATUSES.PENDING},
-                                         ${TRANSACTION_STATUSES.SUCCESS}) THEN
-              ${transactions.amount} 
-              ELSE 0 
-            END ), 0 )
-          `,
-        })
-        .from(transactions)
-        .where(
-          and(
-            eq(transactions.userId, userId),
-            eq(transactions.serverId, serverId)
-          )
-        )
-        .then((res) => res[0] ?? { creditSum: "0", debitSum: "0" });
+      const result = await db.execute(getBalanceQuery(userId, serverId));
 
-      return new Decimal(result.creditSum)
-        .minus(new Decimal(result.debitSum))
-        .toNumber();
+      const currentBalance = Number(result.rows[0]?.current_balance ?? 0);
+      return currentBalance;
     } catch (error) {
       console.error(
         `Failed to get balance for user ${userId} on server ${serverId}:`,
@@ -521,6 +482,7 @@ export async function getTransactions(input: GetTransactionsInput) {
         user: {
           id: users.id,
           minecraftUsername: users.minecraftUsername,
+          minecraftUuid: users.minecraftUuid,
           discordUsername: users.discordUsername,
         },
         createdByUser: {

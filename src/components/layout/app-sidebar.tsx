@@ -29,7 +29,7 @@ import {
   CommandEmpty,
 } from "@/components/ui/command";
 import { cn } from "@/lib/utils/cn";
-import type { Server } from "@/lib/db/schema";
+import type { SelectServer } from "@/lib/db/schema";
 import {
   createServerRoutes,
   createServerRoute,
@@ -86,10 +86,12 @@ function SidebarSection({
   );
 }
 
-export function AppSidebar({ servers }: { servers: Server[] }) {
+export function AppSidebar({ servers }: { servers: SelectServer[] }) {
   const router = useRouter();
   const pathname = usePathname();
-  const [selectedServer, setSelectedServer] = useState<Server | null>(null);
+  const [selectedServer, setSelectedServer] = useState<SelectServer | null>(
+    null
+  );
   const [isServerPopoverOpen, setIsServerPopoverOpen] = useState(false);
 
   // Extract current server from pathname
@@ -161,7 +163,7 @@ export function AppSidebar({ servers }: { servers: Server[] }) {
       <div className="flex min-h-16 flex-col items-center">
         <Link
           className="flex h-full cursor-pointer flex-row items-center justify-center gap-2 bg-none p-0"
-          href="/"
+          href="/app"
         >
           <Image
             unoptimized

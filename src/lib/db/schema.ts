@@ -1,29 +1,29 @@
-import { sql } from "drizzle-orm";
 import {
-  boolean,
+  pgTable,
   index,
+  uniqueIndex,
+  foreignKey,
   integer,
   numeric,
-  pgTable,
-  text,
   timestamp,
-  unique,
+  text,
+  boolean,
   check,
   uuid,
 } from "drizzle-orm/pg-core";
+import { sql } from "drizzle-orm";
 
 export const servers = pgTable(
   "Servers",
   {
-    id: integer("id").primaryKey().generatedByDefaultAsIdentity({
+    id: integer().generatedByDefaultAsIdentity({
       name: "Servers_id_seq",
       startWith: 1,
       increment: 1,
       minValue: 1,
       maxValue: 2147483647,
     }),
-    name: text("name").notNull(),
-    shortName: text("short_name").notNull(),
+    name: text().notNull(),
     bannerLink: text("banner_link").notNull(),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
       .default(sql`(now() AT TIME ZONE 'utc'::text)`)
@@ -31,6 +31,7 @@ export const servers = pgTable(
     updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
       .default(sql`(now() AT TIME ZONE 'utc'::text)`)
       .notNull(),
+    shortName: text("short_name").notNull(),
   },
   (table) => [
     index("Servers_short_name_idx").using(
@@ -39,73 +40,64 @@ export const servers = pgTable(
     ),
   ]
 );
-export type Server = typeof servers.$inferSelect;
-export type NewServer = typeof servers.$inferInsert;
+export type SelectServer = typeof servers.$inferSelect;
+export type InsertServer = typeof servers.$inferInsert;
 
 export const paymentTypes = pgTable("PaymentTypes", {
-  name: text("name").primaryKey().notNull(),
+  name: text().notNull(),
 });
-export type PaymentType = typeof paymentTypes.$inferSelect;
-export type NewPaymentType = typeof paymentTypes.$inferInsert;
+export type SelectPaymentType = typeof paymentTypes.$inferSelect;
+export type InsertPaymentType = typeof paymentTypes.$inferInsert;
 
 export const transactionStatuses = pgTable("TransactionStatuses", {
-  name: text("name").primaryKey().notNull(),
+  name: text().notNull(),
 });
-export type TransactionStatus = typeof transactionStatuses.$inferSelect;
-export type NewTransactionStatus = typeof transactionStatuses.$inferInsert;
+export type SelectTransactionStatus = typeof transactionStatuses.$inferSelect;
+export type InsertTransactionStatus = typeof transactionStatuses.$inferInsert;
 
 export const transactionTypes = pgTable("TransactionTypes", {
-  name: text("name").primaryKey().notNull(),
+  name: text().notNull(),
 });
-export type TransactionType = typeof transactionTypes.$inferSelect;
-export type NewTransactionType = typeof transactionTypes.$inferInsert;
+export type SelectTransactionType = typeof transactionTypes.$inferSelect;
+export type InsertTransactionType = typeof transactionTypes.$inferInsert;
 
 export const accountTypes = pgTable("AccountTypes", {
-  name: text("name").primaryKey().notNull(),
+  name: text().notNull(),
   interestRate: numeric("interest_rate").notNull(),
   transactionFee: numeric("transaction_fee").notNull(),
 });
-export type AccountType = typeof accountTypes.$inferSelect;
-export type NewAccountType = typeof accountTypes.$inferInsert;
+export type SelectAccountType = typeof accountTypes.$inferSelect;
+export type InsertAccountType = typeof accountTypes.$inferInsert;
 
 export const roles = pgTable("Roles", {
-  name: text("name").primaryKey().notNull(),
+  name: text().notNull(),
 });
-export type Role = typeof roles.$inferSelect;
-export type NewRole = typeof roles.$inferInsert;
+export type SelectRole = typeof roles.$inferSelect;
+export type InsertRole = typeof roles.$inferInsert;
 
 export const users = pgTable(
   "Users",
   {
-    id: integer("id").primaryKey().generatedByDefaultAsIdentity({
+    id: integer().generatedByDefaultAsIdentity({
       name: "Users_id_seq",
       startWith: 1,
       increment: 1,
       minValue: 1,
       maxValue: 2147483647,
     }),
-    accountType: text("account_type")
-      .notNull()
-      .references(() => accountTypes.name, {
-        onDelete: "restrict",
-        onUpdate: "cascade",
-      }),
+    accountType: text("account_type").notNull(),
     minecraftUuid: uuid("minecraft_uuid").notNull(),
     minecraftUsername: text("minecraft_username").notNull(),
     discordUsername: text("discord_username").notNull(),
     hashedPassword: text("hashed_password").notNull(),
-    role: text("role")
-      .notNull()
-      .references(() => roles.name, {
-        onDelete: "restrict",
-        onUpdate: "cascade",
-      }),
+    role: text().notNull(),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
       .default(sql`(now() AT TIME ZONE 'utc'::text)`)
       .notNull(),
     updatedAt: timestamp("updated_at", { withTimezone: true, mode: "string" })
       .default(sql`(now() AT TIME ZONE 'utc'::text)`)
       .notNull(),
+    deactivated: boolean().default(false).notNull(),
   },
   (table) => [
     index("Users_account_type_idx").using(
@@ -116,102 +108,87 @@ export const users = pgTable(
       "btree",
       table.role.asc().nullsLast().op("text_ops")
     ),
-    unique("Users_minecraft_uuid_key").on(table.minecraftUuid),
-    unique("Users_minecraft_username_key").on(table.minecraftUsername),
-    unique("Users_discord_username_key").on(table.discordUsername),
-    check(
-      "Users_discord_username_check",
-      sql`length(${table.discordUsername}) <= 32`
-    ),
+    uniqueIndex("Users_minecraft_uuid_key").on(table.minecraftUuid),
+    uniqueIndex("Users_minecraft_username_key").on(table.minecraftUsername),
+    uniqueIndex("Users_discord_username_key").on(table.discordUsername),
+    foreignKey({
+      columns: [table.accountType],
+      foreignColumns: [accountTypes.name],
+      name: "Users_account_type_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("restrict"),
+    foreignKey({
+      columns: [table.role],
+      foreignColumns: [roles.name],
+      name: "Users_role_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("restrict"),
+    check("Users_discord_username_check", sql`length(discord_username) <= 32`),
     check(
       "Users_minecraft_username_check",
-      sql`length(${table.minecraftUsername}) <= 16`
+      sql`length(minecraft_username) <= 16`
     ),
   ]
 );
-export type User = typeof users.$inferSelect;
-export type NewUser = typeof users.$inferInsert;
+export type SelectUser = typeof users.$inferSelect;
+export type InsertUser = typeof users.$inferInsert;
 
 export const userSettings = pgTable(
   "UserSettings",
   {
-    id: integer("id").primaryKey().generatedByDefaultAsIdentity({
+    id: integer().generatedByDefaultAsIdentity({
       name: "UserSettings_id_seq",
       startWith: 1,
       increment: 1,
       minValue: 1,
       maxValue: 2147483647,
     }),
-    userId: integer("user_id")
-      .notNull()
-      .references(() => users.id, {
-        onDelete: "restrict",
-        onUpdate: "cascade",
-      }),
-    font: text("font").notNull().default("Default"),
+    userId: integer("user_id").notNull(),
+    font: text().default("Default").notNull(),
     discordCommunication: boolean("discord_communication")
-      .notNull()
-      .default(false),
+      .default(false)
+      .notNull(),
     discordTransactions: boolean("discord_transactions")
-      .notNull()
-      .default(true),
-    discordSecurity: boolean("discord_security").notNull().default(true),
+      .default(true)
+      .notNull(),
+    discordSecurity: boolean("discord_security").default(true).notNull(),
   },
-  (table) => [unique("UserSettings_id_key").on(table.id)]
+  (table) => [
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.id],
+      name: "UserSettings_user_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("restrict"),
+  ]
 );
-export type UserSetting = typeof userSettings.$inferSelect;
-export type NewUserSetting = typeof userSettings.$inferInsert;
+export type SelectUserSetting = typeof userSettings.$inferSelect;
+export type InsertUserSetting = typeof userSettings.$inferInsert;
 
 export const transactions = pgTable(
   "Transactions",
   {
-    id: integer("id").primaryKey().generatedByDefaultAsIdentity({
-      name: "Transactions_id_seq",
+    id: integer().generatedByDefaultAsIdentity({
+      name: "NewTransactions_id_seq",
       startWith: 1,
       increment: 1,
       minValue: 1,
       maxValue: 2147483647,
     }),
-    serverId: integer("server_id")
-      .notNull()
-      .references(() => servers.id, {
-        onDelete: "restrict",
-        onUpdate: "cascade",
-      }),
-    userId: integer("user_id")
-      .notNull()
-      .references(() => users.id, {
-        onDelete: "restrict",
-        onUpdate: "cascade",
-      }),
-    createdByUserId: integer("created_by_user_id")
-      .notNull()
-      .references(() => users.id, {
-        onDelete: "restrict",
-        onUpdate: "cascade",
-      }),
-    amount: numeric("amount", { precision: 34, scale: 2 }).notNull(),
-    fee: numeric("fee", { precision: 34, scale: 2 }).notNull().default("0.00"),
-    transactionType: text("transaction_type")
-      .notNull()
-      .references(() => transactionTypes.name, {
-        onDelete: "restrict",
-        onUpdate: "cascade",
-      }),
-    paymentType: text("payment_type")
-      .notNull()
-      .references(() => paymentTypes.name, {
-        onDelete: "restrict",
-        onUpdate: "cascade",
-      }),
-    attachment: text("attachment"),
-    note: text("note"),
-    status: text("status")
-      .notNull()
-      .references(() => transactionStatuses.name, {
-        onDelete: "restrict",
-        onUpdate: "cascade",
-      }),
+    userId: integer("user_id").notNull(),
+    createdByUserId: integer("created_by_user_id").notNull(),
+    serverId: integer("server_id").notNull(),
+    transferId: integer("transfer_id"),
+    amount: numeric({ precision: 34, scale: 2 }).notNull(),
+    fee: numeric({ precision: 34, scale: 2 }).default("0.00").notNull(),
+    transactionType: text("transaction_type").notNull(),
+    paymentType: text("payment_type").notNull(),
+    attachment: text(),
+    note: text(),
+    status: text().notNull(),
     createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
       .default(sql`(now() AT TIME ZONE 'utc'::text)`)
       .notNull(),
@@ -220,13 +197,6 @@ export const transactions = pgTable(
       .notNull(),
   },
   (table) => [
-    index("idx_transactions_user_server_status_type").using(
-      "btree",
-      table.userId.asc().nullsLast().op("int4_ops"),
-      table.serverId.asc().nullsLast().op("int4_ops"),
-      table.status.asc().nullsLast().op("text_ops"),
-      table.transactionType.asc().nullsLast().op("text_ops")
-    ),
     index("Transactions_created_at_idx").using(
       "btree",
       table.createdAt.asc().nullsLast().op("timestamptz_ops")
@@ -251,11 +221,113 @@ export const transactions = pgTable(
       "btree",
       table.transactionType.asc().nullsLast().op("text_ops")
     ),
+    index("Transactions_transfer_id_idx").using(
+      "btree",
+      table.transferId.asc().nullsLast().op("int4_ops")
+    ),
     index("Transactions_user_id_idx").using(
       "btree",
       table.userId.asc().nullsLast().op("int4_ops")
     ),
+    foreignKey({
+      columns: [table.createdByUserId],
+      foreignColumns: [users.id],
+      name: "Transactions_created_by_user_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("restrict"),
+    foreignKey({
+      columns: [table.paymentType],
+      foreignColumns: [paymentTypes.name],
+      name: "Transactions_payment_type_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("restrict"),
+    foreignKey({
+      columns: [table.serverId],
+      foreignColumns: [servers.id],
+      name: "Transactions_server_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("restrict"),
+    foreignKey({
+      columns: [table.status],
+      foreignColumns: [transactionStatuses.name],
+      name: "Transactions_status_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("restrict"),
+    foreignKey({
+      columns: [table.transactionType],
+      foreignColumns: [transactionTypes.name],
+      name: "Transactions_transaction_type_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("restrict"),
+    foreignKey({
+      columns: [table.transferId],
+      foreignColumns: [transfers.id],
+      name: "Transactions_transfer_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("restrict"),
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.id],
+      name: "Transactions_user_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("restrict"),
   ]
 );
-export type Transaction = typeof transactions.$inferSelect;
-export type NewTransaction = typeof transactions.$inferInsert;
+export type SelectTransaction = typeof transactions.$inferSelect;
+export type InsertTransaction = typeof transactions.$inferInsert;
+
+export const transfers = pgTable(
+  "Transfers",
+  {
+    id: integer().generatedByDefaultAsIdentity({
+      name: "Transfers_id_seq",
+      startWith: 1,
+      increment: 1,
+      minValue: 1,
+      maxValue: 2147483647,
+    }),
+    senderUserId: integer("sender_user_id").notNull(),
+    recipientUserId: integer("recipient_user_id").notNull(),
+    amount: numeric({ precision: 34, scale: 2 }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+      .default(sql`(now() AT TIME ZONE 'utc'::text)`)
+      .notNull(),
+  },
+  (table) => [
+    index("Transfers_created_at_idx").using(
+      "btree",
+      table.createdAt.asc().nullsLast().op("timestamptz_ops")
+    ),
+    index("Transfers_recipient_user_id_idx").using(
+      "btree",
+      table.recipientUserId.asc().nullsLast().op("int4_ops")
+    ),
+    index("Transfers_sender_user_id_idx").using(
+      "btree",
+      table.senderUserId.asc().nullsLast().op("int4_ops")
+    ),
+    foreignKey({
+      columns: [table.senderUserId],
+      foreignColumns: [users.id],
+      name: "Transfers_sender_user_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("restrict"),
+    foreignKey({
+      columns: [table.recipientUserId],
+      foreignColumns: [users.id],
+      name: "Transfers_recipient_user_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("restrict"),
+  ]
+);
+export type SelectTransfer = typeof transfers.$inferSelect;
+export type InsertTransfer = typeof transfers.$inferInsert;

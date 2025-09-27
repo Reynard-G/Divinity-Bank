@@ -1,7 +1,8 @@
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
+import { Badge } from "@/components/ui/badge";
 import { TransactionStatusBadge } from "./transaction-status-badge";
 import { TransactionTypeBadge } from "./transaction-type-badge";
 import { formatCurrency } from "@/lib/utils/format-currency";
@@ -13,37 +14,79 @@ interface TransactionHeaderProps {
 
 export function TransactionHeader({ transaction }: TransactionHeaderProps) {
   return (
-    <>
-      <div className="mb-6 flex items-center gap-4">
-        <Button variant="ghost" size="sm" asChild>
+    <div className="space-y-6">
+      <div className="flex items-center gap-4">
+        <Button variant="link" size="sm" className="h-9 px-3" asChild>
           <Link href="/app">
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
+            Dashboard
           </Link>
         </Button>
       </div>
 
-      <div className="space-y-4">
-        <div className="flex flex-wrap items-center gap-3">
-          <h1 className="text-3xl font-bold">Transaction #{transaction.id}</h1>
-          <div className="flex gap-2">
-            <TransactionStatusBadge status={transaction.status} />
-            <TransactionTypeBadge type={transaction.transactionType} />
+      <div className="space-y-6">
+        {/* Main Header */}
+        <div className="space-y-4">
+          <div className="flex items-start justify-between">
+            <div className="space-y-2">
+              <h1 className="text-2xl font-semibold tracking-tight">
+                Transaction #{transaction.id}
+              </h1>
+              <div className="flex items-center gap-2">
+                <TransactionStatusBadge status={transaction.status} />
+                <TransactionTypeBadge type={transaction.transactionType} />
+              </div>
+            </div>
+            <div className="text-right">
+              <div className="text-3xl font-bold">
+                {formatCurrency(parseFloat(transaction.amount))}
+              </div>
+              <Badge variant="outline" className="mt-1">
+                {transaction.server.name}
+              </Badge>
+            </div>
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-4 text-muted-foreground">
-          <span className="text-2xl font-bold text-foreground">
-            {formatCurrency(parseFloat(transaction.amount))}
-          </span>
-          <span>•</span>
-          <span>{transaction.server.name}</span>
-          <span>•</span>
-          <span>{transaction.user.minecraftUsername}</span>
+        {/* User Info */}
+        <div className="flex items-center justify-between rounded-lg border bg-card p-4">
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-3">
+              <Image
+                src={`https://crafatar.com/avatars/${transaction.user.minecraftUuid}?size=40&overlay`}
+                alt={`${transaction.user.minecraftUsername}'s avatar`}
+                width={40}
+                height={40}
+                className="rounded-md"
+                unoptimized
+              />
+              <div>
+                <p className="font-medium">
+                  {transaction.user.minecraftUsername}
+                </p>
+                <p className="text-sm text-muted-foreground">Account Holder</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3 text-right">
+            <div>
+              <p className="font-medium">
+                {transaction.createdByUser.minecraftUsername}
+              </p>
+              <p className="text-sm text-muted-foreground">Created By</p>
+            </div>
+            <Image
+              src={`https://crafatar.com/avatars/${transaction.createdByUser.minecraftUuid}?size=40&overlay`}
+              alt={`${transaction.createdByUser.minecraftUsername}'s avatar`}
+              width={40}
+              height={40}
+              className="rounded-md"
+              unoptimized
+            />
+          </div>
         </div>
       </div>
-
-      <Separator className="mb-6 mt-4" />
-    </>
+    </div>
   );
 }

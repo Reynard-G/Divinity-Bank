@@ -4,7 +4,7 @@ import { cache } from "react";
 import { asc, eq } from "drizzle-orm";
 
 import { db } from "@/lib/db";
-import type { Server } from "@/lib/db/schema";
+import type { SelectServer } from "@/lib/db/schema";
 import { servers } from "@/lib/db/schema";
 
 /**
@@ -12,7 +12,7 @@ import { servers } from "@/lib/db/schema";
  *
  * @returns An array of server objects, ordered by their ID.
  */
-export const getServers = cache(async (): Promise<Server[]> => {
+export const getServers = cache(async (): Promise<SelectServer[]> => {
   try {
     return db.select().from(servers).orderBy(asc(servers.id));
   } catch (error) {
@@ -28,7 +28,7 @@ export const getServers = cache(async (): Promise<Server[]> => {
  * @returns The server object if found, or null if not found.
  */
 export const getServerByShortName = cache(
-  async (serverShortName: string): Promise<Server | null> => {
+  async (serverShortName: string): Promise<SelectServer | null> => {
     try {
       const server = await db
         .select()

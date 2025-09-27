@@ -28,10 +28,10 @@ export default async function TransactionViewPage({
   }
 
   return (
-    <div className="container mx-auto space-y-6 py-6">
+    <div className="container mx-auto max-w-4xl space-y-8 p-6">
       <TransactionHeader transaction={transaction} />
 
-      <div className="grid gap-6">
+      <div className="space-y-6">
         <TransactionDetailsCard transaction={transaction} />
 
         {transaction.attachment && attachmentUrl && (

@@ -3,9 +3,11 @@
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 import { db } from "@/lib/db";
-import { transactions } from "@/lib/db/schema";
+import { transactions, transfers } from "@/lib/db/schema";
+import { getBalanceQuery } from "@/lib/db/utils/balance-query";
 import { getSession } from "@/lib/auth/jwt";
 import { uploadImageFileToS3 } from "@/lib/utils/s3";
+
 import { TRANSACTION_STATUSES } from "@/lib/constants/transaction-statuses";
 import { TRANSACTION_TYPES } from "@/lib/constants/transaction-types";
 import { PAYMENT_TYPES } from "@/lib/constants/payment-types";
@@ -82,7 +84,7 @@ export async function depositAction(
       transactionType: TRANSACTION_TYPES.CREDIT,
       paymentType: PAYMENT_TYPES.DEPOSIT,
       attachment: uploadResult.key,
-      note: `Deposit of $${amountNum.toFixed(2)}`,
+      note: `Deposit of $${amountNum}`,
       status: TRANSACTION_STATUSES.PENDING,
     });
 
@@ -153,7 +155,7 @@ export async function withdrawAction(
       fee: "0.00",
       transactionType: TRANSACTION_TYPES.DEBIT,
       paymentType: PAYMENT_TYPES.WITHDRAW,
-      note: `Withdrawal of $${amountNum.toFixed(2)}`,
+      note: `Withdrawal of $${amountNum}`,
       status: TRANSACTION_STATUSES.PENDING,
     });
 
@@ -225,30 +227,56 @@ export async function transferAction(
       };
     }
 
-    // Create DEBIT transaction for sender
-    await db.insert(transactions).values({
-      serverId: parseInt(serverId),
-      userId: parseInt(session.id),
-      createdByUserId: parseInt(session.id),
-      amount: amountNum.toString(),
-      fee: "0.00",
-      transactionType: TRANSACTION_TYPES.DEBIT,
-      paymentType: PAYMENT_TYPES.TRANSFER,
-      status: TRANSACTION_STATUSES.PENDING,
-      note: `Transfer of ${amountNum.toFixed(2)} to ${recipientId} (${recipientUsername})`,
-    });
+    // Perform the transfer inside a transaction to prevent race conditions
+    await db.transaction(async (tx) => {
+      // Check balance inside the transaction to prevent race conditions
+      const balanceResult = await tx.execute(
+        getBalanceQuery(parseInt(session.id), parseInt(serverId))
+      );
 
-    // Create CREDIT transaction for recipient
-    await db.insert(transactions).values({
-      serverId: parseInt(serverId),
-      userId: parseInt(recipientId),
-      createdByUserId: parseInt(session.id),
-      amount: amountNum.toString(),
-      fee: "0.00",
-      transactionType: TRANSACTION_TYPES.CREDIT,
-      paymentType: PAYMENT_TYPES.TRANSFER,
-      status: TRANSACTION_STATUSES.PENDING,
-      note: `Transfer of ${amountNum.toFixed(2)} from ${session.id} (${session.username})`,
+      const currentBalance = Number(
+        balanceResult.rows[0]?.current_balance ?? 0
+      );
+
+      // Check if user has sufficient funds
+      if (amountNum > currentBalance) {
+        // TODO: Replace with tx.rollback() once Drizzle ORM adds custom messages in rollbacks
+        // See: https://github.com/drizzle-team/drizzle-orm/issues/1957
+        throw new Error("Insufficient funds");
+      }
+
+      // Create DEBIT transaction for sender
+      await tx.insert(transactions).values({
+        serverId: parseInt(serverId),
+        userId: parseInt(session.id),
+        createdByUserId: parseInt(session.id),
+        amount: amountNum.toString(),
+        fee: "0.00",
+        transactionType: TRANSACTION_TYPES.DEBIT,
+        paymentType: PAYMENT_TYPES.TRANSFER,
+        status: TRANSACTION_STATUSES.PENDING,
+        note: `Transfer of ${amountNum} to ${recipientId} (${recipientUsername})`,
+      });
+
+      // Create CREDIT transaction for recipient
+      await tx.insert(transactions).values({
+        serverId: parseInt(serverId),
+        userId: parseInt(recipientId),
+        createdByUserId: parseInt(session.id),
+        amount: amountNum.toString(),
+        fee: "0.00",
+        transactionType: TRANSACTION_TYPES.CREDIT,
+        paymentType: PAYMENT_TYPES.TRANSFER,
+        status: TRANSACTION_STATUSES.PENDING,
+        note: `Transfer of ${amountNum.toFixed(2)} from ${session.id} (${session.username})`,
+      });
+
+      // Create transfer record
+      return tx.insert(transfers).values({
+        senderUserId: parseInt(session.id),
+        recipientUserId: parseInt(recipientId),
+        amount: amountNum.toString(),
+      });
     });
 
     return {
@@ -258,6 +286,14 @@ export async function transferAction(
   } catch (error) {
     if (isRedirectError(error)) {
       throw error;
+    }
+
+    // Handle insufficient funds error specifically
+    if (error instanceof Error && error.message === "Insufficient funds") {
+      return {
+        success: false,
+        error: "Insufficient funds",
+      };
     }
 
     console.error("Failed to process transfer:", error);
