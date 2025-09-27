@@ -253,7 +253,7 @@ export async function transferAction(
         fee: "0.00",
         transactionType: TRANSACTION_TYPES.DEBIT,
         paymentType: PAYMENT_TYPES.TRANSFER,
-        status: TRANSACTION_STATUSES.PENDING,
+        status: TRANSACTION_STATUSES.SUCCESS,
         note: `Transfer of ${amountNum} to ${recipientId} (${recipientUsername})`,
       });
 
@@ -266,7 +266,7 @@ export async function transferAction(
         fee: "0.00",
         transactionType: TRANSACTION_TYPES.CREDIT,
         paymentType: PAYMENT_TYPES.TRANSFER,
-        status: TRANSACTION_STATUSES.PENDING,
+        status: TRANSACTION_STATUSES.SUCCESS,
         note: `Transfer of ${amountNum.toFixed(2)} from ${session.id} (${session.username})`,
       });
 
