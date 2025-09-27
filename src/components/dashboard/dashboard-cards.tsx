@@ -1,14 +1,15 @@
 import { unauthorized } from "next/navigation";
+
 import { IconCreditCard, IconReceipt, IconClock } from "@tabler/icons-react";
 
-import { getCurrentUser } from "@/lib/db/queries/user.queries";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getServerByShortName } from "@/lib/db/queries/server.queries";
 import {
   getBalance,
   getLatestTransactionDate,
   getTransactionCount,
 } from "@/lib/db/queries/transaction.queries";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { getCurrentUser } from "@/lib/db/queries/user.queries";
 import { formatCurrency } from "@/lib/utils/format-currency";
 import { formatRelativeDate } from "@/lib/utils/format-date";
 

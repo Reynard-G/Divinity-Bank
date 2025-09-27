@@ -1,12 +1,12 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
 import { unauthorized } from "next/navigation";
+import { Suspense } from "react";
 
-import { PageHeader } from "@/components/ui/page-header";
-import { TransactionsDataTableServer as TransactionsDataTable } from "@/components/data-table/transactions-data-table-server";
-import { getCurrentUser } from "@/lib/db/queries/user.queries";
-import { getServerByShortName } from "@/lib/db/queries/server.queries";
 import { DataTableSkeleton } from "@/components/data-table/data-table-skeleton";
+import { TransactionsDataTableServer as TransactionsDataTable } from "@/components/data-table/transactions-data-table-server";
+import { PageHeader } from "@/components/ui/page-header";
+import { getServerByShortName } from "@/lib/db/queries/server.queries";
+import { getCurrentUser } from "@/lib/db/queries/user.queries";
 
 interface TransactionsPageProps {
   params: Promise<{ server: string }>;

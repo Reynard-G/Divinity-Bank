@@ -1,5 +1,7 @@
 "use client";
 
+import * as React from "react";
+
 import type { ColumnSort, SortDirection, Table } from "@tanstack/react-table";
 import {
   ArrowDownUp,
@@ -7,7 +9,6 @@ import {
   GripVertical,
   Trash2,
 } from "lucide-react";
-import * as React from "react";
 
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -38,8 +39,8 @@ import {
   SortableItemHandle,
   SortableOverlay,
 } from "@/components/ui/sortable";
-import { dataTableConfig } from "@/lib/utils/data-table-config";
 import { cn } from "@/lib/utils/cn";
+import { dataTableConfig } from "@/lib/utils/data-table-config";
 
 const OPEN_MENU_SHORTCUT = "s";
 const REMOVE_SORT_SHORTCUTS = ["backspace", "delete"];

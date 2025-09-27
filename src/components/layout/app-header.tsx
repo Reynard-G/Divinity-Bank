@@ -1,6 +1,10 @@
 "use client";
 
+import { IconBrandDiscord } from "@tabler/icons-react";
 import { useRouter } from "nextjs-toploader/app";
+
+import type { UserForComponents } from "@/app/app/layout";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
@@ -10,10 +14,7 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { logout } from "@/lib/db/actions/auth.actions";
-import type { UserForComponents } from "@/app/app/layout";
-import { IconBrandDiscord } from "@tabler/icons-react";
 
 export function AppHeader({ user }: { user: UserForComponents }) {
   const router = useRouter();

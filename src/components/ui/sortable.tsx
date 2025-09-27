@@ -1,3 +1,5 @@
+import * as React from "react";
+
 import {
   type Announcements,
   DndContext,
@@ -33,11 +35,10 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import { Slot } from "@radix-ui/react-slot";
-import * as React from "react";
-
-import { composeEventHandlers, useComposedRefs } from "@/lib/utils/composition";
-import { cn } from "@/lib/utils/cn";
 import * as ReactDOM from "react-dom";
+
+import { cn } from "@/lib/utils/cn";
+import { composeEventHandlers, useComposedRefs } from "@/lib/utils/composition";
 
 const orientationConfig = {
   vertical: {

@@ -1,5 +1,6 @@
-import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+
+import { SignJWT, jwtVerify } from "jose";
 
 function getKey(): Uint8Array {
   const secretKey = process.env.JWT_SECRET;

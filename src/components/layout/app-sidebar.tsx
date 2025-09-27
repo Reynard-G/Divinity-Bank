@@ -1,10 +1,10 @@
 "use client";
 
-import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useRouter } from "nextjs-toploader/app";
+import { useState, useEffect } from "react";
+
 import {
   IconHome,
   IconServer,
@@ -14,11 +14,8 @@ import {
   IconChevronDown,
   IconChevronUp,
 } from "@tabler/icons-react";
-import {
-  Popover,
-  PopoverTrigger,
-  PopoverContent,
-} from "@/components/ui/popover";
+import { useRouter } from "nextjs-toploader/app";
+
 import { Button } from "@/components/ui/button";
 import {
   Command,
@@ -28,8 +25,13 @@ import {
   CommandGroup,
   CommandEmpty,
 } from "@/components/ui/command";
-import { cn } from "@/lib/utils/cn";
+import {
+  Popover,
+  PopoverTrigger,
+  PopoverContent,
+} from "@/components/ui/popover";
 import type { SelectServer } from "@/lib/db/schema";
+import { cn } from "@/lib/utils/cn";
 import {
   createServerRoutes,
   createServerRoute,

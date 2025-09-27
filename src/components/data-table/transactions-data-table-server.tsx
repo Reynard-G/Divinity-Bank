@@ -1,5 +1,6 @@
 "use server";
 
+import { TransactionsDataTableClient } from "@/components/data-table/transactions-data-table-client";
 import {
   getTransactions,
   getTransactionStatusCounts,
@@ -10,7 +11,6 @@ import {
   type TransactionWithDetails,
 } from "@/lib/db/queries/transaction.queries";
 import { getValidFilters } from "@/lib/utils/data-table";
-import { TransactionsDataTableClient } from "@/components/data-table/transactions-data-table-client";
 import type { ExtendedColumnFilter } from "@/types/data-table";
 
 interface TransactionsDataTableServerProps {

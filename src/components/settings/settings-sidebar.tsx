@@ -2,7 +2,9 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+
 import { IconTool, IconPalette, IconBell } from "@tabler/icons-react";
+
 import { cn } from "@/lib/utils/cn";
 
 const sidebarNavItems = [

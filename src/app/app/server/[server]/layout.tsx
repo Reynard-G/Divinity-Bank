@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 import { db } from "@/lib/db";
-import { servers } from "@/lib/db/schema";
 import { getServerByShortName } from "@/lib/db/queries/server.queries";
+import { servers } from "@/lib/db/schema";
 
 interface ServerLayoutProps {
   children: React.ReactNode;

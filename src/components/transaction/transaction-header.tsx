@@ -1,12 +1,15 @@
-import { ArrowLeft } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
+import Link from "next/link";
+
+import { ArrowLeft } from "lucide-react";
+
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import type { TransactionWithDetails } from "@/lib/db/queries/transaction.queries";
+import { formatCurrency } from "@/lib/utils/format-currency";
+
 import { TransactionStatusBadge } from "./transaction-status-badge";
 import { TransactionTypeBadge } from "./transaction-type-badge";
-import { formatCurrency } from "@/lib/utils/format-currency";
-import type { TransactionWithDetails } from "@/lib/db/queries/transaction.queries";
 
 interface TransactionHeaderProps {
   transaction: TransactionWithDetails;

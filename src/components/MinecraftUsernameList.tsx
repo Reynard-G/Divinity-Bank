@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
+
 import { Check } from "lucide-react";
 
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
@@ -12,10 +13,10 @@ import {
   CommandItem,
   CommandList,
 } from "@/components/ui/command";
-import { cn } from "@/lib/utils/cn";
-import { searchMinecraftUsers } from "@/lib/db/queries/user.queries";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
+import { searchMinecraftUsers } from "@/lib/db/queries/user.queries";
 import type { MinecraftUser } from "@/lib/db/queries/user.queries";
+import { cn } from "@/lib/utils/cn";
 
 interface MinecraftUsernameListProps {
   selectedUser: MinecraftUser | null;

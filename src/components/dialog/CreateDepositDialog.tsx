@@ -1,6 +1,7 @@
 "use client";
 
 import { useActionState, useState, useCallback } from "react";
+
 import { IconPlus, IconUpload, IconX } from "@tabler/icons-react";
 import { toast } from "sonner";
 
@@ -11,9 +12,6 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { SpokeSpinner } from "@/components/ui/spinner";
 import {
   FileUpload,
   FileUploadDropzone,
@@ -24,6 +22,9 @@ import {
   FileUploadItemMetadata,
   FileUploadItemDelete,
 } from "@/components/ui/file-upload";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { SpokeSpinner } from "@/components/ui/spinner";
 import { depositAction } from "@/lib/db/actions/transaction.actions";
 
 interface CreateDepositDialogProps {

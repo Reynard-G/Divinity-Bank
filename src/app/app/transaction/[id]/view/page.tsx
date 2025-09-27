@@ -1,11 +1,11 @@
 import { notFound } from "next/navigation";
 
 import type { TransactionDirectoryParams } from "@/app/app/transaction/[id]/layout";
+import { TransactionAttachment } from "@/components/transaction/transaction-attachment";
+import { TransactionDetailsCard } from "@/components/transaction/transaction-details-card";
+import { TransactionHeader } from "@/components/transaction/transaction-header";
 import { getTransactionByIdWithDetails } from "@/lib/db/queries/transaction.queries";
 import { getCurrentUser } from "@/lib/db/queries/user.queries";
-import { TransactionHeader } from "@/components/transaction/transaction-header";
-import { TransactionDetailsCard } from "@/components/transaction/transaction-details-card";
-import { TransactionAttachment } from "@/components/transaction/transaction-attachment";
 import { getPresignedUrl } from "@/lib/utils/s3";
 
 export default async function TransactionViewPage({

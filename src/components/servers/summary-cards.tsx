@@ -1,13 +1,13 @@
 import { unauthorized } from "next/navigation";
 
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { getServers } from "@/lib/db/queries/server.queries";
 import {
   getAllServerBalances,
   getAllServerTransactionCounts,
 } from "@/lib/db/queries/transaction.queries";
-import { getServers } from "@/lib/db/queries/server.queries";
 import { getCurrentUser } from "@/lib/db/queries/user.queries";
 import { formatCurrency } from "@/lib/utils/format-currency";
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 
 export async function SummaryCards() {
   const user = await getCurrentUser();

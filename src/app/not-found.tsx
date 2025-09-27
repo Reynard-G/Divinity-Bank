@@ -1,7 +1,8 @@
 "use client";
 
-import { useMediaQuery } from "@/hooks/use-media-query";
 import { useRouter } from "next/navigation";
+
+import { useMediaQuery } from "@/hooks/use-media-query";
 
 export default function NotFound() {
   const router = useRouter();

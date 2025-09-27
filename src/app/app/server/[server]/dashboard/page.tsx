@@ -1,5 +1,5 @@
-import { Suspense } from "react";
 import type { Metadata } from "next";
+import { Suspense } from "react";
 
 import { ServerDirectoryParams } from "@/app/app/server/[server]/layout";
 import { DashboardCards } from "@/components/dashboard/dashboard-cards";

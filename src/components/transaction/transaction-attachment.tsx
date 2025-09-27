@@ -2,8 +2,10 @@
 
 import Image from "next/image";
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+
 import { AlertCircle } from "lucide-react";
+
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 interface TransactionAttachmentProps {
   attachmentUrl: string;

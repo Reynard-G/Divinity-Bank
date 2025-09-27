@@ -16,9 +16,10 @@ import {
   type SQL,
   type Column,
 } from "drizzle-orm";
+
+import type { TransactionWithDetails } from "@/lib/db/queries/transaction.queries";
 import { transactions } from "@/lib/db/schema";
 import type { ExtendedColumnFilter, JoinOperator } from "@/types/data-table";
-import type { TransactionWithDetails } from "@/lib/db/queries/transaction.queries";
 
 export function buildWhereClause(
   filters: ExtendedColumnFilter<TransactionWithDetails>[],

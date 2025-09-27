@@ -1,5 +1,7 @@
 "use client";
 
+import * as React from "react";
+
 import type { Column, ColumnMeta, Table } from "@tanstack/react-table";
 import {
   CalendarIcon,
@@ -10,7 +12,6 @@ import {
   Trash2,
 } from "lucide-react";
 import { parseAsStringEnum, useQueryState } from "nuqs";
-import * as React from "react";
 
 import { DataTableRangeFilter } from "@/components/data-table/data-table-range-filter";
 import { Badge } from "@/components/ui/badge";
@@ -55,16 +56,16 @@ import {
   SortableItemHandle,
   SortableOverlay,
 } from "@/components/ui/sortable";
-import { dataTableConfig } from "@/lib/utils/data-table-config";
 import { useDebouncedCallback } from "@/hooks/use-debounced-callback";
+import { cn } from "@/lib/utils/cn";
 import {
   getDefaultFilterOperator,
   getFilterOperators,
 } from "@/lib/utils/data-table";
+import { dataTableConfig } from "@/lib/utils/data-table-config";
 import { formatDate } from "@/lib/utils/format-date";
 import { generateId } from "@/lib/utils/id";
 import { getFiltersStateParser } from "@/lib/utils/parsers";
-import { cn } from "@/lib/utils/cn";
 import type {
   ExtendedColumnFilter,
   FilterOperator,

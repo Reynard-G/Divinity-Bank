@@ -1,9 +1,12 @@
 "use client";
 
 import { useActionState, useState, Suspense, useCallback } from "react";
+
 import { IconArrowRight, IconSelector } from "@tabler/icons-react";
 import { toast } from "sonner";
 
+import { MinecraftUsernameList } from "@/components/MinecraftUsernameList";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -11,6 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -18,13 +22,10 @@ import {
   PopoverContent,
   PopoverTrigger,
 } from "@/components/ui/popover";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
-import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { SpokeSpinner } from "@/components/ui/spinner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { transferAction } from "@/lib/db/actions/transaction.actions";
+import { SpokeSpinner } from "@/components/ui/spinner";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { MinecraftUsernameList } from "@/components/MinecraftUsernameList";
+import { transferAction } from "@/lib/db/actions/transaction.actions";
 import type { MinecraftUser } from "@/lib/db/queries/user.queries";
 
 interface CreateTransferDialogProps {

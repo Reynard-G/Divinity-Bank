@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+
 import { getSession, updateSession } from "@/lib/auth/jwt";
 
 export async function middleware(request: NextRequest) {

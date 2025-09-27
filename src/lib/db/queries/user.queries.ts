@@ -1,12 +1,13 @@
 "use server";
 
 import { cache } from "react";
+
 import { ilike } from "drizzle-orm";
 
-import { db } from "@/lib/db";
-import { users } from "@/lib/db/schema";
 import { getSession } from "@/lib/auth/jwt";
 import type { SessionPayload } from "@/lib/auth/jwt";
+import { db } from "@/lib/db";
+import { users } from "@/lib/db/schema";
 
 export type JWTUser = Pick<SessionPayload, "uuid" | "username" | "role"> & {
   id: number;

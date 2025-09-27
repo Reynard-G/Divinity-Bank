@@ -1,7 +1,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import type { TransactionWithDetails } from "@/lib/db/queries/transaction.queries";
 import { formatCurrency } from "@/lib/utils/format-currency";
 import { formatDate } from "@/lib/utils/format-date";
-import type { TransactionWithDetails } from "@/lib/db/queries/transaction.queries";
 
 interface TransactionDetailsCardProps {
   transaction: TransactionWithDetails;

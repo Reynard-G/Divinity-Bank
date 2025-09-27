@@ -1,13 +1,6 @@
 "use client";
 
 import type { ColumnDef } from "@tanstack/react-table";
-import { Badge } from "@/components/ui/badge";
-import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
-import { Scroller } from "@/components/ui/scroller";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
-import { formatCurrency } from "@/lib/utils/format-currency";
-import { formatDate } from "@/lib/utils/format-date";
-import type { TransactionWithDetails } from "@/lib/db/queries/transaction.queries";
 import {
   DollarSign,
   Calendar,
@@ -22,7 +15,15 @@ import {
   XCircle,
   AlertCircle,
 } from "lucide-react";
+
+import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { TransactionsDataTableClientProps } from "@/components/data-table/transactions-data-table-client";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Scroller } from "@/components/ui/scroller";
+import type { TransactionWithDetails } from "@/lib/db/queries/transaction.queries";
+import { formatCurrency } from "@/lib/utils/format-currency";
+import { formatDate } from "@/lib/utils/format-date";
 
 export function getTransactionColumns(
   statusCounts: TransactionsDataTableClientProps["statusCounts"] = {},
