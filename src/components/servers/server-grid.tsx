@@ -94,8 +94,12 @@ export async function ServerGrid({ serverSlug }: ServerGridProps) {
                 <span className="text-sm font-medium">Last Activity:</span>
                 <span className="text-sm text-muted-foreground">
                   {(() => {
-                    const latestDate = latestTransactionData.find((d) => d.serverId === server.id)?.latestTransactionDate;
-                    return latestDate ? formatRelativeDate(latestDate) : "No activity";
+                    const latestDate = latestTransactionData.find(
+                      (d) => d.serverId === server.id
+                    )?.latestTransactionDate;
+                    return latestDate
+                      ? formatRelativeDate(latestDate)
+                      : "No activity";
                   })()}
                 </span>
               </div>
