@@ -26,7 +26,7 @@ export function CreateWithdrawDialog({
   serverId,
 }: CreateWithdrawDialogProps) {
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-  const [formState, formAction, pending] = useActionState(
+  const [, formAction, pending] = useActionState(
     async (_state: null, formData: FormData) => {
       await handleFormAction(formData);
       return null;

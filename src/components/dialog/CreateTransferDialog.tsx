@@ -40,7 +40,7 @@ export function CreateTransferDialog({
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
   const [isUsersPopoverOpen, setIsUsersPopoverOpen] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<MinecraftUser | null>(null);
-  const [formState, formAction, pending] = useActionState(
+  const [, formAction, pending] = useActionState(
     async (_state: null, formData: FormData) => {
       await handleFormAction(formData);
       return null;
