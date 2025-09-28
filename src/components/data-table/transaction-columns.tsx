@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
+import { TransactionActions } from "@/components/data-table/transaction-actions";
 import { TransactionsDataTableClientProps } from "@/components/data-table/transactions-data-table-client";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -405,9 +406,6 @@ export function getTransactionColumns(
                   minute: undefined,
                 })}
               </div>
-              <div className="text-xs text-muted-foreground">
-                {new Date(createdAt).toLocaleTimeString()}
-              </div>
             </div>
           </div>
         );
@@ -420,6 +418,17 @@ export function getTransactionColumns(
       enableColumnFilter: true,
       enableSorting: true,
       size: 180,
+    },
+    {
+      id: "actions",
+      cell: ({ row }) => {
+        const transaction = row.original;
+        return <TransactionActions transaction={transaction} />;
+      },
+      enableSorting: false,
+      enableColumnFilter: false,
+      enableHiding: false,
+      size: 50,
     },
   ];
 }
