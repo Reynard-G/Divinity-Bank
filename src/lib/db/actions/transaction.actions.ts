@@ -1,5 +1,7 @@
 "use server";
 
+import { eq } from "drizzle-orm";
+
 import { getSession } from "@/lib/auth/jwt";
 import { PAYMENT_TYPES } from "@/lib/constants/payment-types";
 import { TRANSACTION_STATUSES } from "@/lib/constants/transaction-statuses";
@@ -282,6 +284,75 @@ export async function transfer(
     return {
       success: false,
       error: "An unexpected error occurred during transfer.",
+    };
+  }
+}
+
+/**
+ * Cancel a pending transaction
+ */
+export async function cancelTransaction(
+  transactionId: number
+): Promise<{ success: boolean; message?: string; error?: string }> {
+  try {
+    const session = await getSession();
+    if (!session) {
+      return {
+        success: false,
+        error: "You must be logged in to cancel a transaction",
+      };
+    }
+
+    if (!transactionId) {
+      return {
+        success: false,
+        error: "Transaction ID is required",
+      };
+    }
+
+    // Fetch the transaction to ensure it exists
+    const transaction = await db
+      .select()
+      .from(transactions)
+      .where(eq(transactions.id, transactionId))
+      .then((res) => res[0] || null);
+    if (!transaction) {
+      return {
+        success: false,
+        error: "Transaction not found",
+      };
+    }
+
+    // Ensure the transaction belongs to the logged-in user
+    if (transaction.userId !== Number(session.id)) {
+      return {
+        success: false,
+        error: "Transaction not found", // Don't reveal existence of transaction to unauthorized users
+      };
+    }
+
+    // Only pending transactions can be cancelled
+    if (transaction.status !== TRANSACTION_STATUSES.PENDING) {
+      return {
+        success: false,
+        error: "Only pending transactions can be cancelled",
+      };
+    }
+
+    await db
+      .update(transactions)
+      .set({ status: TRANSACTION_STATUSES.CANCELLED })
+      .where(eq(transactions.id, transactionId));
+
+    return {
+      success: true,
+      message: `Transaction #${transactionId} has been cancelled successfully`,
+    };
+  } catch (error) {
+    console.error("Failed to cancel transaction:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred during transaction cancellation",
     };
   }
 }

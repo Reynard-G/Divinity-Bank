@@ -19,6 +19,7 @@ import {
 import { DataTableColumnHeader } from "@/components/data-table/data-table-column-header";
 import { TransactionActions } from "@/components/data-table/transaction-actions";
 import { TransactionsDataTableClientProps } from "@/components/data-table/transactions-data-table-client";
+import { getTransactionStatusConfig } from "@/components/transaction/transaction-status-badge";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Scroller } from "@/components/ui/scroller";
@@ -285,19 +286,6 @@ export function getTransactionColumns(
       ),
       cell: ({ row }) => {
         const status = row.getValue("status") as string;
-        const getStatusIcon = () => {
-          switch (status.toLowerCase()) {
-            case "success":
-              return CheckCircle;
-            case "pending":
-              return Clock;
-            case "failed":
-              return XCircle;
-            default:
-              return AlertCircle;
-          }
-        };
-
         const getStatusVariant = () => {
           switch (status.toLowerCase()) {
             case "success":
@@ -311,7 +299,7 @@ export function getTransactionColumns(
           }
         };
 
-        const StatusIcon = getStatusIcon();
+        const { icon: StatusIcon } = getTransactionStatusConfig(status);
 
         return (
           <Badge variant={getStatusVariant()} className="capitalize">
