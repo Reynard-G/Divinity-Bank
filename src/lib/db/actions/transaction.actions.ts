@@ -1,7 +1,5 @@
 "use server";
 
-import { isRedirectError } from "next/dist/client/components/redirect-error";
-
 import { getSession } from "@/lib/auth/jwt";
 import { PAYMENT_TYPES } from "@/lib/constants/payment-types";
 import { TRANSACTION_STATUSES } from "@/lib/constants/transaction-statuses";
@@ -20,8 +18,7 @@ type TransactionFormState = {
 /**
  * Deposit money into a user's account
  */
-export async function depositAction(
-  _state: TransactionFormState | null,
+export async function deposit(
   formData: FormData
 ): Promise<TransactionFormState> {
   try {
@@ -92,10 +89,6 @@ export async function depositAction(
       message: "Your deposit has been submitted and is pending approval",
     };
   } catch (error) {
-    if (isRedirectError(error)) {
-      throw error;
-    }
-
     console.error("Failed to process deposit:", error);
     return {
       success: false,
@@ -107,8 +100,7 @@ export async function depositAction(
 /**
  * Withdraw money from a user's account
  */
-export async function withdrawAction(
-  _state: TransactionFormState | null,
+export async function withdraw(
   formData: FormData
 ): Promise<TransactionFormState> {
   try {
@@ -163,10 +155,6 @@ export async function withdrawAction(
       message: "Your withdrawal has been submitted and is being processed",
     };
   } catch (error) {
-    if (isRedirectError(error)) {
-      throw error;
-    }
-
     console.error("Failed to process withdrawal:", error);
     return {
       success: false,
@@ -178,8 +166,7 @@ export async function withdrawAction(
 /**
  * Transfer money between users
  */
-export async function transferAction(
-  _state: TransactionFormState | null,
+export async function transfer(
   formData: FormData
 ): Promise<TransactionFormState> {
   try {
@@ -283,10 +270,6 @@ export async function transferAction(
       message: "Your transfer has been submitted and was successful",
     };
   } catch (error) {
-    if (isRedirectError(error)) {
-      throw error;
-    }
-
     // Handle insufficient funds error specifically
     if (error instanceof Error && error.message === "Insufficient funds") {
       return {

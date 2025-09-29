@@ -25,7 +25,7 @@ import {
 import { Skeleton } from "@/components/ui/skeleton";
 import { SpokeSpinner } from "@/components/ui/spinner";
 import { useMediaQuery } from "@/hooks/use-media-query";
-import { transferAction } from "@/lib/db/actions/transaction.actions";
+import { transfer } from "@/lib/db/actions/transaction.actions";
 import type { MinecraftUser } from "@/lib/db/queries/user.queries";
 
 interface CreateTransferDialogProps {
@@ -52,7 +52,7 @@ export function CreateTransferDialog({
   // Custom form action that includes user handling
   const handleFormAction = useCallback(async (formData: FormData) => {
     try {
-      const result = await transferAction(null, formData);
+      const result = await transfer(formData);
 
       if (result.success) {
         toast.success("Success!", {

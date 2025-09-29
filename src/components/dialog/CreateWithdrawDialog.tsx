@@ -15,7 +15,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SpokeSpinner } from "@/components/ui/spinner";
-import { withdrawAction } from "@/lib/db/actions/transaction.actions";
+import { withdraw } from "@/lib/db/actions/transaction.actions";
 
 interface CreateWithdrawDialogProps {
   children?: React.ReactNode;
@@ -37,7 +37,7 @@ export function CreateWithdrawDialog({
 
   const handleFormAction = useCallback(async (formData: FormData) => {
     try {
-      const result = await withdrawAction(null, formData);
+      const result = await withdraw(formData);
 
       if (result.success) {
         toast.success("Success!", {

@@ -25,7 +25,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { SpokeSpinner } from "@/components/ui/spinner";
-import { depositAction } from "@/lib/db/actions/transaction.actions";
+import { deposit } from "@/lib/db/actions/transaction.actions";
 
 interface CreateDepositDialogProps {
   children?: React.ReactNode;
@@ -53,7 +53,7 @@ export function CreateDepositDialog({
       }
 
       try {
-        const result = await depositAction(null, formData);
+        const result = await deposit(formData);
 
         if (result.success) {
           toast.success("Success!", {
