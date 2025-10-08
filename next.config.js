@@ -4,9 +4,6 @@ const nextConfig = {
     authInterrupts: true,
     useLightningcss: true,
   },
-  eslint: {
-    ignoreDuringBuilds: true,
-  },
   images: {
     remotePatterns: [
       {
