@@ -3,24 +3,24 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { IconTool, IconPalette, IconBell } from "@tabler/icons-react";
+import { WrenchIcon, PaletteIcon, BellIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils/cn";
 
 const sidebarNavItems = [
   {
     title: "Account",
-    icon: <IconTool size={18} />,
+    icon: <WrenchIcon size={18} />,
     href: "/app/settings/account",
   },
   {
     title: "Appearance",
-    icon: <IconPalette size={18} />,
+    icon: <PaletteIcon size={18} />,
     href: "/app/settings/appearance",
   },
   {
     title: "Notifications",
-    icon: <IconBell size={18} />,
+    icon: <BellIcon size={18} />,
     href: "/app/settings/notifications",
   },
 ];

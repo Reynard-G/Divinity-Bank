@@ -6,14 +6,14 @@ import { usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 
 import {
-  IconHome,
-  IconServer,
-  IconTransfer,
-  IconSettings,
-  IconCheck,
-  IconChevronDown,
-  IconChevronUp,
-} from "@tabler/icons-react";
+  HomeIcon,
+  ServerIcon,
+  ArrowRightLeftIcon,
+  SettingsIcon,
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+} from "lucide-react";
 import { useRouter } from "nextjs-toploader/app";
 
 import { Button } from "@/components/ui/button";
@@ -124,12 +124,12 @@ export function AppSidebar({ servers }: { servers: SelectServer[] }) {
           {
             label: "Dashboard",
             path: createServerRoutes.dashboard(baseServer),
-            icon: <IconHome size={16} aria-hidden="true" />,
+            icon: <HomeIcon size={16} aria-hidden="true" />,
           },
           {
             label: "Servers",
             path: createServerRoutes.servers(baseServer),
-            icon: <IconServer size={16} aria-hidden="true" />,
+            icon: <ServerIcon size={16} aria-hidden="true" />,
           },
         ],
       },
@@ -139,7 +139,7 @@ export function AppSidebar({ servers }: { servers: SelectServer[] }) {
           {
             label: "Transactions",
             path: createServerRoutes.transactions(baseServer),
-            icon: <IconTransfer size={16} aria-hidden="true" />,
+            icon: <ArrowRightLeftIcon size={16} aria-hidden="true" />,
           },
         ],
       },
@@ -152,7 +152,7 @@ export function AppSidebar({ servers }: { servers: SelectServer[] }) {
       {
         label: "Settings",
         path: "/app/settings",
-        icon: <IconSettings size={16} aria-hidden="true" />,
+        icon: <SettingsIcon size={16} aria-hidden="true" />,
       },
     ],
   };
@@ -196,14 +196,14 @@ export function AppSidebar({ servers }: { servers: SelectServer[] }) {
                 className="w-full justify-between !bg-background"
               >
                 <div className="flex items-center gap-2">
-                  <IconServer size={20} aria-hidden="true" />
+                  <ServerIcon size={20} aria-hidden="true" />
                   {selectedServer?.name || "Select server"}
                 </div>
 
                 {isServerPopoverOpen ? (
-                  <IconChevronUp size={16} aria-hidden="true" />
+                  <ChevronUpIcon size={16} aria-hidden="true" />
                 ) : (
-                  <IconChevronDown size={16} aria-hidden="true" />
+                  <ChevronDownIcon size={16} aria-hidden="true" />
                 )}
               </Button>
             </PopoverTrigger>
@@ -233,7 +233,7 @@ export function AppSidebar({ servers }: { servers: SelectServer[] }) {
                           );
                         }}
                       >
-                        <IconCheck
+                        <CheckIcon
                           size={16}
                           className={cn(
                             "mr-2 h-4 w-4",

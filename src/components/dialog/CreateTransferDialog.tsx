@@ -2,7 +2,7 @@
 
 import { useActionState, useState, Suspense, useCallback } from "react";
 
-import { IconArrowRight, IconSelector } from "@tabler/icons-react";
+import { ArrowRightIcon, ChevronsUpDownIcon } from "lucide-react";
 import { toast } from "sonner";
 
 import { MinecraftUsernameList } from "@/components/MinecraftUsernameList";
@@ -102,7 +102,7 @@ export function CreateTransferDialog({
           <span className="text-muted-foreground">Select a User...</span>
         )}
       </div>
-      <IconSelector size={20} opacity={50} className="ml-2 opacity-50" />
+      <ChevronsUpDownIcon size={20} opacity={50} className="ml-2 opacity-50" />
     </Button>
   );
 
@@ -119,7 +119,7 @@ export function CreateTransferDialog({
       <DialogTrigger asChild>
         {children || (
           <Button variant="outline" size="sm">
-            <IconArrowRight size={16} className="mr-2" aria-hidden="true" />
+            <ArrowRightIcon size={16} className="mr-2" aria-hidden="true" />
             Transfer Money
           </Button>
         )}
@@ -127,7 +127,7 @@ export function CreateTransferDialog({
 
       <DialogContent className="p-0" aria-describedby={undefined}>
         <div className="mx-auto mb-2 mt-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#323232]">
-          <IconArrowRight size={30} aria-hidden="true" />
+          <ArrowRightIcon size={30} aria-hidden="true" />
         </div>
 
         <form action={formAction}>

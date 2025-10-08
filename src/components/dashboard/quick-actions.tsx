@@ -1,4 +1,4 @@
-import { IconPlus, IconMinus, IconArrowRight } from "@tabler/icons-react";
+import { PlusIcon, MinusIcon, ArrowRightIcon } from "lucide-react";
 
 import { CreateDepositDialog } from "@/components/dialog/CreateDepositDialog";
 import { CreateTransferDialog } from "@/components/dialog/CreateTransferDialog";
@@ -13,19 +13,19 @@ interface QuickActionsProps {
 const quickActions = [
   {
     title: "Make Deposit",
-    icon: IconPlus,
+    icon: PlusIcon,
     color: "text-green-600",
     component: CreateDepositDialog,
   },
   {
     title: "Withdraw Funds",
-    icon: IconMinus,
+    icon: MinusIcon,
     color: "text-red-600",
     component: CreateWithdrawDialog,
   },
   {
     title: "Transfer Money",
-    icon: IconArrowRight,
+    icon: ArrowRightIcon,
     color: "text-blue-600",
     component: CreateTransferDialog,
   },

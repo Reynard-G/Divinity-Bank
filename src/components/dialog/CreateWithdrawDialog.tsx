@@ -2,7 +2,7 @@
 
 import { useActionState, useState, useCallback } from "react";
 
-import { IconMinus } from "@tabler/icons-react";
+import { MinusIcon } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -64,7 +64,7 @@ export function CreateWithdrawDialog({
       <DialogTrigger asChild>
         {children || (
           <Button variant="outline" size="sm">
-            <IconMinus size={16} className="mr-2" aria-hidden="true" />
+            <MinusIcon size={16} className="mr-2" aria-hidden="true" />
             Withdraw Funds
           </Button>
         )}
@@ -72,7 +72,7 @@ export function CreateWithdrawDialog({
 
       <DialogContent className="p-0" aria-describedby={undefined}>
         <div className="mx-auto mb-2 mt-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#323232]">
-          <IconMinus size={30} aria-hidden="true" />
+          <MinusIcon size={30} aria-hidden="true" />
         </div>
 
         <form action={formAction}>

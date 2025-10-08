@@ -2,7 +2,7 @@
 
 import { useActionState, useState, useCallback } from "react";
 
-import { IconPlus, IconUpload, IconX } from "@tabler/icons-react";
+import { PlusIcon, UploadIcon, XIcon } from "lucide-react";
 import { toast } from "sonner";
 
 import { Button } from "@/components/ui/button";
@@ -97,7 +97,7 @@ export function CreateDepositDialog({
       <DialogTrigger asChild>
         {children || (
           <Button variant="outline" size="sm">
-            <IconPlus size={16} className="mr-2" aria-hidden="true" />
+            <PlusIcon size={16} className="mr-2" aria-hidden="true" />
             Make Deposit
           </Button>
         )}
@@ -105,7 +105,7 @@ export function CreateDepositDialog({
 
       <DialogContent className="p-0" aria-describedby={undefined}>
         <div className="mx-auto mb-2 mt-5 flex h-16 w-16 items-center justify-center rounded-full bg-[#323232]">
-          <IconPlus size={30} aria-hidden="true" />
+          <PlusIcon size={30} aria-hidden="true" />
         </div>
 
         <form action={formAction}>
@@ -156,7 +156,7 @@ export function CreateDepositDialog({
                 >
                   <FileUploadDropzone className="min-h-[120px]">
                     <div className="flex flex-col items-center justify-center gap-2 text-center">
-                      <IconUpload className="h-8 w-8 text-muted-foreground" />
+                      <UploadIcon className="h-8 w-8 text-muted-foreground" />
                       <div>
                         <p className="text-sm font-medium">
                           Drop your proof of deposit here
@@ -185,7 +185,7 @@ export function CreateDepositDialog({
                             size="icon"
                             className="h-6 w-6"
                           >
-                            <IconX className="h-4 w-4" />
+                            <XIcon className="h-4 w-4" />
                           </Button>
                         </FileUploadItemDelete>
                       </FileUploadItem>

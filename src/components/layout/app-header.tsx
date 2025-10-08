@@ -1,9 +1,9 @@
 "use client";
 
-import { IconBrandDiscord } from "@tabler/icons-react";
 import { useRouter } from "nextjs-toploader/app";
 
 import type { UserForComponents } from "@/app/app/layout";
+import { DiscordSVG } from "@/components/svg/discord";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,7 +37,7 @@ export function AppHeader({ user }: { user: UserForComponents }) {
             rel="noreferrer"
             className="flex items-center gap-2"
           >
-            <IconBrandDiscord size={20} />
+            <DiscordSVG className="h-6 w-6 fill-current" />
             Discord
           </a>
         </Button>

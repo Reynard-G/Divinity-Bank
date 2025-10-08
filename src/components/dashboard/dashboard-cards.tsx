@@ -1,6 +1,6 @@
 import { unauthorized } from "next/navigation";
 
-import { IconCreditCard, IconReceipt, IconClock } from "@tabler/icons-react";
+import { CreditCardIcon, ReceiptTextIcon, ClockIcon } from "lucide-react";
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getServerByShortName } from "@/lib/db/queries/server.queries";
@@ -37,7 +37,7 @@ export async function DashboardCards({ serverSlug }: DashboardCardsProps) {
       <Card>
         <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
           <CardTitle className="text-sm font-medium">Current Balance</CardTitle>
-          <IconCreditCard className="h-4 w-4 text-muted-foreground" />
+          <CreditCardIcon className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
@@ -55,7 +55,7 @@ export async function DashboardCards({ serverSlug }: DashboardCardsProps) {
           <CardTitle className="text-sm font-medium">
             Total Transactions
           </CardTitle>
-          <IconReceipt className="h-4 w-4 text-muted-foreground" />
+          <ReceiptTextIcon className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
@@ -71,7 +71,7 @@ export async function DashboardCards({ serverSlug }: DashboardCardsProps) {
           <CardTitle className="text-sm font-medium">
             Last Transaction
           </CardTitle>
-          <IconClock className="h-4 w-4 text-muted-foreground" />
+          <ClockIcon className="h-4 w-4 text-muted-foreground" />
         </CardHeader>
         <CardContent>
           <div className="text-2xl font-bold">
