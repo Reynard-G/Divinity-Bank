@@ -20,8 +20,11 @@ export function TransactionHeader({ transaction }: TransactionHeaderProps) {
     <div className="space-y-6">
       <div className="flex items-center gap-4">
         <Button variant="link" size="sm" className="h-9 px-3" asChild>
-          <Link href="/app">
-            <ArrowLeft className="mr-2 h-4 w-4" />
+          <Link
+            href="/app"
+            className="relative !no-underline after:absolute after:bottom-2 after:h-[1px] after:w-11/12 after:origin-bottom-right after:scale-x-0 after:bg-primary after:transition-transform after:duration-300 after:ease-in-out hover:after:origin-bottom-left hover:after:scale-x-100"
+          >
+            <ArrowLeft className="mr-1 h-4 w-4" />
             Dashboard
           </Link>
         </Button>
