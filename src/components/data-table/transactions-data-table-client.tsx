@@ -54,9 +54,6 @@ export function TransactionsDataTableClient({
         note: false,
         transactionType: false,
       },
-      columnPinning: {
-        right: ["actions"],
-      },
       sorting: [{ id: "createdAt", desc: true }],
       pagination: { pageIndex: 0, pageSize: 10 },
     },
