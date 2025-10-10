@@ -677,12 +677,13 @@ export async function getPaymentTypeCounts(
 export async function getUserCounts(
   userId: number,
   serverId: number
-): Promise<Record<string, { id: number; count: number }>> {
+): Promise<Record<string, { id: number; uuid: string; count: number }>> {
   try {
     const results = await db
       .select({
         id: users.id,
         username: users.minecraftUsername,
+        uuid: users.minecraftUuid,
         count: count(),
       })
       .from(transactions)
@@ -696,11 +697,11 @@ export async function getUserCounts(
       .groupBy(users.id);
 
     return results.reduce(
-      (acc, { id, username, count }) => {
-        acc[username] = { id, count };
+      (acc, { id, username, uuid, count }) => {
+        acc[username] = { id, uuid, count };
         return acc;
       },
-      {} as Record<string, { id: number; count: number }>
+      {} as Record<string, { id: number; uuid: string; count: number }>
     );
   } catch (error) {
     console.error(

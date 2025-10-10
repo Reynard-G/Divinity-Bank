@@ -14,6 +14,7 @@ import {
 import { parseAsStringEnum, useQueryState } from "nuqs";
 
 import { DataTableRangeFilter } from "@/components/data-table/data-table-range-filter";
+import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
@@ -728,7 +729,11 @@ function onFilterInputRender<TData>({
               <FacetedGroup>
                 {columnMeta?.options?.map((option) => (
                   <FacetedItem key={option.value} value={option.value}>
-                    {option.icon && <option.icon />}
+                    {option.avatar && (
+                      <Avatar className="h-5 w-5 rounded-sm">
+                        <AvatarImage src={option.avatar} alt={option.label} />
+                      </Avatar>
+                    )}
                     <span>{option.label}</span>
                     {option.count && (
                       <span className="ml-auto font-mono text-xs">

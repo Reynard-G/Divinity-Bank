@@ -19,7 +19,7 @@ export interface TransactionsDataTableClientProps {
   statusCounts: Record<string, number>;
   typeCounts: Record<string, number>;
   paymentCounts: Record<string, number>;
-  userCounts: Record<string, { id: number; count: number }>;
+  userCounts: Record<string, { id: number; uuid: string; count: number }>;
   amountRange: { min: number; max: number };
 }
 

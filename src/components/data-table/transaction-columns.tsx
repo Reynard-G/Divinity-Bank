@@ -84,7 +84,8 @@ export function getTransactionColumns(
         label: "Created By",
         variant: "multiSelect",
         options: Object.entries(userCounts).map(
-          ([username, { id, count }]) => ({
+          ([username, { id, uuid, count }]) => ({
+            avatar: `https://crafatar.com/avatars/${uuid}?size=20&overlay`,
             label: username,
             value: id.toString(),
             count,
