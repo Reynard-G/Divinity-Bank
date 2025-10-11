@@ -1,8 +1,8 @@
 import { PlusIcon, MinusIcon, ArrowRightIcon } from "lucide-react";
 
-import { CreateDepositDialog } from "@/components/dialog/CreateDepositDialog";
-import { CreateTransferDialog } from "@/components/dialog/CreateTransferDialog";
-import { CreateWithdrawDialog } from "@/components/dialog/CreateWithdrawDialog";
+import { CreateDepositDialog } from "@/components/dialog/create-deposit-dialog";
+import { CreateTransferDialog } from "@/components/dialog/create-transfer-dialog";
+import { CreateWithdrawDialog } from "@/components/dialog/create-withdraw-dialog";
 import { Card, CardContent } from "@/components/ui/card";
 import { getServerByShortName } from "@/lib/db/queries/server.queries";
 
