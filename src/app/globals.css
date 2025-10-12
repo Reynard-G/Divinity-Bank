@@ -191,8 +191,3 @@
   font-weight: 700;
   font-style: italic;
 }
-
-@font-face {
-  font-family: "Metal Mania";
-  src: url("/fonts/MetalMania-Regular.woff2") format("woff2");
-}
