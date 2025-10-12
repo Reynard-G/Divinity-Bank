@@ -115,7 +115,7 @@ export function AppSidebar({ servers }: { servers: SelectServer[] }) {
 
   // Get navigation items based on current server
   const getNavigationItems = (serverShortName: string | null) => {
-    const baseServer = serverShortName || servers[0]?.shortName || "default";
+    const baseServer = serverShortName || servers[0].shortName;
 
     return [
       {
