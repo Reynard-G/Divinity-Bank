@@ -1,12 +1,9 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
 
 import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
-
-const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: "Divinity Bank",
@@ -23,7 +20,7 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
       <body
-        className={`${inter.className} font-neue_haas_grotesk tracking-wide antialiased`}
+        className="font-neue_haas_grotesk tracking-wide antialiased"
       >
         <NuqsAdapter>{children}</NuqsAdapter>
         <Toaster />
