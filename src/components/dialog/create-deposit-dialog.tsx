@@ -95,7 +95,7 @@ export function CreateDepositDialog({
       }}
     >
       <DialogTrigger asChild>
-        {children || (
+        {children ?? (
           <Button variant="outline" size="sm">
             <PlusIcon size={16} className="mr-2" aria-hidden="true" />
             Make Deposit

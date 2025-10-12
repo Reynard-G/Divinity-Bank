@@ -117,7 +117,7 @@ export function CreateTransferDialog({
       }}
     >
       <DialogTrigger asChild>
-        {children || (
+        {children ?? (
           <Button variant="outline" size="sm">
             <ArrowRightIcon size={16} className="mr-2" aria-hidden="true" />
             Transfer Money
@@ -149,12 +149,12 @@ export function CreateTransferDialog({
             <input
               type="hidden"
               name="recipientId"
-              value={selectedUser?.id.toString() || ""}
+              value={selectedUser?.id.toString() ?? ""}
             />
             <input
               type="hidden"
               name="recipientUsername"
-              value={selectedUser?.minecraftUsername || ""}
+              value={selectedUser?.minecraftUsername ?? ""}
             />
 
             <div className="mb-5 mt-3 grid gap-2">

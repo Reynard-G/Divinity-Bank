@@ -62,7 +62,7 @@ export function CreateWithdrawDialog({
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        {children || (
+        {children ?? (
           <Button variant="outline" size="sm">
             <MinusIcon size={16} className="mr-2" aria-hidden="true" />
             Withdraw Funds
