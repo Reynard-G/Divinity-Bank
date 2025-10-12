@@ -45,7 +45,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `Dashboard - ${server?.name || serverSlug} | Divinity Bank`,
-    description: `View your account overview for ${server?.name || serverSlug}`,
+    title: `Dashboard - ${server?.name || serverSlug.toUpperCase()} | Divinity Bank`,
+    description: `View your account overview for ${server?.name || serverSlug.toUpperCase()}`,
   };
 }

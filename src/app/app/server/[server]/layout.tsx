@@ -40,7 +40,7 @@ export async function generateMetadata({
   const server = await getServerByShortName(serverSlug);
 
   return {
-    title: `${server?.name || serverSlug} | Divinity Bank`,
-    description: `Banking dashboard for ${server?.name || serverSlug}`,
+    title: `${server?.name || serverSlug.toUpperCase()} | Divinity Bank`,
+    description: `Banking dashboard for ${server?.name || serverSlug.toUpperCase()}`,
   };
 }

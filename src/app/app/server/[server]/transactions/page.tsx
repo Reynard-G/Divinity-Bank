@@ -80,7 +80,7 @@ export async function generateMetadata({
   }
 
   return {
-    title: `Transactions - ${server?.name || serverSlug} | Divinity Bank`,
-    description: `View and manage your transactions for ${server?.name || serverSlug}`,
+    title: `Transactions - ${server?.name || serverSlug.toUpperCase()} | Divinity Bank`,
+    description: `View and manage your transactions for ${server?.name || serverSlug.toUpperCase()}`,
   };
 }
