@@ -10,7 +10,7 @@ import { eq } from "drizzle-orm";
 import { createSession, deleteSession } from "@/lib/auth/jwt";
 import { rateLimiter } from "@/lib/auth/ratelimit";
 import { db } from "@/lib/db";
-import { users } from "@/lib/db/schema";
+import { users, userSettings } from "@/lib/db/schema";
 import { getClientIPAddress } from "@/lib/utils/get-client-ip-address";
 import { validateLoginData } from "@/lib/validations/auth.validations";
 
@@ -60,6 +60,7 @@ export async function login(
       .from(users)
       .where(eq(users.minecraftUsername, username))
       .then((res) => res[0]);
+
     if (!user) {
       return {
         success: false,
@@ -75,11 +76,20 @@ export async function login(
       };
     }
 
+    const settings = await db
+      .select({
+        font: userSettings.font,
+      })
+      .from(userSettings)
+      .where(eq(userSettings.userId, user.id))
+      .then((res) => res[0]);
+
     await createSession(
       user.id.toString(),
       user.minecraftUuid,
       user.minecraftUsername,
-      user.role
+      user.role,
+      settings.font
     );
 
     redirect("/app");

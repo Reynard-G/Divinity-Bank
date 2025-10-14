@@ -4,6 +4,11 @@ import { NuqsAdapter } from "nuqs/adapters/next/app";
 
 import "./globals.css";
 import { Toaster } from "@/components/ui/sonner";
+import { getSession } from "@/lib/auth/jwt";
+import { FONT_CLASSNAMES } from "@/lib/constants/fonts";
+import { cn } from "@/lib/utils/cn";
+
+type FontName = keyof typeof FONT_CLASSNAMES;
 
 export const metadata: Metadata = {
   title: "Divinity Bank",
@@ -12,15 +17,20 @@ export const metadata: Metadata = {
   authors: [{ name: "Divinity Bank Team" }],
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  const session = await getSession();
+
   return (
     <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
       <body
-        className="font-neue_haas_grotesk tracking-wide antialiased"
+        className={cn(
+          FONT_CLASSNAMES[session?.font as FontName] ?? FONT_CLASSNAMES.Default,
+          "tracking-wide antialiased"
+        )}
       >
         <NuqsAdapter>{children}</NuqsAdapter>
         <Toaster />

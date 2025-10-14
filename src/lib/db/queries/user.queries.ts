@@ -9,7 +9,10 @@ import type { SessionPayload } from "@/lib/auth/jwt";
 import { db } from "@/lib/db";
 import { users } from "@/lib/db/schema";
 
-export type JWTUser = Pick<SessionPayload, "uuid" | "username" | "role"> & {
+export type JWTUser = Pick<
+  SessionPayload,
+  "uuid" | "username" | "role" | "font"
+> & {
   id: number;
 };
 
@@ -38,6 +41,7 @@ export const getCurrentUser = cache(async (): Promise<JWTUser | null> => {
     uuid: session.uuid,
     username: session.username,
     role: session.role,
+    font: session.font,
   };
 });
 

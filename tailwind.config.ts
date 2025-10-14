@@ -8,6 +8,11 @@ export default {
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
+  safelist: [
+    "font-neue_haas_grotesk",
+    "font-sans",
+    "font-atkinson_hyperlegible",
+  ],
   theme: {
     container: {
       center: true,
@@ -19,7 +24,7 @@ export default {
     extend: {
       fontFamily: {
         neue_haas_grotesk: ['"Neue Haas Grotesk"', "sans-serif"],
-        atskinon_hyperlegible: ['"Atskinon Hyperlegible"', "sans-serif"],
+        atkinson_hyperlegible: ['"Atkinson Hyperlegible"', "sans-serif"],
         anta: ['"Anta"', "sans-serif"],
       },
       colors: {

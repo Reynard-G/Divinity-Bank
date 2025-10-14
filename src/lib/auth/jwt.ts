@@ -16,6 +16,7 @@ export interface SessionPayload {
   uuid: string;
   username: string;
   role: string;
+  font: string;
   exp: number;
 }
 
@@ -43,6 +44,7 @@ export async function decrypt(input: string): Promise<SessionPayload | null> {
       typeof payload.uuid === "string" &&
       typeof payload.username === "string" &&
       typeof payload.role === "string" &&
+      typeof payload.font === "string" &&
       typeof payload.exp === "number"
     ) {
       return {
@@ -50,14 +52,17 @@ export async function decrypt(input: string): Promise<SessionPayload | null> {
         uuid: payload.uuid,
         username: payload.username,
         role: payload.role,
+        font: payload.font,
         exp: payload.exp,
       };
     }
 
     console.error("Invalid JWT payload structure:", payload);
+
     return null;
   } catch (error) {
     console.error("JWT decryption failed:", error);
+
     return null;
   }
 }
@@ -66,7 +71,8 @@ export async function createSession(
   id: string,
   uuid: string,
   username: string,
-  role: string
+  role: string,
+  font: string
 ) {
   const expiresAt = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000); // 30 days
   const session = await encrypt({
@@ -74,6 +80,7 @@ export async function createSession(
     uuid,
     username,
     role,
+    font,
   });
 
   const cookieStore = await cookies();
@@ -107,6 +114,7 @@ export async function updateSession(session: SessionPayload) {
     uuid: session.uuid,
     username: session.username,
     role: session.role,
+    font: session.font,
   });
 
   const cookieStore = await cookies();
