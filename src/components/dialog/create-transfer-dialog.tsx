@@ -14,7 +14,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import { Drawer, DrawerContent, DrawerTitle, DrawerTrigger } from "@/components/ui/drawer";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -203,6 +203,8 @@ export function CreateTransferDialog({
                       open={isUsersPopoverOpen}
                       onOpenChange={setIsUsersPopoverOpen}
                     >
+                      <DrawerTitle className="sr-only">Select a User</DrawerTitle>
+
                       <DrawerTrigger asChild>{triggerButton}</DrawerTrigger>
                       <DrawerContent className="w-full max-w-[414px] p-0">
                         <MinecraftUsernameList
