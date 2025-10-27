@@ -63,23 +63,25 @@ export const getMinecraftUsers = cache(
         return [];
       }
 
-      const baseQuery = db
+      // Build query dynamically
+      let query = db
         .select({
           id: users.id,
           minecraftUsername: users.minecraftUsername,
           minecraftUuid: users.minecraftUuid,
         })
-        .from(users);
+        .from(users)
+        .$dynamic();
 
       // Apply search filter if provided
-      let result;
       if (searchQuery && searchQuery.trim()) {
-        result = await baseQuery
-          .where(ilike(users.minecraftUsername, `%${searchQuery.trim()}%`))
-          .limit(limit);
-      } else {
-        result = await baseQuery.limit(limit);
+        query = query.where(
+          ilike(users.minecraftUsername, `%${searchQuery.trim()}%`)
+        );
       }
+
+      // Apply limit and execute query
+      const result = await query.limit(limit);
 
       // Exclude current user from results
       return result.filter((user) => user.id !== currentUser.id);

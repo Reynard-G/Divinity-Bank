@@ -331,3 +331,40 @@ export const transfers = pgTable(
 );
 export type SelectTransfer = typeof transfers.$inferSelect;
 export type InsertTransfer = typeof transfers.$inferInsert;
+
+export const balanceSnapshots = pgTable(
+  "BalanceSnapshots",
+  {
+    id: integer().generatedByDefaultAsIdentity({
+      name: "BalanceSnapshots_id_seq",
+      startWith: 1,
+      increment: 1,
+      minValue: 1,
+      maxValue: 2147483647,
+    }),
+    userId: integer("user_id").notNull(),
+    serverId: integer("server_id").notNull(),
+    balance: numeric({ precision: 34, scale: 2 }).notNull(),
+    createdAt: timestamp("created_at", { withTimezone: true, mode: "string" })
+      .default(sql`(now() AT TIME ZONE 'utc'::text)`)
+      .notNull(),
+  },
+  (table) => [
+    foreignKey({
+      columns: [table.userId],
+      foreignColumns: [users.id],
+      name: "BalanceSnapshots_user_id_fkey",
+    })
+      .onUpdate("cascade")
+      .onDelete("restrict"),
+    foreignKey({
+      columns: [table.serverId],
+      foreignColumns: [servers.id],
+      name: "BalanceSnapshots",
+    })
+      .onUpdate("cascade")
+      .onDelete("restrict"),
+  ]
+);
+export type SelectBalanceSnapshot = typeof balanceSnapshots.$inferSelect;
+export type InsertBalanceSnapshot = typeof balanceSnapshots.$inferInsert;

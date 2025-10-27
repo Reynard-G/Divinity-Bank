@@ -1,14 +1,17 @@
 "use server";
 
 import { eq } from "drizzle-orm";
+import { NeonDatabase } from "drizzle-orm/neon-serverless";
 
 import { getSession } from "@/lib/auth/jwt";
 import { PAYMENT_TYPES } from "@/lib/constants/payment-types";
 import { TRANSACTION_STATUSES } from "@/lib/constants/transaction-statuses";
 import { TRANSACTION_TYPES } from "@/lib/constants/transaction-types";
 import { db } from "@/lib/db";
-import { transactions, transfers } from "@/lib/db/schema";
+import { getBalance } from "@/lib/db/queries/transaction.queries";
+import { transactions, transfers, balanceSnapshots } from "@/lib/db/schema";
 import { getBalanceQuery } from "@/lib/db/utils/balance-query";
+import { isMoreThanTwoDecimalPlaces } from "@/lib/utils/regex";
 import { uploadImageFileToS3 } from "@/lib/utils/s3";
 
 type TransactionFormState = {
@@ -19,6 +22,10 @@ type TransactionFormState = {
 
 /**
  * Deposit money into a user's account
+ *
+ * @param formData - The form data containing deposit details
+ * @return A promise that resolves to the transaction form state
+ * @throws Error if the deposit process fails
  */
 export async function deposit(
   formData: FormData
@@ -52,7 +59,7 @@ export async function deposit(
     }
 
     // Check for more than 2 decimal places
-    if (!/^\d+(\.\d{1,2})?$/.test(amount)) {
+    if (isMoreThanTwoDecimalPlaces(amount)) {
       return {
         success: false,
         error: "Amount can only have up to 2 decimal places",
@@ -101,6 +108,10 @@ export async function deposit(
 
 /**
  * Withdraw money from a user's account
+ *
+ * @param formData - The form data containing withdrawal details
+ * @return A promise that resolves to the transaction form state
+ * @throws Error if the withdrawal process fails
  */
 export async function withdraw(
   formData: FormData
@@ -133,7 +144,7 @@ export async function withdraw(
     }
 
     // Check for more than 2 decimal places
-    if (!/^\d+(\.\d{1,2})?$/.test(amount)) {
+    if (isMoreThanTwoDecimalPlaces(amount)) {
       return {
         success: false,
         error: "Amount can only have up to 2 decimal places",
@@ -167,6 +178,10 @@ export async function withdraw(
 
 /**
  * Transfer money between users
+ *
+ * @param formData - The form data containing transfer details
+ * @return A promise that resolves to the transaction form state
+ * @throws Error if the transfer process fails
  */
 export async function transfer(
   formData: FormData
@@ -201,7 +216,7 @@ export async function transfer(
     }
 
     // Check for more than 2 decimal places
-    if (!/^\d+(\.\d{1,2})?$/.test(amount)) {
+    if (isMoreThanTwoDecimalPlaces(amount)) {
       return {
         success: false,
         error: "Amount can only have up to 2 decimal places",
@@ -259,6 +274,14 @@ export async function transfer(
         note: `Transfer of ${amountNum.toFixed(2)} from ${session.id} (${session.username})`,
       });
 
+      // Create balance snapshots for both users
+      await createBalanceSnapshot(parseInt(session.id), parseInt(serverId), tx);
+      await createBalanceSnapshot(
+        parseInt(recipientId),
+        parseInt(serverId),
+        tx
+      );
+
       // Create transfer record
       return tx.insert(transfers).values({
         senderUserId: parseInt(session.id),
@@ -289,7 +312,82 @@ export async function transfer(
 }
 
 /**
+ * Approve a pending transaction
+ *
+ * @param transactionId - The ID of the transaction to approve
+ * @return A promise that resolves to an object indicating success or failure
+ * @throws Error if the approval process fails
+ */
+export async function approveTransaction(
+  transactionId: number
+): Promise<{ success: boolean; message?: string; error?: string }> {
+  try {
+    const session = await getSession();
+    if (!session) {
+      return {
+        success: false,
+        error: "You must be logged in to approve a transaction",
+      };
+    }
+
+    if (!transactionId) {
+      return {
+        success: false,
+        error: "Transaction ID is required",
+      };
+    }
+
+    // Fetch the transaction to ensure it exists
+    const transaction = await db
+      .select()
+      .from(transactions)
+      .where(eq(transactions.id, transactionId))
+      .then((res) => res[0] || null);
+    if (!transaction) {
+      return {
+        success: false,
+        error: "Transaction not found",
+      };
+    }
+
+    // Only pending transactions can be approved
+    if (transaction.status !== TRANSACTION_STATUSES.PENDING) {
+      return {
+        success: false,
+        error: "Only pending transactions can be approved",
+      };
+    }
+
+    await db.transaction(async (tx) => {
+      // Update transaction status to SUCCESS
+      await tx
+        .update(transactions)
+        .set({ status: TRANSACTION_STATUSES.SUCCESS })
+        .where(eq(transactions.id, transactionId));
+
+      // Create balance snapshot after approval
+      await createBalanceSnapshot(transaction.userId, transaction.serverId, tx);
+    });
+
+    return {
+      success: true,
+      message: `Transaction #${transactionId} has been approved successfully`,
+    };
+  } catch (error) {
+    console.error("Failed to approve transaction:", error);
+    return {
+      success: false,
+      error: "An unexpected error occurred during transaction approval",
+    };
+  }
+}
+
+/**
  * Cancel a pending transaction
+ *
+ * @param transactionId - The ID of the transaction to cancel
+ * @return A promise that resolves to an object indicating success or failure
+ * @throws Error if the cancellation process fails
  */
 export async function cancelTransaction(
   transactionId: number
@@ -354,5 +452,47 @@ export async function cancelTransaction(
       success: false,
       error: "An unexpected error occurred during transaction cancellation",
     };
+  }
+}
+
+/**
+ * Creates a snapshot of the user's balance for a specific server.
+ *
+ * @param userId - The ID of the user.
+ * @param serverId - The ID of the server.
+ * @param transactionContext - Optional database context for the transaction.
+ * @throws Error if the database operation fails.
+ */
+async function createBalanceSnapshot(
+  userId: number,
+  serverId: number,
+  transactionContext?: NeonDatabase
+): Promise<void> {
+  try {
+    const dbInstance = transactionContext ?? db;
+
+    // If we're inside a transaction, calculate balance from within that transaction context
+    // to include uncommitted transactions. Otherwise, use the cached getBalance function.
+    let balance: number;
+    if (transactionContext) {
+      const result = await dbInstance.execute(
+        getBalanceQuery(userId, serverId)
+      );
+      balance = Number(result.rows[0]?.current_balance ?? 0);
+    } else {
+      balance = await getBalance(userId, serverId);
+    }
+
+    await dbInstance.insert(balanceSnapshots).values({
+      userId,
+      serverId,
+      balance: balance.toString(),
+    });
+  } catch (error) {
+    console.error(
+      `Failed to create balance snapshot for user ${userId} on server ${serverId}:`,
+      error
+    );
+    throw new Error("Failed to create balance snapshot");
   }
 }
