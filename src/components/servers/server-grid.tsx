@@ -104,7 +104,7 @@ export async function ServerGrid({ serverSlug }: ServerGridProps) {
                 </span>
               </div>
 
-              <div className="flex items-center justify-between border-t border-muted pt-3">
+              <div className="flex items-center justify-between border-t pt-3">
                 <span className="text-sm font-medium">Status:</span>
                 <div className="flex items-center space-x-2">
                   {(transactionCountData.find((c) => c.serverId === server.id)
