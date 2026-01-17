@@ -1,6 +1,9 @@
+"use client";
+
 import type * as React from "react";
 
 import { type Table as TanstackTable, flexRender } from "@tanstack/react-table";
+import * as motion from "motion/react-client";
 
 import { DataTablePagination } from "@/components/data-table/data-table-pagination";
 import {
@@ -24,19 +27,20 @@ export function DataTable<TData>({
   actionBar,
   children,
   className,
-  ...props
 }: DataTableProps<TData>) {
   return (
-    <div
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
       className={cn("flex w-full flex-col gap-2.5 overflow-auto", className)}
-      {...props}
     >
       {children}
-      <div className="overflow-hidden rounded-md border">
+      <div className="overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02]">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
-              <TableRow key={headerGroup.id}>
+              <TableRow key={headerGroup.id} className="hover:bg-transparent">
                 {headerGroup.headers.map((header) => (
                   <TableHead
                     key={header.id}
@@ -56,12 +60,21 @@ export function DataTable<TData>({
               </TableRow>
             ))}
           </TableHeader>
-          <TableBody>
+          <TableBody className="overflow-hidden">
             {table.getRowModel().rows?.length ? (
-              table.getRowModel().rows.map((row) => (
-                <TableRow
+              table.getRowModel().rows.map((row, index) => (
+                <motion.tr
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-slot="table-row"
+                  data-state={row.getIsSelected() ? "selected" : undefined}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{
+                    duration: 0.35,
+                    delay: 0.05 + index * 0.025,
+                    ease: "easeOut",
+                  }}
+                  className="border-b border-white/[0.06] transition-colors hover:bg-white/[0.02] data-[state=selected]:bg-white/[0.04]"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell
@@ -76,13 +89,13 @@ export function DataTable<TData>({
                       )}
                     </TableCell>
                   ))}
-                </TableRow>
+                </motion.tr>
               ))
             ) : (
               <TableRow>
                 <TableCell
                   colSpan={table.getAllColumns().length}
-                  className="h-24 text-center"
+                  className="h-24 text-center text-white/40"
                 >
                   No results.
                 </TableCell>
@@ -97,6 +110,6 @@ export function DataTable<TData>({
           table.getFilteredSelectedRowModel().rows.length > 0 &&
           actionBar}
       </div>
-    </div>
+    </motion.div>
   );
 }
