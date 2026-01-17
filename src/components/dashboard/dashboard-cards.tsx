@@ -1,8 +1,6 @@
 import { unauthorized } from "next/navigation";
 
-import { CreditCardIcon, ReceiptTextIcon, ClockIcon } from "lucide-react";
-
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { StatCard } from "@/components/dashboard/stat-card";
 import { getServerByShortName } from "@/lib/db/queries/server.queries";
 import {
   getBalance,
@@ -31,59 +29,37 @@ export async function DashboardCards({ serverSlug }: DashboardCardsProps) {
     getLatestTransactionDate(user.id, currentServer.id),
   ]);
 
+  const stats = [
+    {
+      title: "Current Balance",
+      value: balance !== null ? formatCurrency(balance) : "$0.00",
+      subtitle: `on ${currentServer.name}`,
+    },
+    {
+      title: "Total Transactions",
+      value: transactionCount !== null ? transactionCount.toLocaleString() : "0",
+      subtitle: "lifetime transactions",
+    },
+    {
+      title: "Last Transaction",
+      value: latestTransactionDate
+        ? formatRelativeDate(latestTransactionDate)
+        : "Never",
+      subtitle: latestTransactionDate ? "last activity" : "no activity yet",
+    },
+  ];
+
   return (
-    <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-      {/* Balance Card */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">Current Balance</CardTitle>
-          <CreditCardIcon className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
-            {balance !== null ? formatCurrency(balance) : "No transactions"}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            on {currentServer.name}
-          </p>
-        </CardContent>
-      </Card>
-
-      {/* Transactions Count Card */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            Total Transactions
-          </CardTitle>
-          <ReceiptTextIcon className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
-            {transactionCount !== null ? transactionCount : 0}
-          </div>
-          <p className="text-xs text-muted-foreground">lifetime transactions</p>
-        </CardContent>
-      </Card>
-
-      {/* Last Transaction Card */}
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-          <CardTitle className="text-sm font-medium">
-            Last Transaction
-          </CardTitle>
-          <ClockIcon className="h-4 w-4 text-muted-foreground" />
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
-            {latestTransactionDate
-              ? formatRelativeDate(latestTransactionDate)
-              : "Never"}
-          </div>
-          <p className="text-xs text-muted-foreground">
-            {latestTransactionDate ? "last activity" : "no activity yet"}
-          </p>
-        </CardContent>
-      </Card>
+    <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      {stats.map((stat, index) => (
+        <StatCard
+          key={stat.title}
+          title={stat.title}
+          value={stat.value}
+          subtitle={stat.subtitle}
+          index={index}
+        />
+      ))}
     </div>
   );
 }

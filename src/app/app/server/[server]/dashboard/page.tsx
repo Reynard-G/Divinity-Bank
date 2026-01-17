@@ -4,8 +4,8 @@ import { Suspense } from "react";
 import { ServerDirectoryParams } from "@/app/app/server/[server]/layout";
 import { DashboardCards } from "@/components/dashboard/dashboard-cards";
 import { DashboardCardsSkeleton } from "@/components/dashboard/dashboard-cards-skeleton";
-import { QuickActions } from "@/components/dashboard/quick-actions";
 import { PageHeader } from "@/components/ui/page-header";
+import { QuickActions } from "@/components/dashboard/quick-actions";
 import { getServerByShortName } from "@/lib/db/queries/server.queries";
 
 export default async function ServerDashboardPage({
@@ -14,18 +14,24 @@ export default async function ServerDashboardPage({
   const { server: serverSlug } = await params;
 
   return (
-    <div className="mx-auto flex w-full max-w-7xl grow flex-col">
+    <div className="mx-auto flex w-full max-w-6xl grow flex-col px-1">
       <PageHeader
         title="Dashboard"
         description="Welcome back! Here's an overview of your account."
       />
 
-      <div className="space-y-8">
-        <Suspense fallback={<DashboardCardsSkeleton />}>
-          <DashboardCards serverSlug={serverSlug} />
-        </Suspense>
+      <div className="space-y-10">
+        <section>
+          <Suspense fallback={<DashboardCardsSkeleton />}>
+            <DashboardCards serverSlug={serverSlug} />
+          </Suspense>
+        </section>
 
-        <QuickActions serverSlug={serverSlug} />
+        <section>
+          <Suspense>
+            <QuickActions serverSlug={serverSlug} />
+          </Suspense>
+        </section>
       </div>
     </div>
   );
