@@ -38,6 +38,15 @@ export function formatRelativeDate(date: Date | string | number): string {
   } else if (diffInDays < 7) {
     return `${diffInDays} day${diffInDays !== 1 ? "s" : ""} ago`;
   } else {
-    return formatDate(targetDate, { month: "short", day: "numeric" });
+    // For dates on the same year, show "MMM D at h:mm AM/PM"
+    // For dates on different years, show "MMM D, YYYY"
+    const isSameYear = now.getFullYear() === targetDate.getFullYear();
+    return formatDate(targetDate, {
+      month: "short",
+      day: "numeric",
+      year: isSameYear ? undefined : "numeric",
+      hour: isSameYear ? "numeric" : undefined,
+      minute: isSameYear ? "2-digit" : undefined,
+    });
   }
 }
