@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 
 import { MinusIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -36,40 +36,43 @@ export function CreateWithdrawDialog({
 }: CreateWithdrawDialogProps) {
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [, formAction, pending] = useActionState(
-    async (_state: null, formData: FormData) => {
-      await handleFormAction(formData);
-      return null;
+  const [pending, setPending] = useState<boolean>(false);
+
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      setPending(true);
+
+      try {
+        const formData = new FormData(e.currentTarget);
+        const result = await withdraw(formData);
+
+        if (result.success) {
+          toast.success("Success!", {
+            description: result.message,
+          });
+
+          setIsOpen(false);
+        } else if (result.error) {
+          toast.error("Error", {
+            description: result.error,
+          });
+        }
+      } catch (error) {
+        console.error("Withdrawal form submission error:", error);
+
+        toast.error("Error", {
+          description: "An unexpected error has occurred.",
+        });
+      } finally {
+        setPending(false);
+      }
     },
-    null
+    []
   );
 
-  const handleFormAction = useCallback(async (formData: FormData) => {
-    try {
-      const result = await withdraw(formData);
-
-      if (result.success) {
-        toast.success("Success!", {
-          description: result.message,
-        });
-
-        setIsOpen(false);
-      } else if (result.error) {
-        toast.error("Error", {
-          description: result.error,
-        });
-      }
-    } catch (error) {
-      console.error("Withdrawal form submission error:", error);
-
-      toast.error("Error", {
-        description: "An unexpected error has occurred.",
-      });
-    }
-  }, []);
-
   const withdrawForm = (
-    <form action={formAction}>
+    <form onSubmit={handleSubmit}>
       <div
         className={cn("mb-2 grid gap-2 px-12 text-center", isDesktop && "pt-6")}
       >

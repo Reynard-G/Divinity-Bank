@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, useCallback } from "react";
+import { useState, useCallback } from "react";
 
 import { PlusIcon, UploadIcon, XIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -34,6 +34,7 @@ import { SpokeSpinner } from "@/components/ui/spinner";
 import { useMediaQuery } from "@/hooks/use-media-query";
 import { deposit } from "@/lib/db/actions/transaction.actions";
 import { cn } from "@/lib/utils/cn";
+import { createPresignedUploadUrl } from "@/lib/utils/s3";
 
 interface CreateDepositDialogProps {
   children?: React.ReactNode;
@@ -47,21 +48,52 @@ export function CreateDepositDialog({
   const isDesktop = useMediaQuery("(min-width: 768px)");
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [files, setFiles] = useState<File[]>([]);
-  const [, formAction, pending] = useActionState(
-    async (_state: null, formData: FormData) => {
-      await handleFormAction(formData);
-      return null;
-    },
-    null
-  );
+  const [pending, setPending] = useState<boolean>(false);
 
-  const handleFormAction = useCallback(
-    async (formData: FormData) => {
-      if (files.length > 0) {
-        formData.set("proofOfDeposit", files[0]);
-      }
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      if (files.length === 0) return;
+
+      setPending(true);
 
       try {
+        const formData = new FormData(e.currentTarget);
+        const file = files[0];
+
+        // Get presigned upload URL
+        const presignedResult = await createPresignedUploadUrl(
+          file.name,
+          file.type,
+          file.size,
+          `transactions/server/${serverId}/deposits`
+        );
+
+        if (!presignedResult.success) {
+          toast.error("Error", {
+            description: presignedResult.error,
+          });
+          return;
+        }
+
+        // Upload file directly to S3
+        const uploadResponse = await fetch(presignedResult.uploadUrl, {
+          method: "PUT",
+          body: file,
+          headers: {
+            "Content-Type": file.type,
+          },
+        });
+
+        if (!uploadResponse.ok) {
+          toast.error("Error", {
+            description: "Failed to upload proof of deposit",
+          });
+          return;
+        }
+
+        // Submit deposit with S3 key
+        formData.set("attachmentKey", presignedResult.key);
         const result = await deposit(formData);
 
         if (result.success) {
@@ -82,9 +114,11 @@ export function CreateDepositDialog({
         toast.error("Error", {
           description: "An unexpected error has occurred.",
         });
+      } finally {
+        setPending(false);
       }
     },
-    [files]
+    [files, serverId]
   );
 
   const onFileReject = useCallback((file: File, message: string) => {
@@ -99,7 +133,7 @@ export function CreateDepositDialog({
   };
 
   const depositForm = (
-    <form action={formAction}>
+    <form onSubmit={handleSubmit}>
       <div
         className={cn("mb-2 grid gap-2 px-12 text-center", isDesktop && "pt-6")}
       >

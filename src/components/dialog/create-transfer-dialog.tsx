@@ -1,6 +1,6 @@
 "use client";
 
-import { useActionState, useState, Suspense, useCallback } from "react";
+import { useState, Suspense, useCallback } from "react";
 
 import { ArrowRightIcon, ChevronsUpDownIcon } from "lucide-react";
 import { toast } from "sonner";
@@ -47,39 +47,41 @@ export function CreateTransferDialog({
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [isUsersPopoverOpen, setIsUsersPopoverOpen] = useState<boolean>(false);
   const [selectedUser, setSelectedUser] = useState<MinecraftUser | null>(null);
-  const [, formAction, pending] = useActionState(
-    async (_state: null, formData: FormData) => {
-      await handleFormAction(formData);
-      return null;
-    },
-    null
-  );
+  const [pending, setPending] = useState<boolean>(false);
 
-  // Custom form action that includes user handling
-  const handleFormAction = useCallback(async (formData: FormData) => {
-    try {
-      const result = await transfer(formData);
+  const handleSubmit = useCallback(
+    async (e: React.FormEvent<HTMLFormElement>) => {
+      e.preventDefault();
+      setPending(true);
 
-      if (result.success) {
-        toast.success("Success!", {
-          description: result.message,
-        });
+      try {
+        const formData = new FormData(e.currentTarget);
+        const result = await transfer(formData);
 
-        setIsOpen(false);
-        setSelectedUser(null);
-      } else if (result.error) {
+        if (result.success) {
+          toast.success("Success!", {
+            description: result.message,
+          });
+
+          setIsOpen(false);
+          setSelectedUser(null);
+        } else if (result.error) {
+          toast.error("Error", {
+            description: result.error,
+          });
+        }
+      } catch (error) {
+        console.error("Transfer form submission error:", error);
+
         toast.error("Error", {
-          description: result.error,
+          description: "An unexpected error has occurred.",
         });
+      } finally {
+        setPending(false);
       }
-    } catch (error) {
-      console.error("Form submission error:", error);
-
-      toast.error("Error", {
-        description: "An unexpected error has occurred.",
-      });
-    }
-  }, []);
+    },
+    []
+  );
 
   const handleUserSelect = (user: MinecraftUser) => {
     setSelectedUser(user);
@@ -120,7 +122,7 @@ export function CreateTransferDialog({
   );
 
   const transferForm = (
-    <form action={formAction}>
+    <form onSubmit={handleSubmit}>
       <div
         className={cn("mb-2 grid gap-2 px-12 text-center", isDesktop && "pt-6")}
       >
