@@ -8,9 +8,9 @@ const nextConfig = {
     remotePatterns: [
       {
         protocol: "https",
-        hostname: "crafatar.com",
+        hostname: "crafthead.net",
         port: "",
-        pathname: "/avatars/**",
+        pathname: "/avatar/**",
       },
       {
         protocol: "https",

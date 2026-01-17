@@ -102,7 +102,7 @@ export function MinecraftUsernameList({
                 />
                 <Avatar className="mr-2 h-6 w-6 rounded-sm">
                   <AvatarImage
-                    src={`https://crafatar.com/avatars/${user.minecraftUuid}?size=24&overlay`}
+                    src={`https://crafthead.net/avatar/${user.minecraftUuid}`}
                     alt={user.minecraftUsername}
                   />
                 </Avatar>

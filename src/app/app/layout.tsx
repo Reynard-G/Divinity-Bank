@@ -32,7 +32,7 @@ export default async function AppLayout({
     name: user.username,
     uuid: user.uuid,
     role: user.role,
-    image: `https://crafatar.com/avatars/${user.uuid}?size=36&overlay`,
+    image: `https://crafthead.net/avatar/${user.uuid}`,
   };
 
   return (

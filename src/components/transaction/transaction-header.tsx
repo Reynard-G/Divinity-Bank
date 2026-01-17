@@ -59,7 +59,7 @@ export function TransactionHeader({ transaction }: TransactionHeaderProps) {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-3">
               <Image
-                src={`https://crafatar.com/avatars/${transaction.user.minecraftUuid}?size=40&overlay`}
+                src={`https://crafthead.net/avatar/${transaction.user.minecraftUuid}`}
                 alt={`${transaction.user.minecraftUsername}'s avatar`}
                 width={40}
                 height={40}
@@ -83,7 +83,7 @@ export function TransactionHeader({ transaction }: TransactionHeaderProps) {
               <p className="text-sm text-muted-foreground">Created By</p>
             </div>
             <Image
-              src={`https://crafatar.com/avatars/${transaction.createdByUser.minecraftUuid}?size=40&overlay`}
+              src={`https://crafthead.net/avatar/${transaction.createdByUser.minecraftUuid}`}
               alt={`${transaction.createdByUser.minecraftUsername}'s avatar`}
               width={40}
               height={40}

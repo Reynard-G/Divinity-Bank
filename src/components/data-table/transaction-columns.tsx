@@ -63,7 +63,7 @@ export function getTransactionColumns(
               <AvatarImage
                 src={
                   createdBy.minecraftUuid
-                    ? `https://crafatar.com/avatars/${createdBy.minecraftUuid}?size=24&overlay`
+                    ? `https://crafthead.net/avatar/${createdBy.minecraftUuid}`
                     : undefined
                 }
                 alt={createdBy.minecraftUsername || "User Avatar"}
@@ -85,7 +85,7 @@ export function getTransactionColumns(
         variant: "multiSelect",
         options: Object.entries(userCounts).map(
           ([username, { id, uuid, count }]) => ({
-            avatar: `https://crafatar.com/avatars/${uuid}?size=20&overlay`,
+            avatar: `https://crafthead.net/avatar/${uuid}`,
             label: username,
             value: id.toString(),
             count,
