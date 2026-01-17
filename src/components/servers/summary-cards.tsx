@@ -1,6 +1,6 @@
 import { unauthorized } from "next/navigation";
 
-import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { SummaryStatCard } from "@/components/servers/summary-stat-card";
 import { getServers } from "@/lib/db/queries/server.queries";
 import {
   getAllServerBalances,
@@ -32,43 +32,35 @@ export async function SummaryCards() {
     (server) => server.transactionCount > 0
   ).length;
 
+  const stats = [
+    {
+      title: "Total Balance",
+      value: formatCurrency(totalBalance),
+      subtitle: "across all servers",
+    },
+    {
+      title: "Total Transactions",
+      value: totalTransactions.toLocaleString(),
+      subtitle: "lifetime transactions",
+    },
+    {
+      title: "Active Servers",
+      value: activeServers.toString(),
+      subtitle: `of ${servers.length} servers`,
+    },
+  ];
+
   return (
     <div className="mb-8 grid gap-4 md:grid-cols-3">
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium">Total Balance</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">
-            {formatCurrency(totalBalance)}
-          </div>
-          <p className="text-xs text-muted-foreground">across all servers</p>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium">
-            Total Transactions
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{totalTransactions}</div>
-          <p className="text-xs text-muted-foreground">lifetime transactions</p>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="pb-2">
-          <CardTitle className="text-sm font-medium">Active Servers</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="text-2xl font-bold">{activeServers}</div>
-          <p className="text-xs text-muted-foreground">
-            of {servers.length} servers
-          </p>
-        </CardContent>
-      </Card>
+      {stats.map((stat, index) => (
+        <SummaryStatCard
+          key={stat.title}
+          title={stat.title}
+          value={stat.value}
+          subtitle={stat.subtitle}
+          index={index}
+        />
+      ))}
     </div>
   );
 }
