@@ -12,7 +12,6 @@ import { getBalance } from "@/lib/db/queries/transaction.queries";
 import { transactions, transfers, balanceSnapshots } from "@/lib/db/schema";
 import { getBalanceQuery } from "@/lib/db/utils/balance-query";
 import { isMoreThanTwoDecimalPlaces } from "@/lib/utils/regex";
-import { uploadImageFileToS3 } from "@/lib/utils/s3";
 
 type TransactionFormState = {
   success: boolean;
@@ -23,7 +22,7 @@ type TransactionFormState = {
 /**
  * Deposit money into a user's account
  *
- * @param formData - The form data containing deposit details
+ * @param formData - The form data containing deposit details (including attachmentKey from presigned upload)
  * @return A promise that resolves to the transaction form state
  * @throws Error if the deposit process fails
  */
@@ -41,12 +40,21 @@ export async function deposit(
 
     const serverId = formData.get("serverId")?.toString();
     const amount = formData.get("amount")?.toString();
-    const proofOfDeposit = formData.get("proofOfDeposit") as File;
+    const attachmentKey = formData.get("attachmentKey")?.toString();
 
-    if (!amount || !proofOfDeposit || !serverId) {
+    if (!amount || !attachmentKey || !serverId) {
       return {
         success: false,
         error: "Amount, proof of deposit, and server fields are required",
+      };
+    }
+
+    // Validate that the attachment key matches expected path pattern
+    const expectedPathPrefix = `transactions/server/${serverId}/deposits/`;
+    if (!attachmentKey.startsWith(expectedPathPrefix)) {
+      return {
+        success: false,
+        error: "Invalid attachment",
       };
     }
 
@@ -66,20 +74,6 @@ export async function deposit(
       };
     }
 
-    // Upload proof of deposit to S3
-    const uploadResult = await uploadImageFileToS3(
-      proofOfDeposit,
-      process.env.R2_BUCKET_NAME!,
-      `transactions/server/${serverId}/deposits`
-    );
-
-    if (!uploadResult.success) {
-      return {
-        success: false,
-        error: uploadResult.error,
-      };
-    }
-
     await db.insert(transactions).values({
       serverId: parseInt(serverId),
       userId: parseInt(session.id),
@@ -88,7 +82,7 @@ export async function deposit(
       fee: "0.00",
       transactionType: TRANSACTION_TYPES.CREDIT,
       paymentType: PAYMENT_TYPES.DEPOSIT,
-      attachment: uploadResult.key,
+      attachment: attachmentKey,
       note: `Deposit of $${amountNum}`,
       status: TRANSACTION_STATUSES.PENDING,
     });
