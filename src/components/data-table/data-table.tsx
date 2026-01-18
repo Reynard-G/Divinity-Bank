@@ -36,7 +36,7 @@ export function DataTable<TData>({
       className={cn("flex w-full flex-col gap-2.5 overflow-auto", className)}
     >
       {children}
-      <div className="overflow-hidden rounded-xl border border-white/[0.08] bg-white/[0.02]">
+      <div className="overflow-hidden rounded-md border border-white/[0.08] bg-white/[0.02]">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
