@@ -37,7 +37,8 @@ export async function DashboardCards({ serverSlug }: DashboardCardsProps) {
     },
     {
       title: "Total Transactions",
-      value: transactionCount !== null ? transactionCount.toLocaleString() : "0",
+      value:
+        transactionCount !== null ? transactionCount.toLocaleString() : "0",
       subtitle: "lifetime transactions",
     },
     {

@@ -3,9 +3,9 @@ import { Suspense } from "react";
 import { ServerDirectoryParams } from "@/app/app/server/[server]/layout";
 import { ServerGrid } from "@/components/servers/server-grid";
 import { ServerGridSkeleton } from "@/components/servers/server-grid-skeleton";
-import { PageHeader } from "@/components/ui/page-header";
 import { SummaryCards } from "@/components/servers/summary-cards";
 import { SummaryCardsSkeleton } from "@/components/servers/summary-cards-skeleton";
+import { PageHeader } from "@/components/ui/page-header";
 
 export default async function ServerListPage({
   params,

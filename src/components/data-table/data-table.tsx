@@ -74,7 +74,7 @@ export function DataTable<TData>({
                     delay: 0.05 + index * 0.025,
                     ease: "easeOut",
                   }}
-                  className="border-b border-white/[0.06] transition-colors hover:bg-white/[0.02] data-[state=selected]:bg-white/[0.04]"
+                  className="border-b border-white/[0.06] transition-colors data-[state=selected]:bg-white/[0.04] hover:bg-white/[0.02]"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell

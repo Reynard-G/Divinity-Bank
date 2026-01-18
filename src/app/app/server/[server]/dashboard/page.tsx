@@ -4,8 +4,8 @@ import { Suspense } from "react";
 import { ServerDirectoryParams } from "@/app/app/server/[server]/layout";
 import { DashboardCards } from "@/components/dashboard/dashboard-cards";
 import { DashboardCardsSkeleton } from "@/components/dashboard/dashboard-cards-skeleton";
-import { PageHeader } from "@/components/ui/page-header";
 import { QuickActions } from "@/components/dashboard/quick-actions";
+import { PageHeader } from "@/components/ui/page-header";
 import { getServerByShortName } from "@/lib/db/queries/server.queries";
 
 export default async function ServerDashboardPage({
