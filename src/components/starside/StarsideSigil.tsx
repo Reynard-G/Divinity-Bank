@@ -72,9 +72,21 @@ const ENTRANCE_DURATION = 0.6;
 const ENTRANCE_STAGGER = 0.08;
 const ENTRANCE_EASE = [0.25, 0.1, 0.25, 1] as const;
 const PARALLAX_RANGE = 16;
-const EMBLEM_SIZE = 540;
+/** Artwork spans ~0.89 of this (logo.png's alpha box), so it stays inside
+ *  the inner polygon's 624u. It does NOT clear the hero everywhere: at
+ *  SIZE and SHIFT_UP below it clears from ~1440x900 up, but still sits
+ *  behind the kicker rail on short laptop viewports (1280x800, 1366x768).
+ *  The bottom vignette in the homepage is what keeps the kicker legible
+ *  there, so weakening that gradient re-opens the problem. */
+const EMBLEM_SIZE = 520;
 const EMBLEM_POS = (VIEW - EMBLEM_SIZE) / 2;
-const SIZE = "min(92vmin, 880px)";
+/** Scaled down from the design's min(92vmin, 880px) and lifted off centre.
+ *  Together these clear the hero band without shrinking the emblem
+ *  relative to the rings, so every internal proportion stays as designed.
+ *  The binding case is short laptop heights (768-800px), where the hero
+ *  rises toward a viewport-centred sigil. */
+const SIZE = "min(82vmin, 800px)";
+const SHIFT_UP = "-5vh";
 const TICK_GRID = 0.25;
 /** Matches the isDesktop breakpoint used by the dialog components. */
 const DESKTOP_QUERY = "(min-width: 768px)";
@@ -117,15 +129,20 @@ export default function StarsideSigil({
   const sx = useSpring(mx, { stiffness: 40, damping: 20 });
   const sy = useSpring(my, { stiffness: 40, damping: 20 });
 
+  /** Desktop-only. pointermove fires on touch drags too, so leaving this on
+   *  below the breakpoint makes the sigil lurch when the page is tapped or
+   *  scrolled, rather than idling as a pointer-follow implies. */
+  const parallaxEnabled = isDesktop && !prefersReducedMotion;
+
   useEffect(() => {
-    if (prefersReducedMotion) return;
+    if (!parallaxEnabled) return;
     const onMove = (e: PointerEvent) => {
       mx.set((e.clientX / window.innerWidth) * 2 - 1);
       my.set((e.clientY / window.innerHeight) * 2 - 1);
     };
     window.addEventListener("pointermove", onMove);
     return () => window.removeEventListener("pointermove", onMove);
-  }, [mx, my, prefersReducedMotion]);
+  }, [mx, my, parallaxEnabled]);
 
   const emblemMarkup = `<image href="${emblemSrc}" x="${EMBLEM_POS}" y="${EMBLEM_POS}" width="${EMBLEM_SIZE}" height="${EMBLEM_SIZE}"/>`;
 
@@ -148,7 +165,14 @@ export default function StarsideSigil({
           .ss-layer { animation: none !important; }
         }
       `}</style>
-      <div style={{ position: "relative", width: SIZE, aspectRatio: "1" }}>
+      <div
+        style={{
+          position: "relative",
+          width: SIZE,
+          aspectRatio: "1",
+          transform: `translateY(${SHIFT_UP})`,
+        }}
+      >
         {LAYER_SPECS.map((spec) => {
           const markup =
             spec.key === "emblem" ? emblemMarkup : layers[spec.key];
@@ -161,6 +185,7 @@ export default function StarsideSigil({
               spin={prefersReducedMotion ? null : spec.spin}
               sx={sx}
               sy={sy}
+              parallax={parallaxEnabled}
               reduced={!!prefersReducedMotion}
             />
           );
@@ -176,6 +201,7 @@ function SigilLayer({
   spin,
   sx,
   sy,
+  parallax,
   reduced,
 }: {
   spec: LayerSpec;
@@ -183,6 +209,9 @@ function SigilLayer({
   spin: [number, 1 | -1] | null;
   sx: MotionValue<number>;
   sy: MotionValue<number>;
+  /** Pointer parallax. Off below the desktop breakpoint. */
+  parallax: boolean;
+  /** Entrance animation only; parallax has its own flag. */
   reduced: boolean;
 }) {
   const x = useTransform(sx, (v) => v * PARALLAX_RANGE * spec.depth);
@@ -193,8 +222,8 @@ function SigilLayer({
       style={{
         position: "absolute",
         inset: 0,
-        x: reduced ? 0 : x,
-        y: reduced ? 0 : y,
+        x: parallax ? x : 0,
+        y: parallax ? y : 0,
       }}
       initial={reduced ? false : { opacity: 0, scale: 0.94 }}
       animate={{ opacity: spec.ink, scale: 1 }}
