@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import type { TransactionDirectoryParams } from "@/app/app/transaction/[id]/layout";
+import type { TransactionDirectoryParams } from "@/app/(main)/app/transaction/[id]/layout";
 import { TransactionAttachment } from "@/components/transaction/transaction-attachment";
 import { TransactionDetailsCard } from "@/components/transaction/transaction-details-card";
 import { TransactionHeader } from "@/components/transaction/transaction-header";

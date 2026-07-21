@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import { ServerDirectoryParams } from "@/app/app/server/[server]/layout";
+import { ServerDirectoryParams } from "@/app/(main)/app/server/[server]/layout";
 import { ServerGrid } from "@/components/servers/server-grid";
 import { ServerGridSkeleton } from "@/components/servers/server-grid-skeleton";
 import { SummaryCards } from "@/components/servers/summary-cards";

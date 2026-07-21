@@ -1,47 +1,21 @@
-"use client";
+import "./globals.css";
+import { NotFoundView } from "@/components/errors/not-found-view";
+import { FONT_CLASSNAMES } from "@/lib/constants/fonts";
+import { cn } from "@/lib/utils/cn";
 
-import { useRouter } from "next/navigation";
-
-import { useMediaQuery } from "@/hooks/use-media-query";
-
+/**
+ * Renders its own document shell. With two root layouts under (marketing)
+ * and (main), a URL matching neither group has no layout to inherit, so
+ * this file has to supply html/body itself.
+ */
 export default function NotFound() {
-  const router = useRouter();
-  const isMobile = useMediaQuery("(max-width: 768px)");
-
   return (
-    <main className="relative flex h-screen items-center justify-center overflow-hidden bg-[#010101]">
-      {isMobile !== undefined && (
-        <video
-          autoPlay
-          muted
-          playsInline
-          className="absolute inset-0 h-full w-full object-cover"
-        >
-          <source
-            src={
-              isMobile
-                ? "/not-found_background_1080x1080.mp4"
-                : "/not-found_background_1920x1080.mp4"
-            }
-            type="video/mp4"
-          />
-        </video>
-      )}
-      <div className="relative z-10 flex flex-col items-center justify-center p-8 text-center">
-        <h1 className="mb-2 text-3xl font-semibold text-white">
-          Page not found
-        </h1>
-        <p className="text-base text-gray-400">
-          Darkness envelops this page. It&apos;s not safe here,{" "}
-          <button
-            onClick={() => router.back()}
-            className="text-neutral-100 underline transition-colors hover:text-neutral-300"
-          >
-            turn back
-          </button>
-          .
-        </p>
-      </div>
-    </main>
+    <html lang="en" className="dark" style={{ colorScheme: "dark" }}>
+      <body
+        className={cn(FONT_CLASSNAMES.Default, "tracking-wide antialiased")}
+      >
+        <NotFoundView />
+      </body>
+    </html>
   );
 }

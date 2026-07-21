@@ -2,7 +2,7 @@
 
 import { useRouter } from "nextjs-toploader/app";
 
-import type { UserForComponents } from "@/app/app/layout";
+import type { UserForComponents } from "@/app/(main)/app/layout";
 import { DiscordSVG } from "@/components/svg/discord";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
